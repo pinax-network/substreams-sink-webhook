@@ -1,0 +1,23 @@
+{
+  "name": "temporal-fetch-esm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/worker.ts",
+    "workflow": "tsx src/client.ts"
+  },
+  "dependencies": {
+    "@temporalio/activity": "latest",
+    "@temporalio/client": "latest",
+    "@temporalio/worker": "latest",
+    "@temporalio/workflow": "latest"
+  },
+  "devDependencies": {
+    "@tsconfig/esm": "latest",
+    "@types/node": "latest",
+    "tsup": "latest",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}
