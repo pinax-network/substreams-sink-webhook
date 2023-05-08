@@ -1,22 +1,37 @@
-# Fetch ESM
+# [`Substreams`](https://substreams.streamingfast.io/) [Temporal](https://temporal.io/) CLI `Node.js`
 
-Sample for configuring a Temporal project with TypeScript and [ES Modules](https://nodejs.org/api/esm.html).
+<!-- [<img alt="github" src="" height="20">](https://github.com/pinax-network/substreams-sink-temporal) -->
+<!-- [<img alt="npm" src="" height="20">](https://www.npmjs.com/package/substreams-sink-temporal) -->
+<!-- [<img alt="GitHub Workflow Status" src="" height="20">](https://github.com/pinax-network/substreams-sink-temporal/actions?query=branch%3Amain) -->
 
-Fundamental difference from CommonJS:
+> `substreams-sink-temporal` is a tool that allows developers to pipe data extracted from a blockchain to Temporal.
 
-- [`package.json`](./package.json) has `"type": "module"` attribute.
-- [`tsconfig.json`](./tsconfig.json) outputs in `esnext` format.
-- Imports [must](https://nodejs.org/api/esm.html#esm_mandatory_file_extensions) include the `.js` file extension.
+## 📖 Documentation
 
-### Running this sample
+<!-- ### https://www.npmjs.com/package/substreams-sink-temporal -->
 
-1. `temporal server start-dev` to start [Temporal Server](https://github.com/temporalio/cli/#installation).
-1. `npm install` to install dependencies.
-1. `npm run start.watch` to start the Worker.
-1. In another shell, `npm run workflow` to run the Workflow.
+### Further resources
 
-The Workflow should return:
+- [**Substreams** documentation](https://substreams.streamingfast.io)
+
+### Protobuf
+
+## CLI
+[**Use pre-built binaries**](https://github.com/pinax-network/substreams-sink-temporal/releases)
+- [x] MacOS
+- [x] Linux
+- [x] Windows
+
+**Install** globally via npm
 
 ```
-Hello, Temporal!
+$ npm install -g substreams-sink-temporal
 ```
+
+**Run**
+```
+$ substreams-sink-temporal run [options] <spkg>
+```
+## Features
+
+- [ ] Webhooks
