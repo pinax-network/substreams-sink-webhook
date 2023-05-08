@@ -2,6 +2,7 @@
   "extends": "@tsconfig/esm/tsconfig.json",
   "compilerOptions": {
     "target": "esnext",
-    "moduleResolution": "nodenext"
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true
   }
 }

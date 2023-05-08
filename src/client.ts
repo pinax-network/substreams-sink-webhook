@@ -1,11 +1,13 @@
-import { Client } from '@temporalio/client';
-import { example } from './workflows.js';
+import { nanoid } from 'nanoid';
+import type { Clock } from "substreams";
+import type { Client } from '@temporalio/client';
+import { webhook } from './workflows.js';
 
-const client = new Client();
-
-const result = await client.workflow.execute(example, {
-  taskQueue: 'fetch-esm',
-  workflowId: 'my-business-id',
-  args: ['Temporal'],
-});
-console.log(result); // Hello, Temporal!
+export async function handleOperations(client: Client, message: any, clock: Clock, typeName: string, hash: string, manifest: string) {
+  const result = await client.workflow.execute(webhook, {
+    taskQueue: 'webhooks',
+    workflowId: 'workflow-' + nanoid(),
+    args: [message, clock, typeName, hash, manifest],
+  });
+  console.log(result);
+}

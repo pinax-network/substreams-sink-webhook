@@ -1,7 +1,8 @@
 {
-  "name": "temporal-fetch-esm",
-  "version": "0.1.0",
   "private": true,
+  "name": "substreams-sink-temporal-webhooks",
+  "description": "Substreams Sink Temporal Webhooks",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "start": "tsx src/worker.ts",
@@ -11,7 +12,9 @@
     "@temporalio/activity": "latest",
     "@temporalio/client": "latest",
     "@temporalio/worker": "latest",
-    "@temporalio/workflow": "latest"
+    "@temporalio/workflow": "latest",
+    "nanoid": "latest",
+    "substreams-sink": "^0.2.2"
   },
   "devDependencies": {
     "@tsconfig/esm": "latest",
