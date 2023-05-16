@@ -14,7 +14,7 @@
     "@temporalio/worker": "latest",
     "@temporalio/workflow": "latest",
     "nanoid": "latest",
-    "substreams-sink": "^0.2.2"
+    "substreams-sink": "0.3.x"
   },
   "devDependencies": {
     "@tsconfig/esm": "latest",
