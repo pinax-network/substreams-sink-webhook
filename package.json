@@ -17,7 +17,7 @@
     "substreams-sink": "0.3.x"
   },
   "devDependencies": {
-    "@tsconfig/esm": "latest",
+    "@tsconfig/recommended": "latest",
     "@types/node": "latest",
     "tsup": "latest",
     "tsx": "latest",
