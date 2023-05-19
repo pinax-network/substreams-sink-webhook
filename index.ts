@@ -25,10 +25,8 @@ export async function action(manifest: string, moduleName: string, options: Acti
     const hash = createHash(spkg);
     logger.info("download", {manifest, hash});
 
-    const client = new Client();
-
     // Run Substreams
     const substreams = run(spkg, moduleName, options);
-    substreams.on("anyMessage", (message, clock, typeName) => handleOperations(client, message, clock, typeName, hash, manifest))
+    substreams.on("anyMessage", handleOperations)
     substreams.start(options.delayBeforeStart);
 }

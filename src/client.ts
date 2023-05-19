@@ -1,13 +1,14 @@
 import { nanoid } from 'nanoid';
-import type { Clock } from "substreams";
-import type { Client } from '@temporalio/client';
 import { webhook } from './workflows.js';
+import { Client } from '@temporalio/client';
 
-export async function handleOperations(client: Client, message: any, clock: Clock, typeName: string, hash: string, manifest: string) {
+export async function handleOperations(message: any) {
+  console.log("handleOperations", message);
+  const client = new Client();
   const result = await client.workflow.execute(webhook, {
     taskQueue: 'webhooks',
     workflowId: 'workflow-' + nanoid(),
-    args: [message, clock, typeName, hash, manifest],
+    args: [message],
   });
   console.log(result);
 }

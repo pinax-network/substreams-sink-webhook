@@ -1,10 +1,15 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
+  "version": "4.4.2",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "ESNext",
-    "moduleResolution": "nodenext",
-    "resolveJsonModule": true,
-    "outDir": "dist"
-  }
+    "target": "ESNext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "rootDir": "./src",
+    "outDir": "./lib"
+  },
+  "include": ["src/**/*.ts"]
 }

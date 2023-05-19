@@ -7,4 +7,4 @@ import pkg from "../package.json";
 const program = cli.program(pkg);
 const command = cli.run(program, pkg);
 command.action(action);
-program.parse([]);
+program.parse();
