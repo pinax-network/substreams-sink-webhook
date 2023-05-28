@@ -1,25 +1,11 @@
 {
   "private": true,
-  "name": "substreams-sink-temporal",
-  "description": "Substreams Sink Temporal",
+  "name": "substreams-sink-webhook",
+  "description": "Substreams Sink Webhook",
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "tsc --build",
-    "build.watch": "tsc --build --watch",
-    "lint": "eslint .",
-    "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.11.1/eosio-token-v0.11.1.spkg map_transfers -s -1 -e https://eos.firehose.eosnation.io:9001",
-    "start.watch": "nodemon src/worker.ts",
-    "workflow": "node --loader ts-node/esm src/client.ts"
-  },
-  "nodemonConfig": {
-    "execMap": {
-      "ts": "node --loader ts-node/esm"
-    },
-    "ext": "ts",
-    "watch": [
-      "src"
-    ]
+    "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.11.1/eosio-token-v0.11.1.spkg map_transfers -s -1 -e https://eos.firehose.eosnation.io:9001"
   },
   "dependencies": {
     "@temporalio/activity": "latest",
@@ -27,15 +13,12 @@
     "@temporalio/worker": "latest",
     "@temporalio/workflow": "latest",
     "nanoid": "latest",
-    "substreams-sink": "0.3.1"
+    "substreams-sink": "^0.3.2"
   },
   "devDependencies": {
-    "ts-node": "^10.9.1",
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
-    "tsup": "latest",
     "tsx": "latest",
-    "nodemon": "latest",
     "typescript": "latest"
   }
 }

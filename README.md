@@ -1,37 +1,66 @@
-# [`Substreams`](https://substreams.streamingfast.io/) [Temporal](https://temporal.io/) CLI `Node.js`
+# [`Substreams`](https://substreams.streamingfast.io/) Sink Webhook
 
-<!-- [<img alt="github" src="" height="20">](https://github.com/pinax-network/substreams-sink-temporal) -->
-<!-- [<img alt="npm" src="" height="20">](https://www.npmjs.com/package/substreams-sink-temporal) -->
-<!-- [<img alt="GitHub Workflow Status" src="" height="20">](https://github.com/pinax-network/substreams-sink-temporal/actions?query=branch%3Amain) -->
-
-> `substreams-sink-temporal` is a tool that allows developers to pipe data extracted from a blockchain to Temporal.
+> `substreams-sink-webhook` is a tool that allows developers to pipe data extracted from a blockchain to Webhook.
 
 ## 📖 Documentation
 
-<!-- ### https://www.npmjs.com/package/substreams-sink-temporal -->
-
 ### Further resources
 
-- [**Substreams** documentation](https://substreams.streamingfast.io)
+- [**Substreams** documentation](https://substreams.streamingfast.io/)
+- [**Temporal** documentation](https://docs.temporal.io/)
+- Discord Webhooks
+  - [interactions-and-bot-users](https://discord.com/developers/docs/interactions/receiving-and-responding#interactions-and-bot-users)
+  - [security-and-authorization](https://discord.com/developers/docs/interactions/receiving-and-responding#security-and-authorization)
 
-### Protobuf
+## [Pre-built binaries](https://github.com/pinax-network/substreams-sink-webhook/releases)
+- MacOS
+- Linux
+- Windows
 
-## CLI
-[**Use pre-built binaries**](https://github.com/pinax-network/substreams-sink-temporal/releases)
-- [x] MacOS
-- [x] Linux
-- [x] Windows
-
-**Install** globally via npm
+## Quickstart
 
 ```
-$ npm install -g substreams-sink-temporal
+$ substreams-sink-webhook run
 ```
 
-**Run**
+## Help
+
 ```
-$ substreams-sink-temporal run [options] <spkg>
+Substreams Sink Webhook
+
+Arguments:
+  <manifest>                              URL or IPFS hash of Substreams package
+  module_name                             Name of the output module (declared in the manifest)
+
+Options:
+  -e --substreams-endpoint <string>       Substreams gRPC endpoint to stream data from (default:
+                                          "https://mainnet.eth.streamingfast.io:443")
+  -s --start-block <int>                  Start block to stream from (defaults to -1, which means
+                                          the initialBlock of the first module you are streaming)
+  -t --stop-block <string>                Stop block to end stream at, inclusively
+  --substreams-api-token <string>         API token for the substream endpoint
+  --substreams-api-token-envvar <string>  Environnement variable name of the API token for the
+                                          substream endpoint (default: "SUBSTREAMS_API_TOKEN")
+  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait
+                                          before starting any internal processes, can be used to
+                                          perform to maintenance on the pod before actually letting
+                                          it starts (default: "0")
+  --cursor-file <string>                  cursor lock file (default: "cursor.lock")
+  --production-mode                       Enable Production Mode, with high-speed parallel
+                                          processing (default: false)
+  --verbose                               Enable verbose logging (default: false)
+  --metrics-listen-address                If non-empty, the process will listen on this address for
+                                          Prometheus metrics requests
+  --metrics-listen-port                   If non-empty, the process will listen on this port for
+                                          Prometheus metrics requests
+  -p, --params <string...>                Set a params for parameterizable modules. Can be specified
+                                          multiple times. Ex: -p module1=valA -p module2=valX&valY
+                                          (default: [])
+  --url <string>                          Webhook URL to send POST.
+  --private-key <string>                  Private key to sign POST data payload (ex: "PVT_K1_...")
+  -h, --help                              display help for command
 ```
+
 ## Features
 
-- [ ] Webhooks
+- [ ] POST webhook to URL
