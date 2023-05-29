@@ -8,7 +8,7 @@ export async function handleOperations(message: any, clock: Clock, moduleName: s
   const client = new Client();
   const {signature, timestamp} = await client.workflow.execute(webhook, {
     taskQueue: 'webhooks',
-    workflowId: `workflow-${moduleName}-${clock.number}-${nanoid()}`,
+    workflowId: `post-${moduleName}-to-${options.url}-${nanoid()}`,
     args: [message, clock, moduleName, moduleHash, options.url, options.privateKey],
   });
   logger.info("POST", {moduleName, moduleHash, url: options.url, signature, timestamp});

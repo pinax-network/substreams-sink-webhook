@@ -10,7 +10,8 @@ export async function createWorker( ) {
   const worker = await Worker.create({
     workflowsPath: fileURLToPath(workflowsPathUrl),
     activities,
-    taskQueue: 'webhooks',
+    namespace: 'webhooks',
+    taskQueue: 'WEBHOOK_TASK_QUEUE',
   });
   worker.run();
 }

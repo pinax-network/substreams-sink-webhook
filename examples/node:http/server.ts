@@ -7,7 +7,7 @@ const public_key = PublicKey.from(argv[2] ?? "PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat
 
 const server = http.createServer();
 
-function getBody(request: http.IncomingMessage) {
+function rawBody(request: http.IncomingMessage) {
     return new Promise<string>((resolve, reject) => {
         let chunks: Uint8Array[] = [];
         request.on('data', (chunk) => {
@@ -29,7 +29,7 @@ server.on("request", async (request, response) => {
         response.write("invalid request");
         response.end();
     }
-    const body = await getBody(request);
+    const body = await rawBody(request);
     const hex = Buffer.from(timestamp + body).toString("hex");
     const bytes = Bytes.from(hex);
     const isVerified = Signature.from(signature).verifyMessage(bytes, public_key);
