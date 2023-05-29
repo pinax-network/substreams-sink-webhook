@@ -12,7 +12,6 @@ export async function createWorker( ) {
     activities,
     taskQueue: 'webhooks',
   });
-
   worker.run();
 }
 

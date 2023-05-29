@@ -4,17 +4,20 @@ import { PrivateKey, Bytes } from "@wharfkit/session";
 export async function postWebhook(message: any, clock: Clock, url: string, privateKey: string) {
   const body = JSON.stringify({message, clock});
   const timestamp = String(Math.floor(Date.now().valueOf() / 1000));
-  const hex = Buffer.from(body).toString("hex");
+  const hex = Buffer.from(timestamp + body).toString("hex");
   const bytes = Bytes.from(hex);
-  const signature = PrivateKey.fromString(privateKey).signMessage(bytes).toString();
+  const key = PrivateKey.fromString(privateKey);
+  const signature = key.signMessage(bytes).toString();
 
-  return fetch(url, {
+  const response = await fetch(url, {
     body,
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'X-Signature-Secp256k1': signature,
-      'X-Signature-Timestamp': timestamp,
+      'content-type': 'application/json',
+      'x-signature-secp256k1': signature,
+      'x-signature-timestamp': timestamp,
     }
   });
+  const text = await response.text();
+  return {signature, timestamp, response: text};
 }

@@ -1,0 +1,6 @@
+POST http://localhost:8080 HTTP/1.1
+content-type: application/json
+x-signature-secp256k1: SIG_K1_Kc8e467F1GGpoWVeSSmnSMTzcSFeBUPpBgB9YZmpvvGKJKrGfibae9ZwD98smoWuRaSc8R3VkwG7mDXtPxYda93PosbuQ9
+x-signature-timestamp: 1685325147
+
+{"message":{"items":[{"trxId":"bae0c87c370959bbbed617179951bf18cf0d5b78715cc50de0884979c0a9e195","actionOrdinal":2,"contract":"eosio.token","symcode":"EOS","from":"agentxzxxxxx","to":"swap.defi","quantity":"0.0403 EOS","memo":"swap, 131, 177","amount":"403","precision":4}]},"clock":{"id":"129d08493e2a78fba82edbfd16cd077115cf385c01a9ce59dc41088b534ecc1d","number":"312281161","timestamp":"2023-05-29T01:52:15.500Z"}}

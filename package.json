@@ -8,7 +8,8 @@
   },
   "exports": "./dist/index.js",
   "scripts": {
-    "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.11.1/eosio-token-v0.11.1.spkg map_transfers -s -1 -e https://eos.firehose.eosnation.io:9001 --url http://localhost:3000 --private-key PVT_K1_28Fspugw5bnY2xi5CvrfwaidYQTirU8PwKiso9XfxsjEqGMuUe"
+    "server": "tsx ./scripts/server.ts PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat86GhVEyXp33NbDTB8DgtG4B",
+    "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.11.1/eosio-token-v0.11.1.spkg map_transfers -s -1 -e https://eos.firehose.eosnation.io:9001 --verbose -p 'map_transfers=symcode=EOS&to=swap.defi' --url http://127.0.0.1:8080 --private-key PVT_K1_28Fspugw5bnY2xi5CvrfwaidYQTirU8PwKiso9XfxsjEqGMuUe"
   },
   "dependencies": {
     "@temporalio/activity": "latest",
@@ -24,6 +25,7 @@
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
     "tsx": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "http-server": "latest"
   }
 }
