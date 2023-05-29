@@ -63,4 +63,6 @@ Options:
 
 ## Features
 
-- [ ] POST webhook to URL
+- [x] POST webhook to URL
+- [x] Provide map hash module
+- [ ] Use [`tweetnacl`](https://github.com/dchest/tweetnacl-js) to sign POST data payload

@@ -2,3 +2,4 @@ node_modules
 dist
 cursor.lock
 .env
+*.log

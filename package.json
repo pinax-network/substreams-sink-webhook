@@ -3,29 +3,25 @@
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "version": "0.1.0",
-  "bin": {
-    "eos-evm-miner": "./dist/bin/cli.js"
-  },
-  "exports": "./dist/index.js",
   "scripts": {
-    "server": "tsx ./scripts/server.ts PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat86GhVEyXp33NbDTB8DgtG4B",
-    "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.11.1/eosio-token-v0.11.1.spkg map_transfers -s -1 -e https://eos.firehose.eosnation.io:9001 --verbose -p 'map_transfers=symcode=EOS&to=swap.defi' --url http://127.0.0.1:8080 --private-key PVT_K1_28Fspugw5bnY2xi5CvrfwaidYQTirU8PwKiso9XfxsjEqGMuUe"
+    "server": "tsx ./examples/server.ts PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat86GhVEyXp33NbDTB8DgtG4B",
+    "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.11.1/eosio-token-v0.11.1.spkg map_transfers -s -1 -e https://eos.firehose.eosnation.io:9001 --verbose -p 'map_transfers=symcode=UPX' --url http://127.0.0.1:8080 --private-key PVT_K1_28Fspugw5bnY2xi5CvrfwaidYQTirU8PwKiso9XfxsjEqGMuUe"
   },
   "dependencies": {
+    "@substreams/core": "^0.1.4",
     "@temporalio/activity": "latest",
     "@temporalio/client": "latest",
     "@temporalio/worker": "latest",
     "@temporalio/workflow": "latest",
     "@wharfkit/session": "^0.5.0",
-    "@wharfkit/wallet-plugin-privatekey": "^0.5.0",
     "nanoid": "latest",
     "substreams-sink": "^0.3.2"
   },
   "devDependencies": {
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
+    "http-server": "latest",
     "tsx": "latest",
-    "typescript": "latest",
-    "http-server": "latest"
+    "typescript": "latest"
   }
 }

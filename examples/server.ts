@@ -30,13 +30,13 @@ server.on("request", async (request, response) => {
         response.end();
     }
     const body = await getBody(request);
-    console.log("---")
-    console.log(body);
-    console.log(signature);
-    console.log(timestamp);
     const hex = Buffer.from(timestamp + body).toString("hex");
     const bytes = Bytes.from(hex);
     const isVerified = Signature.from(signature).verifyMessage(bytes, public_key);
+
+    console.log("\n---------MESSAGE---------");
+    console.log("headers", JSON.stringify({timestamp, signature}, null, 2));
+    console.log("body", JSON.stringify(JSON.parse(body), null, 2));
 
     if ( isVerified ) {
         response.write("OK");

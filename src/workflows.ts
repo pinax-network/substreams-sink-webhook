@@ -7,6 +7,6 @@ const { postWebhook } = proxyActivities<typeof activities>({
   startToCloseTimeout: '1 minute',
 });
 
-export function webhook(message: any, clock: Clock, url: string, privateKey: string) {
-  return postWebhook(message, clock, url, privateKey);
+export function webhook(message: any, clock: Clock, moduleName: string, moduleHash: string, url: string, privateKey: string) {
+  return postWebhook(message, clock, moduleName, moduleHash, url, privateKey);
 }

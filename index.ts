@@ -1,6 +1,6 @@
-import { createHash, download } from "substreams";
 import { run, logger } from "substreams-sink";
 import type { RunOptions } from "substreams-sink";
+import { fetchSubstream, createModuleHash, getModuleOrThrow, createSubstream } from "@substreams/core"
 import pkg from "./package.json";
 import { handleOperations } from "./src/client.js";
 import { createWorker } from "./src/worker.js"
@@ -24,15 +24,16 @@ export async function action(manifest: string, moduleName: string, options: Acti
     if ( !options.privateKey ) throw new Error("Missing required --private-key");
 
     // Download Substreams (or read from local file system)
-    const spkg = await download(manifest);
-    const hash = createHash(spkg);
-    logger.info("download", {manifest, hash});
+    const spkg = await fetchSubstream(manifest);
+    if ( !spkg.modules ) throw new Error("Unable to create Substream Package");
+    const module = getModuleOrThrow(spkg.modules, moduleName);
+    const moduleHash = Buffer.from(await createModuleHash(spkg.modules, module)).toString("hex");
 
     // create Temporal Worker
     createWorker();
 
     // Run Substreams
-    const substreams = run(spkg, moduleName, options);
-    substreams.on("anyMessage", (message, clock) => handleOperations(message, clock, options))
+    const substreams = run(spkg.toBinary(), moduleName, options);
+    substreams.on("anyMessage", (message, clock) => handleOperations(message, clock, moduleName, moduleHash, options))
     substreams.start();
 }

@@ -1,8 +1,8 @@
 import { Clock } from "substreams";
 import { PrivateKey, Bytes } from "@wharfkit/session";
 
-export async function postWebhook(message: any, clock: Clock, url: string, privateKey: string) {
-  const body = JSON.stringify({message, clock});
+export async function postWebhook(message: any, clock: Clock, moduleName: string, moduleHash: string, url: string, privateKey: string) {
+  const body = JSON.stringify({clock, moduleName, moduleHash, message});
   const timestamp = String(Math.floor(Date.now().valueOf() / 1000));
   const hex = Buffer.from(timestamp + body).toString("hex");
   const bytes = Bytes.from(hex);
