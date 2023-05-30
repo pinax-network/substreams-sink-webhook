@@ -1,9 +1,10 @@
 {
-  "extends": "@tsconfig/recommended",
+  "extends": "@tsconfig/recommended/tsconfig.json",
   "compilerOptions": {
-		"target": "ESNext",
-		"module": "esnext",
-    	"moduleResolution": "node",
-		"resolveJsonModule": true
-	}
+		"resolveJsonModule": true,
+		"outDir": "./dist",
+	},
+	"include": [
+		"./bin/cli.ts"
+	]
 }

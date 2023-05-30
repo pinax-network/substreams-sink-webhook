@@ -4,3 +4,4 @@ cursor.lock
 .env
 *.log
 *.db
+*.js

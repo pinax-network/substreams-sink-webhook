@@ -1,17 +1,15 @@
 import { Worker } from '@temporalio/worker';
-import { URL, fileURLToPath } from 'url';
-import * as path from 'node:path';
 import * as activities from './activities.js';
-
-// Support running both complied code and ts-node/esm loader
-const workflowsPathUrl = new URL(`./workflows${path.extname(import.meta.url)}`, import.meta.url);
 
 export async function createWorker( ) {
   const worker = await Worker.create({
-    workflowsPath: fileURLToPath(workflowsPathUrl),
+    workflowsPath: require.resolve('./workflows'),
     activities,
     taskQueue: 'webhooks',
   })
-  worker.run();
+  worker.run().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }
 

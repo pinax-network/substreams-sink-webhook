@@ -19,6 +19,7 @@
 
 ```
 PRIVATE_KEY=PVT_K1_...
+PUBLIC_KEY=PUB_K1_...
 URL=http://localhost:8000
 ```
 
@@ -68,7 +69,7 @@ Options:
 - [x] POST webhook to URL
 - [x] Provide map hash module
 - [ ] Use [`tweetnacl`](https://github.com/dchest/tweetnacl-js) to sign POST data payload
-- [ ] Add Dockerfile
+- [x] Add Dockerfile
 - [ ] Add `ping` command to check if webhook is alive
 - Examples
   - [x] node:http

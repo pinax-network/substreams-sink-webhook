@@ -4,9 +4,10 @@
   "description": "Substreams Sink Webhook",
   "version": "0.1.0",
   "scripts": {
+    "build": "tsc",
     "worker": "tsx ./bin/cli.ts worker",
     "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.12.1/eosio-token-v0.12.1.spkg map_transfers -e https://wax.firehose.eosnation.io:9001 --production-mode -s -1 --verbose",
-    "server": "tsx ./examples/node:http/server.ts 8000 PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat86GhVEyXp33NbDTB8DgtG4B"
+    "server": "tsx ./bin/cli.ts --port 8000"
   },
   "dependencies": {
     "@substreams/core": "^0.1.4",
@@ -15,12 +16,13 @@
     "@temporalio/worker": "latest",
     "@temporalio/workflow": "latest",
     "@wharfkit/session": "^0.5.0",
-    "nanoid": "latest",
+    "nanoid": "^3.3.6",
     "substreams-sink": "^0.3.2"
   },
   "devDependencies": {
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
+    "tsup": "latest",
     "tsx": "latest",
     "typescript": "latest"
   }
