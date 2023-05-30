@@ -5,3 +5,4 @@ cursor.lock
 *.log
 *.db
 *.js
+!ecosystem.config.js

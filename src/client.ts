@@ -5,9 +5,9 @@ import { Clock } from "substreams"
 import { logger } from 'substreams-sink';
 import { PrivateKey, Bytes } from "@wharfkit/session";
 
-export async function handleOperations(message: any, clock: Clock, moduleName: string, moduleHash: string, url: string, privateKey: string) {
+export async function handleOperations(message: any, clock: Clock, moduleName: string, url: string, privateKey: string) {
   // sign message
-  const body = JSON.stringify({clock, moduleName, moduleHash, message});
+  const body = JSON.stringify({clock, moduleName, message});
   const timestamp = String(Math.floor(Date.now().valueOf() / 1000));
   const hex = Buffer.from(timestamp + body).toString("hex");
   const bytes = Bytes.from(hex);
@@ -16,7 +16,7 @@ export async function handleOperations(message: any, clock: Clock, moduleName: s
 
   // push result to Temporal
   const client = new Client();
-  console.log("EXECUTE", {moduleName, moduleHash, url: url, signature, timestamp})
+  console.log("EXECUTE", {moduleName, url: url, signature, timestamp})
   const response = await client.workflow.execute(webhook, {
     taskQueue: 'webhooks',
     workflowId: `webhook-${moduleName}-to-${url}-${nanoid()}`,

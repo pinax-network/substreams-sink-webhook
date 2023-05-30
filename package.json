@@ -22,7 +22,7 @@
   "devDependencies": {
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
-    "tsup": "latest",
+    "pm2": "latest",
     "tsx": "latest",
     "typescript": "latest"
   }

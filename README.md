@@ -19,13 +19,14 @@
 
 ```bash
 docker build -t substreams-sink-webhook .
-
-# server
 docker run -it --rm -p 8000:8000 --env-file .env substreams-sink-webhook server
-# worker
-docker run -it --rm substreams-sink-webhook worker
-# sink
-docker run -it --rm --env-file .env substreams-sink-webhook run
+```
+
+## pm2
+
+```bash
+pm2 start
+pm2 logs
 ```
 
 ## `.env` Environment variables
@@ -33,6 +34,7 @@ docker run -it --rm --env-file .env substreams-sink-webhook run
 ```
 PRIVATE_KEY=PVT_K1_...
 PUBLIC_KEY=PUB_K1_...
+SUBSTREAMS_API_TOKEN=...
 URL=http://localhost:8000
 ```
 
@@ -84,6 +86,7 @@ Options:
 - [x] Provide map hash module
 - [ ] Use [`tweetnacl`](https://github.com/dchest/tweetnacl-js) to sign POST data payload
 - [x] Add Dockerfile
+- [x] Add pm2 config
 - [ ] Add `ping` command to check if webhook is alive
 - Examples
   - [x] node:http

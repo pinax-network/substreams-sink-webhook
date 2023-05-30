@@ -1,6 +1,6 @@
 import { run, logger } from "substreams-sink";
 import type { RunOptions } from "substreams-sink";
-import { fetchSubstream, createModuleHash, getModuleOrThrow } from "@substreams/core"
+import { fetchSubstream } from "@substreams/core"
 import pkg from "./package.json";
 import { handleOperations } from "./src/client.js";
 
@@ -27,11 +27,12 @@ export async function action(manifest: string, moduleName: string, options: Acti
     // Download Substreams (or read from local file system)
     const spkg = await fetchSubstream(manifest);
     if ( !spkg.modules ) throw new Error("Unable to create Substream Package");
-    const module = getModuleOrThrow(spkg.modules, moduleName);
-    const moduleHash = Buffer.from(await createModuleHash(spkg.modules, module)).toString("hex");
+
+    // const module = getModuleOrThrow(spkg.modules, moduleName);
+    // const moduleHash = Buffer.from(await createModuleHash(spkg.modules, module)).toString("hex");
 
     // Run Substreams
     const substreams = run(spkg.toBinary(), moduleName, options);
-    substreams.on("anyMessage", (message, clock) => handleOperations(message, clock, moduleName, moduleHash, url, privateKey))
+    substreams.on("anyMessage", (message, clock) => handleOperations(message, clock, moduleName, url, privateKey))
     substreams.start();
 }
