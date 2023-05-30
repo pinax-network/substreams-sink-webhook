@@ -5,7 +5,6 @@
   "version": "0.1.0",
   "scripts": {
     "build": "tsc",
-    "pm2": "pm2",
     "worker": "tsx ./bin/cli.ts worker",
     "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.12.1/eosio-token-v0.12.1.spkg map_transfers -e https://wax.firehose.eosnation.io:9001 --production-mode -s -1 --verbose",
     "server": "tsx ./bin/cli.ts server --port 8000"
