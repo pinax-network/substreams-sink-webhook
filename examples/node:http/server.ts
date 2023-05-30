@@ -3,7 +3,7 @@ import { Bytes, PublicKey, Signature  } from "@wharfkit/session"
 
 export function createServer(options: { publicKey: string, port: number }) {
     const port = options.port ?? process.env.PORT ?? 8000;
-    const publicKey = options.publicKey ?? process.env.PUBLIC_KEY;
+    const publicKey = PublicKey.from(options.publicKey ?? process.env.PUBLIC_KEY);
     if ( !publicKey ) throw new Error("Missing required --public-key");
 
     const server = http.createServer();
@@ -25,15 +25,21 @@ export function createServer(options: { publicKey: string, port: number }) {
         const timestamp = String(headers['x-signature-timestamp']);
         const signature = String(headers['x-signature-secp256k1']);
 
+        if ( request.method !== "POST" ) {
+            response.statusCode = 405;
+            response.write("invalid method");
+            return response.end();
+        }
+
         if ( !timestamp || !signature ) {
             response.statusCode = 401;
             response.write("invalid request");
-            response.end();
+            return response.end();
         }
         const body = await rawBody(request);
         const hex = Buffer.from(timestamp + body).toString("hex");
         const bytes = Bytes.from(hex);
-        const isVerified = Signature.from(signature).verifyMessage(bytes, PublicKey.from(publicKey));
+        const isVerified = Signature.from(signature).verifyMessage(bytes, publicKey);
 
         console.log("\n---------MESSAGE---------");
         console.log("headers", JSON.stringify({timestamp, signature}, null, 2));
@@ -48,7 +54,8 @@ export function createServer(options: { publicKey: string, port: number }) {
         response.end();
     });
 
-    server.listen(options.port, () => {
-        console.log(`server listening on http://localhost:${options.port}`);
+    server.listen(port, () => {
+        console.log(`server listening on http://localhost:${port}`);
+        console.log(`verify message with: ${publicKey.toString()}`);
     });
 }

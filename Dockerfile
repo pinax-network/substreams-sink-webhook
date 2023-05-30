@@ -1,6 +1,6 @@
 FROM node:current
 
-EXPOSE 9102
+EXPOSE 8000
 
 WORKDIR /app
 COPY . .

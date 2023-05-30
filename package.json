@@ -7,7 +7,7 @@
     "build": "tsc",
     "worker": "tsx ./bin/cli.ts worker",
     "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.12.1/eosio-token-v0.12.1.spkg map_transfers -e https://wax.firehose.eosnation.io:9001 --production-mode -s -1 --verbose",
-    "server": "tsx ./bin/cli.ts --port 8000"
+    "server": "tsx ./bin/cli.ts server --port 8000"
   },
   "dependencies": {
     "@substreams/core": "^0.1.4",

@@ -15,6 +15,19 @@
 - Linux
 - Windows
 
+## Docker environment
+
+```bash
+docker build -t substreams-sink-webhook .
+
+# server
+docker run -it --rm -p 8000:8000 --env-file .env substreams-sink-webhook server
+# worker
+docker run -it --rm substreams-sink-webhook worker
+# sink
+docker run -it --rm --env-file .env substreams-sink-webhook run
+```
+
 ## `.env` Environment variables
 
 ```
@@ -23,10 +36,11 @@ PUBLIC_KEY=PUB_K1_...
 URL=http://localhost:8000
 ```
 
-## CLI
+## Help
 
-**run**
 ```
+$ substreams-sink-webhook run --help
+
 Usage: substreams-sink-webhook run [options] [<manifest>] <module_name>
 
 Substreams Sink Webhook
@@ -76,3 +90,4 @@ Options:
   - [ ] express
   - [ ] bun
   - [ ] deno
+- [ ] add flags to `.env` file
