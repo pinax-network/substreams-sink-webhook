@@ -2,9 +2,7 @@
 
 > `substreams-sink-webhook` is a tool that allows developers to pipe data extracted from a blockchain to Webhook.
 
-## 📖 Documentation
-
-### Further resources
+## 📖 References
 
 - [**Substreams** documentation](https://substreams.streamingfast.io/)
 - [**Temporal** documentation](https://docs.temporal.io/)
@@ -17,15 +15,19 @@
 - Linux
 - Windows
 
-## Quickstart
+## `.env` Environment variables
 
 ```
-$ substreams-sink-webhook run
+PRIVATE_KEY=PVT_K1_...
+URL=http://localhost:8000
 ```
 
-## Help
+## CLI
 
+**run**
 ```
+Usage: substreams-sink-webhook run [options] [<manifest>] <module_name>
+
 Substreams Sink Webhook
 
 Arguments:
@@ -35,19 +37,19 @@ Arguments:
 Options:
   -e --substreams-endpoint <string>       Substreams gRPC endpoint to stream data from (default:
                                           "https://mainnet.eth.streamingfast.io:443")
-  -s --start-block <int>                  Start block to stream from (defaults to -1, which means
-                                          the initialBlock of the first module you are streaming)
+  -s --start-block <int>                  Start block to stream from (defaults to -1, which means the
+                                          initialBlock of the first module you are streaming)
   -t --stop-block <string>                Stop block to end stream at, inclusively
   --substreams-api-token <string>         API token for the substream endpoint
-  --substreams-api-token-envvar <string>  Environnement variable name of the API token for the
-                                          substream endpoint (default: "SUBSTREAMS_API_TOKEN")
-  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait
-                                          before starting any internal processes, can be used to
-                                          perform to maintenance on the pod before actually letting
-                                          it starts (default: "0")
+  --substreams-api-token-envvar <string>  Environnement variable name of the API token for the substream
+                                          endpoint (default: "SUBSTREAMS_API_TOKEN")
+  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait before
+                                          starting any internal processes, can be used to perform to
+                                          maintenance on the pod before actually letting it starts
+                                          (default: "0")
   --cursor-file <string>                  cursor lock file (default: "cursor.lock")
-  --production-mode                       Enable Production Mode, with high-speed parallel
-                                          processing (default: false)
+  --production-mode                       Enable Production Mode, with high-speed parallel processing
+                                          (default: false)
   --verbose                               Enable verbose logging (default: false)
   --metrics-listen-address                If non-empty, the process will listen on this address for
                                           Prometheus metrics requests
@@ -67,3 +69,9 @@ Options:
 - [x] Provide map hash module
 - [ ] Use [`tweetnacl`](https://github.com/dchest/tweetnacl-js) to sign POST data payload
 - [ ] Add Dockerfile
+- [ ] Add `ping` command to check if webhook is alive
+- Examples
+  - [x] node:http
+  - [ ] express
+  - [ ] bun
+  - [ ] deno

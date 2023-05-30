@@ -3,3 +3,4 @@ dist
 cursor.lock
 .env
 *.log
+*.db

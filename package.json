@@ -4,8 +4,9 @@
   "description": "Substreams Sink Webhook",
   "version": "0.1.0",
   "scripts": {
-    "server": "tsx ./examples/node:http server.ts PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat86GhVEyXp33NbDTB8DgtG4B",
-    "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.11.1/eosio-token-v0.11.1.spkg map_transfers -s -1 -e https://eos.firehose.eosnation.io:9001 --verbose -p 'map_transfers=symcode=UPX,EOS' --url http://127.0.0.1:8080 --private-key PVT_K1_28Fspugw5bnY2xi5CvrfwaidYQTirU8PwKiso9XfxsjEqGMuUe"
+    "worker": "tsx ./bin/cli.ts worker",
+    "start": "tsx ./bin/cli.ts run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.12.1/eosio-token-v0.12.1.spkg map_transfers -e https://wax.firehose.eosnation.io:9001 --production-mode -s -1 --verbose",
+    "server": "tsx ./examples/node:http/server.ts 8000 PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat86GhVEyXp33NbDTB8DgtG4B"
   },
   "dependencies": {
     "@substreams/core": "^0.1.4",

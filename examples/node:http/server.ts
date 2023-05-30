@@ -2,8 +2,9 @@ import http from "node:http";
 import { argv } from "node:process";
 import { Bytes, PublicKey, Signature  } from "@wharfkit/session"
 
+const PORT = parseInt(argv[2] ?? "8000");
 // user must provide R1 public key
-const public_key = PublicKey.from(argv[2] ?? "PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat86GhVEyXp33NbDTB8DgtG4B");
+const PUBLIC_KEY = PublicKey.from(argv[3] ?? "PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat86GhVEyXp33NbDTB8DgtG4B");
 
 const server = http.createServer();
 
@@ -32,7 +33,7 @@ server.on("request", async (request, response) => {
     const body = await rawBody(request);
     const hex = Buffer.from(timestamp + body).toString("hex");
     const bytes = Bytes.from(hex);
-    const isVerified = Signature.from(signature).verifyMessage(bytes, public_key);
+    const isVerified = Signature.from(signature).verifyMessage(bytes, PUBLIC_KEY);
 
     console.log("\n---------MESSAGE---------");
     console.log("headers", JSON.stringify({timestamp, signature}, null, 2));
@@ -47,7 +48,6 @@ server.on("request", async (request, response) => {
     response.end();
 });
 
-const port = 8080;
-server.listen(port, () => {
-    console.log(`server listening on http://localhost:${port}`);
+server.listen(PORT, () => {
+    console.log(`server listening on http://localhost:${PORT}`);
 });

@@ -3,13 +3,24 @@ import { webhook } from './workflows.js';
 import { Client } from '@temporalio/client';
 import { Clock } from "substreams"
 import { logger } from 'substreams-sink';
+import { PrivateKey, Bytes } from "@wharfkit/session";
 
-export async function handleOperations(message: any, clock: Clock, moduleName: string, moduleHash: string, options: {url: string, privateKey: string}) {
+export async function handleOperations(message: any, clock: Clock, moduleName: string, moduleHash: string, url: string, privateKey: string) {
+  // sign message
+  const body = JSON.stringify({clock, moduleName, moduleHash, message});
+  const timestamp = String(Math.floor(Date.now().valueOf() / 1000));
+  const hex = Buffer.from(timestamp + body).toString("hex");
+  const bytes = Bytes.from(hex);
+  const key = PrivateKey.fromString(privateKey);
+  const signature = key.signMessage(bytes).toString();
+
+  // push result to Temporal
   const client = new Client();
-  const {signature, timestamp} = await client.workflow.execute(webhook, {
+  console.log("EXECUTE", {moduleName, moduleHash, url: url, signature, timestamp})
+  const response = await client.workflow.execute(webhook, {
     taskQueue: 'webhooks',
-    workflowId: `post-${moduleName}-to-${options.url}-${nanoid()}`,
-    args: [message, clock, moduleName, moduleHash, options.url, options.privateKey],
+    workflowId: `webhook-${moduleName}-to-${url}-${nanoid()}`,
+    args: [url, body, signature, timestamp],
   });
-  logger.info("POST", {moduleName, moduleHash, url: options.url, signature, timestamp});
+  console.log("POST", {response});
 }
