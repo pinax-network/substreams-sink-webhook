@@ -3,26 +3,22 @@
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "worker": "node ./dist/bin/cli.js worker",
-    "start": "node ./dist/bin/cli.js run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.12.1/eosio-token-v0.12.1.spkg map_transfers -e https://wax.firehose.eosnation.io:9001 --production-mode -s -1 --verbose",
-    "server": "node ./dist/bin/cli.js server --port 8000"
+    "start": "node ./dist/bin/cli.js run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.12.1/eosio-token-v0.12.1.spkg map_transfers -e https://wax.firehose.eosnation.io:9001 --production-mode -s -1 --verbose"
   },
   "dependencies": {
-    "@substreams/core": "^0.1.4",
-    "@temporalio/activity": "latest",
-    "@temporalio/client": "latest",
-    "@temporalio/worker": "latest",
-    "@temporalio/workflow": "latest",
+    "@substreams/core": "^0.1.9",
+    "@substreams/node": "^0.1.1",
     "@wharfkit/session": "^0.5.0",
-    "nanoid": "3.x",
+    "nanoid": "latest",
     "substreams-sink": "^0.3.2"
   },
   "devDependencies": {
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
-    "pm2": "latest",
     "typescript": "latest"
   }
 }
