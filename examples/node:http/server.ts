@@ -1,4 +1,5 @@
 import { Bytes, PublicKey, Signature } from "@wharfkit/session";
+import "dotenv/config";
 import http from "node:http";
 
 export function createServer(options: { publicKey: string; port: number }) {

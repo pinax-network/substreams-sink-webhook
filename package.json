@@ -7,14 +7,15 @@
   "scripts": {
     "build": "tsc",
     "worker": "node ./dist/bin/cli.js worker",
-    "start": "node ./dist/bin/cli.js run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.12.1/eosio-token-v0.12.1.spkg map_transfers -e https://wax.firehose.eosnation.io:9001 --production-mode -s -1 --verbose"
+    "start": "node ./dist/bin/cli.js run https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.12.1/eosio-token-v0.12.1.spkg map_transfers -e https://wax.firehose.eosnation.io:9001 -s -1 --verbose"
   },
   "dependencies": {
     "@substreams/core": "^0.1.9",
     "@substreams/node": "^0.1.1",
     "@wharfkit/session": "^0.5.0",
-    "nanoid": "latest",
-    "substreams-sink": "^0.3.2"
+    "commander": "latest",
+    "dotenv": "latest",
+    "nanoid": "latest"
   },
   "devDependencies": {
     "@tsconfig/recommended": "latest",

@@ -5,10 +5,11 @@
 		  "outDir": "dist",
 		  "module": "ESNext",
 		  "moduleResolution": "nodenext",
+		  "resolveJsonModule": true,
 		  "declaration": true,
 		  "sourceMap": true
 	  },
 	  "include": [
-		  "index.ts"
+		  "bin/cli.ts"
 	  ]
   }
