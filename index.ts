@@ -74,19 +74,20 @@ export async function action(options: ActionOptions) {
     const id = nanoid();
     if (!state.timestamp) return;
     const timestamp = generateTimestampSeconds(state.timestamp);
+    const block_num = Number(state.current);
     const body = JSON.stringify({
       id,
       chain,
       moduleName,
       moduleHash,
-      block_num: Number(state.current),
+      block_num,
       timestamp: state.timestamp.toISOString(),
       cursor: state.cursor,
       data,
     });
     const signature = signMessage(body, timestamp, privateKey);
     const response = await postWebhook(url, body, signature, timestamp);
-    if ( options.verbose) log.info("POST", {moduleName, moduleHash,id, response});
+    if ( options.verbose) log.info("POST", {url, response, id, chain, spkg, manifest, baseUrl, block_num, moduleName, moduleHash, cursor: state.cursor});
   });
 
   emitter.start();

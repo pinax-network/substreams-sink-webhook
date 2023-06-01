@@ -16,6 +16,7 @@
     "commander": "latest",
     "dotenv": "latest",
     "nanoid": "latest",
+    "p-queue": "latest",
     "tslog": "latest"
   },
   "devDependencies": {
