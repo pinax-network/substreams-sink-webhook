@@ -19,14 +19,7 @@
 
 ```bash
 docker build -t substreams-sink-webhook .
-docker run -it --rm -p 8000:8000 --env-file .env substreams-sink-webhook server
-```
-
-## pm2
-
-```bash
-pm2 start
-pm2 logs
+docker run -it --rm --env-file .env substreams-sink-webhook
 ```
 
 ## `.env` Environment variables
@@ -35,7 +28,7 @@ pm2 logs
 PRIVATE_KEY=PVT_K1_...
 PUBLIC_KEY=PUB_K1_...
 SUBSTREAMS_API_TOKEN=...
-URL=http://localhost:8000
+URL=http://localhost:3000
 ```
 
 ## Help
