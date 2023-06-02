@@ -88,7 +88,13 @@ Commands:
 - [x] Signing policy
   - [x] R1 private keys
 - [x] Retry policy
+  - [x] Exponential backoff (2x)
+  - [x] Initial Interval (1s)
+  - [x] Maximum Attempts (Infinity)
+  - [x] Maximum Interval (100 * initialInterval)
+- [x] Queue
+  - [x] Conccurent requests (1)
 - [x] Dockerfile
-- [x] provide arguments or `.env` file
+- [x] Provide CLI arguments or Environment Variables (`.env`)
 - [x] Params injection
 - [ ] Prometheus metrics

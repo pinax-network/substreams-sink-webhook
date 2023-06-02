@@ -1,5 +1,6 @@
 import delay from "delay";
 import { logger } from "./logger.js";
+import { queue } from "./queue.js";
 
 // Retry Policy
 const initialInterval = 1000; // 1s
@@ -13,7 +14,7 @@ export async function postWebhook(url: string, body: string, signature: string, 
     if ( attempts ) {
       let milliseconds = initialInterval * Math.pow(backoffCoefficient, attempts);
       if ( milliseconds > maximumInterval ) milliseconds = maximumInterval;
-      logger.error(`delay ${milliseconds}`, {url});
+      logger.warn(`delay ${milliseconds}`, {attempts, url, queue: queue.size});
       await delay(milliseconds);
     }
     if ( attempts > maximumAttempts ) {
@@ -37,10 +38,10 @@ export async function postWebhook(url: string, body: string, signature: string, 
         logger.warn(`Unexpected status code ${status}`, { text, url });
         continue;
       }
-      return { response: await response.text(), attempts };
+      return { text, attempts };
     } catch (e: any) {
       const error = e.cause;
-      logger.error(`Retry attempt ${attempts}`, {url, error});
+      logger.error(`Unexpected error`, {url, error});
       attempts++;
     }
   }

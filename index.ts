@@ -54,7 +54,7 @@ export async function action(options: ActionOptions) {
   if ( !moduleName ) throw new Error("Missing required --module-name");
 
   // Apply params
-  applyParams(options.params, substreamPackage.modules.modules);
+  if ( options.params.length ) applyParams(options.params, substreamPackage.modules.modules);
 
   // Module hash
   const module = getModuleOrThrow(substreamPackage.modules.modules, moduleName);
@@ -100,8 +100,8 @@ export async function action(options: ActionOptions) {
 
     // Queue POST
     queue.add(async () => {
-      const {response, attempts} = await postWebhook(url, body, signature, timestamp)
-      logger.info("POST", {url, response, attempts, id, chain, spkg, manifest, baseUrl, block_num, moduleName, moduleHash, cursor: state.cursor});
+      const {text, attempts} = await postWebhook(url, body, signature, timestamp)
+      logger.info("POST", {url, text, attempts, id, chain, spkg, manifest, baseUrl, block_num, moduleName, moduleHash, cursor: state.cursor});
     });
   });
 
