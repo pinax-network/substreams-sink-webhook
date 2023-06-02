@@ -6,15 +6,15 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "server": "bun ./examples/http.ts",
+    "server": "bun ./examples/bun/http.ts 3000",
     "start": "tsc && node ./dist/bin/cli.js"
   },
   "dependencies": {
-    "@substreams/core": "^0.1.9",
+    "@substreams/core": "^0.1.10",
     "@substreams/node": "^0.1.1",
     "@wharfkit/session": "^0.5.0",
     "commander": "latest",
-    "delay": "^6.0.0",
+    "delay": "latest",
     "dotenv": "latest",
     "nanoid": "latest",
     "p-queue": "latest",

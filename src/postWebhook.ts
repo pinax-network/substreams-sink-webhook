@@ -38,7 +38,7 @@ export async function postWebhook(url: string, body: string, signature: string, 
         logger.warn(`Unexpected status code ${status}`, { text, url });
         continue;
       }
-      return { text, attempts };
+      return {url, status, text};
     } catch (e: any) {
       const error = e.cause;
       logger.error(`Unexpected error`, {url, error});

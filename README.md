@@ -87,6 +87,7 @@ Commands:
 - [x] Map hash module
 - [x] Signing policy
   - [x] R1 private keys
+  - [ ] Ether.js
 - [x] Retry policy
   - [x] Exponential backoff (2x)
   - [x] Initial Interval (1s)
@@ -98,3 +99,5 @@ Commands:
 - [x] Provide CLI arguments or Environment Variables (`.env`)
 - [x] Params injection
 - [ ] Prometheus metrics
+- [ ] Add PING on first request
+- [ ] Save `cursor.lock` file

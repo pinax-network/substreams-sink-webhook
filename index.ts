@@ -1,12 +1,12 @@
+import "dotenv/config";
+import { nanoid } from "nanoid";
+import { BlockEmitter, createDefaultTransport } from "@substreams/node";
+import { applyParams, createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
 import { RunOptions } from "./bin/substreams-sink.js";
 import { getSubstreamsEndpoint } from "./src/getSubstreamsEndpoint.js";
 import { generateTimestampSeconds } from "./src/generateTimestampSeconds.js";
 import { postWebhook } from "./src/postWebhook.js";
 import { signMessage } from "./src/signMessage.js";
-import { applyParams, createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
-import { BlockEmitter, createDefaultTransport } from "@substreams/node";
-import { nanoid } from "nanoid";
-import "dotenv/config";
 import { getSubstreamsPackageURL } from "./src/getSubstreamsPackageURL.js";
 import { logger } from "./src/logger.js";
 import { queue } from "./src/queue.js";
@@ -100,8 +100,8 @@ export async function action(options: ActionOptions) {
 
     // Queue POST
     queue.add(async () => {
-      const {text, attempts} = await postWebhook(url, body, signature, timestamp)
-      logger.info("POST", {url, text, attempts, id, chain, spkg, manifest, baseUrl, block_num, moduleName, moduleHash, cursor: state.cursor});
+      const response = await postWebhook(url, body, signature, timestamp)
+      logger.info("POST", {id, response, substreams: {chain, spkg, manifest, baseUrl, moduleName, moduleHash}, state});
     });
   });
 
