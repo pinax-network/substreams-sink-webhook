@@ -18,8 +18,9 @@ export default {
 
     // validate signature using public key
     const publicKey = PublicKey.from("PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat86GhVEyXp33NbDTB8DgtG4B");
-    const hex = Buffer.from(timestamp + body).toString("hex");
-    const isVerified = Signature.from(signature).verifyMessage(Bytes.from(hex), publicKey);
+    const message = Bytes.from(Buffer.from(timestamp + body).toString("hex"));
+    const isVerified = Signature.from(signature).verifyMessage(message, publicKey);
+
     if (!isVerified) {
       return new Response("invalid request signature", { status: 401 });
     }

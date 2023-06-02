@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "server": "bun ./examples/bun/http.ts 3000",
+    "server": "bun ./examples/http.ts 3000",
     "start": "tsc && node ./dist/bin/cli.js"
   },
   "dependencies": {
