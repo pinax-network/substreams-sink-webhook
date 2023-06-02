@@ -20,7 +20,7 @@
 
 ```bash
 docker build -t substreams-sink-webhook .
-docker run -it --rm --env-file .env substreams-sink-webhook
+docker run -it --rm --env-file .env -e "URL=http://host.docker.internal:3000" substreams-sink-webhook run
 ```
 
 ## `.env` Environment variables
