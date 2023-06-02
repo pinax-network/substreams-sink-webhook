@@ -9,13 +9,15 @@ import { nanoid } from "nanoid";
 import "dotenv/config";
 import { getSubstreamsPackageURL } from "./src/getSubstreamsPackageURL.js";
 import { Logger, ILogObj } from "tslog";
+import PQueue from 'p-queue';
 
 export interface ActionOptions extends RunOptions {
   url: string;
   privateKey: string;
 }
 
-const log: Logger<ILogObj> = new Logger();
+export const log: Logger<ILogObj> = new Logger();
+const queue = new PQueue({concurrency: 1});
 
 export async function action(options: ActionOptions) {
   // required CLI or environment variables
@@ -86,8 +88,10 @@ export async function action(options: ActionOptions) {
       data,
     });
     const signature = signMessage(body, timestamp, privateKey);
-    const response = await postWebhook(url, body, signature, timestamp);
-    if ( options.verbose) log.info("POST", {url, response, id, chain, spkg, manifest, baseUrl, block_num, moduleName, moduleHash, cursor: state.cursor});
+    queue.add(async () => {
+      const {response, attempts} = await postWebhook(url, body, signature, timestamp)
+      if ( options.verbose ) log.info("POST", {url, response, attempts, id, chain, spkg, manifest, baseUrl, block_num, moduleName, moduleHash, cursor: state.cursor});
+    });
   });
 
   emitter.start();
