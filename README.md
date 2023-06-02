@@ -101,3 +101,4 @@ Commands:
 - [ ] Prometheus metrics
 - [ ] Add PING on first request
 - [ ] Save `cursor.lock` file
+- [ ] Use `clock`
