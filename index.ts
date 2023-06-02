@@ -3,23 +3,28 @@ import { getSubstreamsEndpoint } from "./src/getSubstreamsEndpoint.js";
 import { generateTimestampSeconds } from "./src/generateTimestampSeconds.js";
 import { postWebhook } from "./src/postWebhook.js";
 import { signMessage } from "./src/signMessage.js";
-import { createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
+import { applyParams, createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { nanoid } from "nanoid";
 import "dotenv/config";
 import { getSubstreamsPackageURL } from "./src/getSubstreamsPackageURL.js";
-import { Logger, ILogObj } from "tslog";
-import PQueue from 'p-queue';
+import { logger } from "./src/logger.js";
+import { queue } from "./src/queue.js";
+
 
 export interface ActionOptions extends RunOptions {
   url: string;
   privateKey: string;
+  concurrency: string;
 }
 
-export const log: Logger<ILogObj> = new Logger();
-const queue = new PQueue({concurrency: 1});
-
 export async function action(options: ActionOptions) {
+  // verbose
+  if (!options.verbose) logger.settings.type = "hidden";
+
+  // Queue
+  queue.concurrency = parseInt(options.concurrency) ?? process.env.CONCURRENCY ?? 1;
+
   // required CLI or environment variables
   const url = options.url ?? process.env.URL;
   const privateKey = options.privateKey ?? process.env.PRIVATE_KEY;
@@ -47,15 +52,18 @@ export async function action(options: ActionOptions) {
   // Module hash
   const moduleName = options.moduleName ?? process.env.MODULE_NAME;
   if ( !moduleName ) throw new Error("Missing required --module-name");
+
+  // Apply params
+  applyParams(options.params, substreamPackage.modules.modules);
+
+  // Module hash
   const module = getModuleOrThrow(substreamPackage.modules.modules, moduleName);
   const moduleHash = Buffer.from(await createModuleHash(substreamPackage.modules, module)).toString("hex");
 
+  // Start & Stop block
   const startBlockNum = options.startBlock ?? process.env.START_BLOCK;
   const stopBlockNum = options.stopBlock ?? process.env.STOP_BLOCK;
   if (!startBlockNum) throw new Error("Missing required --start-block");
-
-  // TO-DO
-  const params = options.params;
 
   // Connect Transport
   const registry = createRegistry(substreamPackage);
@@ -68,7 +76,7 @@ export async function action(options: ActionOptions) {
     productionMode: true,
   });
 
-  // NodeJS Events
+  // Block Emitter
   const emitter = new BlockEmitter(transport, request, registry);
 
   // Stream Blocks
@@ -87,10 +95,13 @@ export async function action(options: ActionOptions) {
       cursor: state.cursor,
       data,
     });
+    // Sign body
     const signature = signMessage(body, timestamp, privateKey);
+
+    // Queue POST
     queue.add(async () => {
       const {response, attempts} = await postWebhook(url, body, signature, timestamp)
-      if ( options.verbose ) log.info("POST", {url, response, attempts, id, chain, spkg, manifest, baseUrl, block_num, moduleName, moduleHash, cursor: state.cursor});
+      logger.info("POST", {url, response, attempts, id, chain, spkg, manifest, baseUrl, block_num, moduleName, moduleHash, cursor: state.cursor});
     });
   });
 

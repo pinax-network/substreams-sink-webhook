@@ -48,8 +48,6 @@ export function option(program: Command, pkg: Package) {
   return program
     .showHelpAfterError()
     .description(pkg.description)
-    // .argument("[<manifest>]", "URL or IPFS hash of Substreams package")
-    // .argument("<module_name>", "Name of the output module (declared in the manifest)")
     .option("-e --substreams-endpoint <string>", "Substreams gRPC endpoint to stream data from")
     .option("--manifest", "URL of Substreams package")
     .option("--spkg", "Substreams package (ex: eosio.token)")

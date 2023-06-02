@@ -1,5 +1,5 @@
 import delay from "delay";
-import { log } from "../index.js";
+import { logger } from "./logger.js";
 
 // Retry Policy
 const initialInterval = 1000; // 1s
@@ -8,17 +8,18 @@ const maximumAttempts = Infinity;
 const maximumInterval = 100 * initialInterval;
 
 export async function postWebhook(url: string, body: string, signature: string, timestamp: number ) {
-  let attempts = 1;
-  if ( attempts ) {
-    let milliseconds = initialInterval * Math.pow(backoffCoefficient, attempts);
-    if ( milliseconds > maximumInterval ) milliseconds = maximumInterval;
-    await delay(milliseconds);
-  }
-  if ( attempts > maximumAttempts ) {
-    log.error("Maximum attempts exceeded", {url, body, signature, timestamp});
-    throw new Error("Maximum attempts exceeded");
-  }
+  let attempts = 0;
   while ( true ) {
+    if ( attempts ) {
+      let milliseconds = initialInterval * Math.pow(backoffCoefficient, attempts);
+      if ( milliseconds > maximumInterval ) milliseconds = maximumInterval;
+      logger.error(`delay ${milliseconds}`, {url});
+      await delay(milliseconds);
+    }
+    if ( attempts > maximumAttempts ) {
+      logger.error("Maximum attempts exceeded", {url});
+      throw new Error("Maximum attempts exceeded");
+    }
     try {
       const response = await fetch(url, {
         body,
@@ -28,10 +29,18 @@ export async function postWebhook(url: string, body: string, signature: string, 
           "x-signature-secp256k1": signature,
           "x-signature-timestamp": String(timestamp),
         },
-      });
-      if ( response.status != 200 ) throw new Error(`Unexpected status code ${response.status}`);
+      })
+      const status = response.status;
+      const text = await response.text();
+      if ( status != 200 ) {
+        attempts++;
+        logger.warn(`Unexpected status code ${status}`, { text, url });
+        continue;
+      }
       return { response: await response.text(), attempts };
-    } catch (e) {
+    } catch (e: any) {
+      const error = e.cause;
+      logger.error(`Retry attempt ${attempts}`, {url, error});
       attempts++;
     }
   }
