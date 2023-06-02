@@ -4,7 +4,6 @@ import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { applyParams, createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
 import { RunOptions } from "./bin/substreams-sink.js";
 import { getSubstreamsEndpoint } from "./src/getSubstreamsEndpoint.js";
-import { generateTimestampSeconds } from "./src/generateTimestampSeconds.js";
 import { postWebhook } from "./src/postWebhook.js";
 import { signMessage } from "./src/signMessage.js";
 import { getSubstreamsPackageURL } from "./src/getSubstreamsPackageURL.js";
@@ -80,28 +79,32 @@ export async function action(options: ActionOptions) {
   const emitter = new BlockEmitter(transport, request, registry);
 
   // Stream Blocks
-  emitter.on("anyMessage", async (data, state) => {
+  emitter.on("anyMessage", async (data, cursor, clock) => {
+    if ( !clock.timestamp ) return;
     const id = nanoid();
-    if (!state.timestamp) return;
-    const timestamp = generateTimestampSeconds(state.timestamp);
-    const block_num = Number(state.current);
-    const body = JSON.stringify({
+    const metadata = {
       id,
-      chain,
-      moduleName,
-      moduleHash,
-      block_num,
-      timestamp: state.timestamp.toISOString(),
-      cursor: state.cursor,
-      data,
-    });
+      cursor,
+      clock: {
+        timestamp: clock.timestamp.toDate().toISOString(),
+        number: Number(clock.number),
+        id: clock.id,
+      },
+      manifest: {
+        chain,
+        moduleName,
+        moduleHash,
+      },
+    }
     // Sign body
-    const signature = signMessage(body, timestamp, privateKey);
+    const seconds = Number(clock.timestamp.seconds);
+    const body = JSON.stringify({...metadata, data});
+    const signature = signMessage(body, seconds, privateKey);
 
     // Queue POST
     queue.add(async () => {
-      const response = await postWebhook(url, body, signature, timestamp)
-      logger.info("POST", {id, response, substreams: {chain, spkg, manifest, baseUrl, moduleName, moduleHash}, state});
+      const response = await postWebhook(url, body, signature, seconds)
+      logger.info("POST", response, metadata);
     });
   });
 

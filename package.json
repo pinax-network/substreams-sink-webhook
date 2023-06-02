@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@substreams/core": "^0.1.10",
-    "@substreams/node": "^0.1.1",
+    "@substreams/node": "^0.1.2",
     "@wharfkit/session": "^0.5.0",
     "commander": "latest",
     "delay": "latest",

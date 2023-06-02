@@ -100,5 +100,5 @@ Commands:
 - [x] Params injection
 - [ ] Prometheus metrics
 - [ ] Add PING on first request
-- [ ] Save `cursor.lock` file
-- [ ] Use `clock`
+- [ ] Save `cursor.lock` file on successful POST
+- [x] Use `clock` data

@@ -24,7 +24,7 @@ export default {
     if (!isVerified) {
       return new Response("invalid request signature", { status: 401 });
     }
-    console.dir({timestamp, signature, body: JSON.parse(body)});
+    console.dir({headers: {timestamp, signature}, body: JSON.parse(body)});
     return new Response("OK");
   },
 };
