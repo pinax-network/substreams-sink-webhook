@@ -1,4 +1,5 @@
 import "dotenv/config";
+import fs from "node:fs";
 import { nanoid } from "nanoid";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { applyParams, createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
@@ -25,6 +26,10 @@ export async function action(options: ActionOptions) {
 
   // Queue
   queue.concurrency = parseInt(options.concurrency) ?? process.env.CONCURRENCY ?? 1;
+
+  // Cursor file
+  const cursorFile = options.cursorFile ?? process.env.CURSOR_FILE ?? "cursor.lock";
+  const startCursor = fs.existsSync(cursorFile) ? fs.readFileSync(cursorFile, "utf-8") : "";
 
   // required CLI or environment variables
   const url = options.url ?? process.env.URL;
@@ -84,6 +89,7 @@ export async function action(options: ActionOptions) {
     startBlockNum: startBlockNum as any,
     stopBlockNum: stopBlockNum as any,
     productionMode: true,
+    startCursor,
   });
 
   // Block Emitter
@@ -115,6 +121,7 @@ export async function action(options: ActionOptions) {
     // Queue POST
     queue.add(async () => {
       const response = await postWebhook(url, body, signature, seconds)
+      fs.writeFileSync(cursorFile, cursor, "utf-8");
       logger.info("POST", response, metadata);
     });
   });
