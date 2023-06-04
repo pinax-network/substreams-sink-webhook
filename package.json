@@ -18,6 +18,7 @@
     "dotenv": "latest",
     "nanoid": "latest",
     "p-queue": "latest",
+    "prom-client": "latest",
     "tslog": "latest"
   },
   "devDependencies": {

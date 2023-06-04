@@ -98,7 +98,12 @@ Commands:
 - [x] Dockerfile
 - [x] Provide CLI arguments or Environment Variables (`.env`)
 - [x] Params injection
-- [ ] Prometheus metrics
+- [x] Prometheus metrics
+  - [x] add metrics from `substreams-sink`
+  - [ ] add queue counter
+  - [ ] add post counter
+  - [ ] add error counter
+  - [ ] update block stats when errors
 - [x] PING URL on start (invalid + valid)
 - [x] Save `cursor.lock` file on successful POST
 - [x] Use `clock` data

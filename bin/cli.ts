@@ -2,7 +2,7 @@
 
 import { action } from "../index.js";
 import pkg from "../package.json" assert { type: "json" };
-import * as sink from "./substreams-sink.js";
+import * as sink from "../externals/substreams-sink.js";
 
 // Run Webhook Sink
 const program = sink.program(pkg);

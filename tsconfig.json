@@ -13,6 +13,7 @@
 	  "include": [
 		  "index.ts",
 		  "bin/cli.ts",
-		  "src/**/*"
+		  "src/**/*",
+		  "externals/**/*"
 	  ]
   }

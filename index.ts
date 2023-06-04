@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { nanoid } from "nanoid";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { applyParams, createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
-import { RunOptions } from "./bin/substreams-sink.js";
+import { RunOptions } from "./externals/substreams-sink.js";
 import { getSubstreamsEndpoint } from "./src/getSubstreamsEndpoint.js";
 import { postWebhook } from "./src/postWebhook.js";
 import { signMessage } from "./src/signMessage.js";
@@ -12,7 +12,7 @@ import { logger } from "./src/logger.js";
 import { queue } from "./src/queue.js";
 import { PrivateKey } from "@wharfkit/session";
 import { ping } from "./src/ping.js";
-
+import * as metrics from "./externals/prometheus.js";
 
 export interface ActionOptions extends RunOptions {
   url: string;
@@ -125,6 +125,14 @@ export async function action(options: ActionOptions) {
       logger.info("POST", response, metadata);
     });
   });
+
+  emitter.on("block", block => {
+    metrics.updateBlockDataMetrics(block);
+    if ( block.clock ) metrics.updateClockMetrics(block.clock);
+  });
+
+  metrics.listen(9102, "localhost");
+  // metrics.collectDefaultMetrics();
   logger.info("start BlockEmitter");
   emitter.start();
 }
