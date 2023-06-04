@@ -2,24 +2,32 @@ import delay from "delay";
 import { logger } from "./logger.js";
 import { queue } from "./queue.js";
 
-// Retry Policy
-const initialInterval = 1000; // 1s
-const backoffCoefficient = 2;
-const maximumAttempts = Infinity;
-const maximumInterval = 100 * initialInterval;
+interface PostWebhookOptions {
+  maximumAttempts?: number;
+}
 
-export async function postWebhook(url: string, body: string, signature: string, timestamp: number ) {
+export async function postWebhook(url: string, body: string, signature: string, timestamp: number, options: PostWebhookOptions = {}) {
+  // Retry Policy
+  const initialInterval = 1000; // 1s
+  const maximumAttempts = options.maximumAttempts ?? 100 * initialInterval;
+  const maximumInterval = 100 * initialInterval;
+  const backoffCoefficient = 2;
+
   let attempts = 0;
   while ( true ) {
+    if ( attempts > maximumAttempts && maximumAttempts == 0 ) {
+      logger.error("invalid response", {url});
+      throw new Error("invalid response");
+    }
+    if ( attempts > maximumAttempts ) {
+      logger.error("Maximum attempts exceeded", {url});
+      throw new Error("Maximum attempts exceeded");
+    }
     if ( attempts ) {
       let milliseconds = initialInterval * Math.pow(backoffCoefficient, attempts);
       if ( milliseconds > maximumInterval ) milliseconds = maximumInterval;
       logger.warn(`delay ${milliseconds}`, {attempts, url, queue: queue.size});
       await delay(milliseconds);
-    }
-    if ( attempts > maximumAttempts ) {
-      logger.error("Maximum attempts exceeded", {url});
-      throw new Error("Maximum attempts exceeded");
     }
     try {
       const response = await fetch(url, {

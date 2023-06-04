@@ -9,6 +9,8 @@ import { signMessage } from "./src/signMessage.js";
 import { getSubstreamsPackageURL } from "./src/getSubstreamsPackageURL.js";
 import { logger } from "./src/logger.js";
 import { queue } from "./src/queue.js";
+import { PrivateKey } from "@wharfkit/session";
+import { ping } from "./src/ping.js";
 
 
 export interface ActionOptions extends RunOptions {
@@ -26,9 +28,17 @@ export async function action(options: ActionOptions) {
 
   // required CLI or environment variables
   const url = options.url ?? process.env.URL;
-  const privateKey = options.privateKey ?? process.env.PRIVATE_KEY;
   if (!url) throw new Error("Missing required --url");
-  if (!privateKey) throw new Error("Missing required --private-key");
+
+  // Private Key to sign messages
+  if (!options.privateKey && !process.env.PRIVATE_KEY) throw new Error("Missing required --private-key");
+  const privateKey = PrivateKey.fromString(options.privateKey ?? process.env.PRIVATE_KEY);
+
+  // Ping URL to check if it's valid
+  if (!await ping(url, privateKey) ) {
+    logger.error("exiting from invalid PING response");
+    process.exit();
+  }
 
   // auth API token
   // https://app.streamingfast.io/
@@ -45,6 +55,7 @@ export async function action(options: ActionOptions) {
   const spkg = options.spkg ?? process.env.SPKG;
   const manifest = spkg ? getSubstreamsPackageURL(spkg) : options.manifest ?? process.env.MANIFEST;
   if (!manifest) throw new Error("Missing required --manifest or --spkg");
+  logger.info("fetching manifest", {manifest});
   const substreamPackage = await fetchSubstream(manifest);
   if (!substreamPackage.modules) throw new Error("Unable to create Substream Package");
 
@@ -107,6 +118,6 @@ export async function action(options: ActionOptions) {
       logger.info("POST", response, metadata);
     });
   });
-
+  logger.info("start BlockEmitter");
   emitter.start();
 }

@@ -20,7 +20,7 @@
 
 ```bash
 docker build -t substreams-sink-webhook .
-docker run -it --rm --env-file .env -e "URL=http://host.docker.internal:3000" substreams-sink-webhook run
+docker run -it --rm --env-file .env substreams-sink-webhook run
 ```
 
 ## `.env` Environment variables
@@ -99,6 +99,6 @@ Commands:
 - [x] Provide CLI arguments or Environment Variables (`.env`)
 - [x] Params injection
 - [ ] Prometheus metrics
-- [ ] Add PING on first request
+- [x] PING URL on start (invalid + valid)
 - [ ] Save `cursor.lock` file on successful POST
 - [x] Use `clock` data
