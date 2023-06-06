@@ -29,7 +29,12 @@ docker run -it --rm --env-file .env substreams-sink-webhook run
 PRIVATE_KEY=PVT_K1_...
 PUBLIC_KEY=PUB_K1_...
 SUBSTREAMS_API_TOKEN=...
-URL=http://localhost:3000
+URL=http://127.0.0.1:3000
+CHAIN=wax
+SPKG=eosio.token
+MODULE_NAME=map_transfers
+START_BLOCK=-1
+PARAM="symcode=WAX"
 ```
 
 ## Help
