@@ -18,6 +18,8 @@
 
 ## Docker environment
 
+- [Docker Hub](https://hub.docker.com/r/pinaxnetwork/substreams-sink-webhook) community container image
+
 ```bash
 docker build -t substreams-sink-webhook .
 docker run -it --rm --env-file .env substreams-sink-webhook run
