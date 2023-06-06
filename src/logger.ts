@@ -1,2 +1,2 @@
-import { Logger, ILogObj } from "tslog";
+import { Logger, type ILogObj } from "tslog";
 export const logger: Logger<ILogObj> = new Logger({type: "pretty"});

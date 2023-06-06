@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { nanoid } from "nanoid";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { applyParams, createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
-import { RunOptions } from "./externals/substreams-sink.js";
+import { type RunOptions } from "./externals/substreams-sink.js";
 import { getSubstreamsEndpoint } from "./src/getSubstreamsEndpoint.js";
 import { postWebhook } from "./src/postWebhook.js";
 import { signMessage } from "./src/signMessage.js";
