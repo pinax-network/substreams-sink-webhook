@@ -74,8 +74,8 @@ export async function action(options: ActionOptions) {
   const params = [];
   if ( options.params.length ) params.push(...options.params)
   if ( process.env.PARAM) params.push(`${moduleName}=${process.env.PARAM}`)
-  const modules = substreamPackage.modules.modules;
-  if ( params.length ) applyParams(params, modules);
+  if ( params.length ) applyParams(params, substreamPackage.modules.modules);
+  logger.info("params", params);
 
   // Module hash
   const module = getModuleOrThrow(substreamPackage.modules.modules, moduleName);

@@ -1,7 +1,10 @@
 import { Bytes, PublicKey, Signature } from "@wharfkit/session";
 
 const port = process.argv[2] ?? 3000
+const PUBLIC_KEY = process.env.PUBLIC_KEY;
+if ( !PUBLIC_KEY ) throw new Error("PUBLIC_KEY is require");
 console.log(`Listening on port ${port}`);
+console.log(`Signature validation using ${PUBLIC_KEY}`);
 
 export default {
   port,
@@ -17,10 +20,11 @@ export default {
     if (!body) return new Response("missing body", { status: 400 });
 
     // validate signature using public key
-    const publicKey = PublicKey.from("PUB_K1_5F38WK8BDCfiu3EWhb5wwrsrrat86GhVEyXp33NbDTB8DgtG4B");
+    const publicKey = PublicKey.from(PUBLIC_KEY);
     const message = Bytes.from(Buffer.from(timestamp + body).toString("hex"));
     const isVerified = Signature.from(signature).verifyMessage(message, publicKey);
-    console.dir({headers: {isVerified, timestamp, signature}, body: JSON.parse(body)});
+    console.log({isVerified, timestamp, signature});
+    console.log(body);
 
     if (!isVerified) {
       return new Response("invalid request signature", { status: 401 });

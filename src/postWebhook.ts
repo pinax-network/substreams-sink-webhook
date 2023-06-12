@@ -40,13 +40,13 @@ export async function postWebhook(url: string, body: string, signature: string, 
         },
       })
       const status = response.status;
-      const text = await response.text();
+      // const text = await response.text();
       if ( status != 200 ) {
         attempts++;
-        logger.warn(`Unexpected status code ${status}`, { text, url });
+        logger.warn(`Unexpected status code ${status}`, { url });
         continue;
       }
-      return {url, status, text};
+      return {url, status};
     } catch (e: any) {
       const error = e.cause;
       logger.error(`Unexpected error`, {url, error});
