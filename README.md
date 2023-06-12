@@ -27,7 +27,7 @@ docker run -it --rm --env-file .env substreams-sink-webhook run
 
 ## `.env` Environment variables
 
-```
+```env
 # Webhook
 PRIVATE_KEY=PVT_K1_...
 PUBLIC_KEY=PUB_K1_...
@@ -41,7 +41,7 @@ CHAIN=wax
 SPKG=eosio.token
 MODULE_NAME=map_transfers
 START_BLOCK=-1
-PARAM="map_transfers=symcode=WAX&quantity_gte=100000000000"
+PARAM=map_transfers=symcode=WAX&quantity_gte=100000000000
 
 # Prometheus
 PROMETHEUS_PORT=9102
