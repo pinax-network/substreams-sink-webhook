@@ -50,6 +50,7 @@ PROMETHEUS_DISABLED=false
 
 # CLI
 VERBOSE=true
+DISABLE_PING=true
 ```
 
 ## Help

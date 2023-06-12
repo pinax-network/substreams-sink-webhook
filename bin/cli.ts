@@ -10,5 +10,6 @@ const command = sink.option(program, pkg);
 command.option("--url <string>", "Webhook URL to send POST.");
 command.option("--private-key <string>", 'Private key to sign POST data payload (ex: "PVT_K1_...")');
 command.option("--concurrency <number>", "Concurrency of requests", "1");
+command.option("--disable-ping", "Disable ping on init");
 command.action(action);
 program.parse();

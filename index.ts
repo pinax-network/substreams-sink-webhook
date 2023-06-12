@@ -20,6 +20,7 @@ export interface ActionOptions extends RunOptions {
   url: string;
   privateKey: string;
   concurrency: string;
+  disablePing: boolean;
 }
 
 export async function action(options: ActionOptions) {
@@ -48,9 +49,12 @@ export async function action(options: ActionOptions) {
   const privateKey = PrivateKey.fromString(options.privateKey ?? process.env.PRIVATE_KEY);
 
   // Ping URL to check if it's valid
-  if (!await ping(url, privateKey) ) {
-    logger.error("exiting from invalid PING response");
-    process.exit();
+  const disablePing = options.disablePing ?? JSON.parse(process.env.DISABLE_PING ?? "false");
+  if ( !disablePing ) {
+    if (!await ping(url, privateKey) ) {
+      logger.error("exiting from invalid PING response");
+      process.exit();
+    }
   }
 
   // auth API token
