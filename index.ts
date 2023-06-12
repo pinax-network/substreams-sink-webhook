@@ -14,6 +14,7 @@ import { PrivateKey } from "@wharfkit/session";
 import { ping } from "./src/ping.js";
 import * as metrics from "./externals/prometheus.js";
 import { applyParams } from "./externals/applyParams.js";
+import { PROMETHEUS_DISABLED, PROMETHEUS_HOSTNAME, PROMETHEUS_PORT } from "./src/config.js";
 
 export interface ActionOptions extends RunOptions {
   url: string;
@@ -25,6 +26,11 @@ export async function action(options: ActionOptions) {
   // verbose
   const verbose = options.verbose ?? JSON.parse(process.env.VERBOSE ?? "false");
   if (verbose) logger.settings.type = "pretty";
+
+  // Metrics
+  const prometheusHostname = options.prometheusHostname ?? PROMETHEUS_HOSTNAME;
+  const prometheusPort = options.prometheusPort ?? PROMETHEUS_PORT;
+  const prometheusDisabled = options.prometheusDisabled ?? PROMETHEUS_DISABLED;
 
   // Queue
   queue.concurrency = parseInt(options.concurrency) ?? process.env.CONCURRENCY ?? 1;
@@ -73,7 +79,7 @@ export async function action(options: ActionOptions) {
   // Apply params
   const params = [];
   if ( options.params.length ) params.push(...options.params)
-  if ( process.env.PARAM) params.push(`${moduleName}=${process.env.PARAM}`)
+  if ( process.env.PARAM) params.push(process.env.PARAM)
   if ( params.length ) applyParams(params, substreamPackage.modules.modules);
   logger.info("params", params);
 
@@ -132,12 +138,14 @@ export async function action(options: ActionOptions) {
     });
   });
 
-  emitter.on("block", block => {
-    metrics.updateBlockDataMetrics(block);
-    if ( block.clock ) metrics.updateClockMetrics(block.clock);
-  });
+  if ( !prometheusDisabled ) {
+    emitter.on("block", block => {
+      metrics.updateBlockDataMetrics(block);
+      if ( block.clock ) metrics.updateClockMetrics(block.clock);
+    });
+    metrics.listen(prometheusPort, prometheusHostname);
+  }
 
-  metrics.listen(9102, "localhost");
   // metrics.collectDefaultMetrics();
   logger.info("start BlockEmitter");
   emitter.start();

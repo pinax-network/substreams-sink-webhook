@@ -3,31 +3,32 @@ import { Command } from "commander";
 export interface RunOptions {
   startBlock?: string;
   stopBlock?: string;
-  substreamsEndpoint: string;
+  substreamsEndpoint?: string;
   manifest?: string;
   spkg?: string;
-  substreamsApiTokenEnvvar: string;
+  substreamsApiTokenEnvvar?: string;
   substreamsApiToken?: string;
   delayBeforeStart?: string;
-  cursorFile: string;
-  productionMode: boolean;
-  verbose: boolean;
-  metricsListenAddress: string;
-  metricsListenPort: number;
-  metricsDisabled: boolean;
+  cursorFile?: string;
+  productionMode?: boolean;
+  verbose?: boolean;
+  prometheusHostname?: string;
+  prometheusPort?: number;
+  prometheusDisabled?: boolean;
   chain?: string;
   params: string[];
   moduleName?: string;
 }
 
-// default substreams options
+// defaults
+export const DEFAULT_HOSTNAME = "127.0.0.1";
+export const DEFAULT_PROMETHEUS_PORT = 9102;
+export const DEFAULT_PROMETHEUS_HOSTNAME = DEFAULT_HOSTNAME;
+export const DEFAULT_PROMETHEUS_DISABLED = false;
+export const DEFAULT_VERBOSE = false;
 export const DEFAULT_SUBSTREAMS_API_TOKEN_ENV = "SUBSTREAMS_API_TOKEN";
 export const DEFAULT_CURSOR_FILE = "cursor.lock";
 export const DEFAULT_PRODUCTION_MODE = false;
-export const DEFAULT_VERBOSE = false;
-export const DEFAULT_PROMETHEUS_ADDRESS = "localhost";
-export const DEFAULT_PROMETHEUS_PORT = 9102;
-export const DEFAULT_METRICS_DISABLED = false;
 
 interface Package {
   name: string;
@@ -61,8 +62,8 @@ export function option(program: Command, pkg: Package) {
     .option("--cursor-file <string>", "cursor lock file (ex: cursor.lock)")
     .option("--production-mode", "Enable Production Mode, with high-speed parallel processing", DEFAULT_PRODUCTION_MODE)
     .option("--verbose", "Enable verbose logging")
-    .option("--metrics-listen-address <string>", "The process will listen on this address for Prometheus metrics requests", DEFAULT_PROMETHEUS_ADDRESS)
-    .option("--metrics-listen-port <int>", "The process will listen on this port for Prometheus metrics requests", String(DEFAULT_PROMETHEUS_PORT))
-    .option("--metrics-disabled", "If set, will not send metrics to Prometheus", DEFAULT_METRICS_DISABLED)
+    .option(`--prometheus-hostname <string>", "Hostname for Prometheus metrics (ex: ${DEFAULT_PROMETHEUS_HOSTNAME})`)
+    .option(`--prometheus-port <int>", "Port for Prometheus metrics (ex: ${DEFAULT_PROMETHEUS_PORT})`)
+    .option("--prometheus-disabled", "If set, will not send metrics to Prometheus")
     .option("-p, --params <string...>", "Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY)", []);
 }
