@@ -1,7 +1,8 @@
 node_modules
 dist
 cursor.lock
-.env
+.env*
+!.env-example
 *.log
 *.db
 *.js
