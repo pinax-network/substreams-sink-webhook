@@ -2,7 +2,7 @@ import "dotenv/config";
 import fs from "node:fs";
 import { nanoid } from "nanoid";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
-import { applyParams, createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
+import { createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
 import { type RunOptions } from "./externals/substreams-sink.js";
 import { getSubstreamsEndpoint } from "./src/getSubstreamsEndpoint.js";
 import { postWebhook } from "./src/postWebhook.js";
@@ -13,6 +13,7 @@ import { queue } from "./src/queue.js";
 import { PrivateKey } from "@wharfkit/session";
 import { ping } from "./src/ping.js";
 import * as metrics from "./externals/prometheus.js";
+import { applyParams } from "./externals/applyParams.js";
 
 export interface ActionOptions extends RunOptions {
   url: string;
@@ -22,7 +23,8 @@ export interface ActionOptions extends RunOptions {
 
 export async function action(options: ActionOptions) {
   // verbose
-  if (!options.verbose) logger.settings.type = "hidden";
+  const verbose = options.verbose ?? JSON.parse(process.env.VERBOSE ?? "false");
+  if (verbose) logger.settings.type = "pretty";
 
   // Queue
   queue.concurrency = parseInt(options.concurrency) ?? process.env.CONCURRENCY ?? 1;
@@ -69,7 +71,11 @@ export async function action(options: ActionOptions) {
   if ( !moduleName ) throw new Error("Missing required --module-name");
 
   // Apply params
-  if ( options.params.length ) applyParams(options.params, substreamPackage.modules.modules);
+  const params = [];
+  if ( options.params.length ) params.push(...options.params)
+  if ( process.env.PARAM) params.push(`${moduleName}=${process.env.PARAM}`)
+  const modules = substreamPackage.modules.modules;
+  if ( params.length ) applyParams(params, modules);
 
   // Module hash
   const module = getModuleOrThrow(substreamPackage.modules.modules, moduleName);
