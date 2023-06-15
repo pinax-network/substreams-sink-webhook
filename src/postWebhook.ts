@@ -1,4 +1,4 @@
-import delay from "delay";
+import { setTimeout } from "node:timers/promises";
 import { logger } from "./logger.js";
 import { queue } from "./queue.js";
 
@@ -27,7 +27,7 @@ export async function postWebhook(url: string, body: string, signature: string, 
       let milliseconds = initialInterval * Math.pow(backoffCoefficient, attempts);
       if ( milliseconds > maximumInterval ) milliseconds = maximumInterval;
       logger.warn(`delay ${milliseconds}`, {attempts, url, queue: queue.size});
-      await delay(milliseconds);
+      await setTimeout(milliseconds);
     }
     try {
       const response = await fetch(url, {
@@ -35,12 +35,11 @@ export async function postWebhook(url: string, body: string, signature: string, 
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-signature-secp256k1": signature,
+          "x-signature-ed25519": signature,
           "x-signature-timestamp": String(timestamp),
         },
       })
       const status = response.status;
-      // const text = await response.text();
       if ( status != 200 ) {
         attempts++;
         logger.warn(`Unexpected status code ${status}`, { url });

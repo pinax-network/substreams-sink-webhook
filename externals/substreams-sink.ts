@@ -46,7 +46,7 @@ export function program(pkg: Package) {
 }
 
 export function option(program: Command, pkg: Package) {
-  return program
+  return program.command("run")
     .showHelpAfterError()
     .description(pkg.description)
     .option("-e --substreams-endpoint <string>", "Substreams gRPC endpoint to stream data from")

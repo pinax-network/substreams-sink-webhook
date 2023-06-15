@@ -5,16 +5,18 @@
 ## 📖 References
 
 - [**Substreams** documentation](https://substreams.streamingfast.io/)
-- [**Temporal** documentation](https://docs.temporal.io/)
-  - [activity-retries](https://docs.temporal.io/dev-guide/typescript/features#activity-retries)
+- TweetNaCl
+  - [TweetNaCl: a crypto library in 100 tweets](http://tweetnacl.cr.yp.to/)
+  - [TweetNaCl.js](https://tweetnacl.js.org/)
+  - [TweetNaclSharp](https://github.com/XeroXP/TweetNaclSharp)
 - Discord Webhooks
   - [interactions-and-bot-users](https://discord.com/developers/docs/interactions/receiving-and-responding#interactions-and-bot-users)
   - [security-and-authorization](https://discord.com/developers/docs/interactions/receiving-and-responding#security-and-authorization)
 
 ## [Pre-built binaries](https://github.com/pinax-network/substreams-sink-webhook/releases)
-- MacOS
-- Linux
-- Windows
+- [x] MacOS
+- [x] Linux
+- [x] Windows
 
 ## Docker environment
 
@@ -29,8 +31,8 @@ docker run -it --rm --env-file .env substreams-sink-webhook run
 
 ```env
 # Webhook
-PRIVATE_KEY=PVT_K1_...
-PUBLIC_KEY=PUB_K1_...
+SECRET_KEY=...
+PUBLIC_KEY=...
 URL=http://127.0.0.1:3000
 
 # Substreams endpoint
@@ -107,8 +109,9 @@ Commands:
 - [x] POST data to URL
 - [x] Map hash module
 - [x] Signing policy
-  - [x] R1 private keys
-  - [ ] Ether.js
+  - [x] TweetNaCl
+  - [x] ~~R1 private keys~~
+  - [ ] ~~Ether.js~~
 - [x] Retry policy
   - [x] Exponential backoff (2x)
   - [x] Initial Interval (1s)

@@ -2,28 +2,29 @@
   "private": true,
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "build": "tsc",
     "server": "bun ./examples/http.ts 3000",
-    "start": "tsc && node ./dist/bin/cli.js"
+    "start": "tsx ./bin/cli.ts run",
+    "keypair": "tsx ./bin/cli.ts keypair"
   },
   "dependencies": {
     "@substreams/core": "^0.1.10",
     "@substreams/node": "^0.1.2",
-    "@wharfkit/session": "^0.5.0",
     "commander": "latest",
-    "delay": "latest",
     "dotenv": "latest",
     "nanoid": "latest",
     "p-queue": "latest",
     "prom-client": "latest",
-    "tslog": "latest"
+    "tslog": "latest",
+    "tweetnacl": "latest"
   },
   "devDependencies": {
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
-    "typescript": "latest"
+    "typescript": "latest",
+    "tsx": "latest"
   }
 }

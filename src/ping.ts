@@ -1,13 +1,12 @@
-import { PrivateKey } from "@wharfkit/session";
-import { signMessage } from "./signMessage.js";
+import { generateSecretKey, signMessage } from "./signMessage.js";
 import { postWebhook } from "./postWebhook.js";
 import { logger } from "./logger.js";
 
-export async function ping(url: string, privateKey: PrivateKey) {
+export async function ping(url: string, secretKey: string) {
     const body = JSON.stringify({message: "PING"});
     const timestamp = Math.floor(Date.now().valueOf() / 1000);
-    const signature = signMessage(body, timestamp, privateKey);
-    const invalidSignature = signMessage(body, timestamp, PrivateKey.generate("K1"));
+    const signature = signMessage(body, timestamp, secretKey);
+    const invalidSignature = signMessage(body, timestamp, generateSecretKey());
 
     // send valid signature (must respond with 200)
     try {

@@ -1,6 +1,6 @@
 import "dotenv/config";
 import fs from "node:fs";
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
 import { type RunOptions } from "./externals/substreams-sink.js";
@@ -10,15 +10,14 @@ import { signMessage } from "./src/signMessage.js";
 import { getSubstreamsPackageURL } from "./src/getSubstreamsPackageURL.js";
 import { logger } from "./src/logger.js";
 import { queue } from "./src/queue.js";
-import { PrivateKey } from "@wharfkit/session";
 import { ping } from "./src/ping.js";
 import * as metrics from "./externals/prometheus.js";
 import { applyParams } from "./externals/applyParams.js";
-import { PROMETHEUS_DISABLED, PROMETHEUS_HOSTNAME, PROMETHEUS_PORT } from "./src/config.js";
+import { CONCURRENCY, PROMETHEUS_DISABLED, PROMETHEUS_HOSTNAME, PROMETHEUS_PORT, SECRET_KEY } from "./src/config.js";
 
 export interface ActionOptions extends RunOptions {
   url: string;
-  privateKey: string;
+  secretKey: string;
   concurrency: string;
   disablePing: boolean;
 }
@@ -26,7 +25,9 @@ export interface ActionOptions extends RunOptions {
 export async function action(options: ActionOptions) {
   // verbose
   const verbose = options.verbose ?? JSON.parse(process.env.VERBOSE ?? "false");
-  if (verbose) logger.settings.type = "pretty";
+  if (verbose) {
+    logger.settings.type = "json";
+  }
 
   // Metrics
   const prometheusHostname = options.prometheusHostname ?? PROMETHEUS_HOSTNAME;
@@ -34,7 +35,8 @@ export async function action(options: ActionOptions) {
   const prometheusDisabled = options.prometheusDisabled ?? PROMETHEUS_DISABLED;
 
   // Queue
-  queue.concurrency = parseInt(options.concurrency) ?? process.env.CONCURRENCY ?? 1;
+  const concurrency = options.concurrency ? parseInt(options.concurrency) : CONCURRENCY;
+  queue.concurrency = concurrency;
 
   // Cursor file
   const cursorFile = options.cursorFile ?? process.env.CURSOR_FILE ?? "cursor.lock";
@@ -45,13 +47,13 @@ export async function action(options: ActionOptions) {
   if (!url) throw new Error("Missing required --url");
 
   // Private Key to sign messages
-  if (!options.privateKey && !process.env.PRIVATE_KEY) throw new Error("Missing required --private-key");
-  const privateKey = PrivateKey.fromString(options.privateKey ?? process.env.PRIVATE_KEY);
+  const secretKey = options.secretKey ?? SECRET_KEY;
+  if (!secretKey) throw new Error("Missing required --private-key");
 
   // Ping URL to check if it's valid
   const disablePing = options.disablePing ?? JSON.parse(process.env.DISABLE_PING ?? "false");
   if ( !disablePing ) {
-    if (!await ping(url, privateKey) ) {
+    if (!await ping(url, secretKey) ) {
       logger.error("exiting from invalid PING response");
       process.exit();
     }
@@ -114,9 +116,9 @@ export async function action(options: ActionOptions) {
   // Stream Blocks
   emitter.on("anyMessage", async (data, cursor, clock) => {
     if ( !clock.timestamp ) return;
-    const id = nanoid();
+    // const id = nanoid();
     const metadata = {
-      id,
+      // id,
       cursor,
       clock: {
         timestamp: clock.timestamp.toDate().toISOString(),
@@ -132,7 +134,7 @@ export async function action(options: ActionOptions) {
     // Sign body
     const seconds = Number(clock.timestamp.seconds);
     const body = JSON.stringify({...metadata, data});
-    const signature = signMessage(body, seconds, privateKey);
+    const signature = signMessage(body, seconds, secretKey);
 
     // Queue POST
     queue.add(async () => {
