@@ -26,7 +26,7 @@ export async function action(options: ActionOptions) {
   // verbose
   const verbose = options.verbose ?? JSON.parse(process.env.VERBOSE ?? "false");
   if (verbose) {
-    logger.settings.type = "json";
+    logger.settings.type = "pretty";
   }
 
   // Metrics

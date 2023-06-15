@@ -8,7 +8,6 @@ console.log(`Signature validation using ${PUBLIC_KEY}`);
 
 export default {
   port,
-  development: true,
   async fetch(request) {
     // get headers and body from POST request
     const timestamp = request.headers.get("x-signature-timestamp");
