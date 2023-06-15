@@ -1,6 +1,6 @@
 import nacl from "tweetnacl";
 
-export function signMessage(body: string, timestamp: number, secretKey: string) {
+export function signMessage(timestamp: number, body: string, secretKey: string) {
   const msg = Buffer.from(timestamp + body);
   const signed = nacl.sign.detached(msg, Buffer.from(secretKey, "hex"));
   return Buffer.from(signed).toString("hex");
@@ -14,10 +14,18 @@ export function keyPair() {
   };
 }
 
-export function generateSecretKey() {
-  return keyPair().secretKey;
+export function fromSecretKey(secretKey: string) {
+  const from = nacl.sign.keyPair.fromSecretKey(Buffer.from(secretKey, "hex"))
+  return {
+    secretKey: Buffer.from(from.secretKey).toString("hex"),
+    publicKey: Buffer.from(from.publicKey).toString("hex"),
+  };
 }
 
-export function generatePublicKey(secretKey: string) {
-  return nacl.sign.keyPair.fromSecretKey(Buffer.from(secretKey, "hex"))
+export function verify(msg: Buffer, sig: string, publicKey: string) {
+  return nacl.sign.detached.verify(
+    msg,
+    Buffer.from(sig, "hex"),
+    Buffer.from(publicKey, "hex")
+  );
 }

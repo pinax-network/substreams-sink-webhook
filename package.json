@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "test": "bun test",
     "server": "bun ./examples/http.ts 3000",
     "start": "tsx ./bin/cli.ts run",
     "keypair": "tsx ./bin/cli.ts keypair"
@@ -24,7 +25,8 @@
   "devDependencies": {
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
-    "typescript": "latest",
-    "tsx": "latest"
+    "bun-types": "^0.6.9",
+    "tsx": "latest",
+    "typescript": "latest"
   }
 }

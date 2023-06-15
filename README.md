@@ -33,7 +33,7 @@ docker run -it --rm --env-file .env substreams-sink-webhook run
 # Webhook
 SECRET_KEY=...
 PUBLIC_KEY=...
-URL=http://127.0.0.1:3000
+WEBHOOK_URL=http://127.0.0.1:3000
 
 # Substreams endpoint
 SUBSTREAMS_API_TOKEN=...
@@ -60,48 +60,33 @@ DISABLE_PING=true
 ```
 $ substreams-sink-webhook --help
 
-Usage: substreams-sink-webhook [options] [command]
+Usage: substreams-sink-webhook run [options]
 
 Substreams Sink Webhook
 
 Options:
-  -v, --version                           version for substreams-sink-webhook
   -e --substreams-endpoint <string>       Substreams gRPC endpoint to stream data from
   --manifest                              URL of Substreams package
   --spkg                                  Substreams package (ex: eosio.token)
   --module_name                           Name of the output module (declared in the manifest)
   --chain <string>                        Substreams supported chain (ex: eth)
-  -s --start-block <int>                  Start block to stream from (defaults to -1, which means
-                                          the initialBlock of the first module you are streaming)
+  -s --start-block <int>                  Start block to stream from (defaults to -1, which means the initialBlock of the first module you are streaming)
   -t --stop-block <string>                Stop block to end stream at, inclusively
   --substreams-api-token <string>         API token for the substream endpoint
-  --substreams-api-token-envvar <string>  Environnement variable name of the API token for the
-                                          substream endpoint (default: "SUBSTREAMS_API_TOKEN")
-  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait
-                                          before starting any internal processes, can be used to
-                                          perform to maintenance on the pod before actually letting
-                                          it starts (default: "0")
-  --cursor-file <string>                  cursor lock file (default: "cursor.lock")
-  --production-mode                       Enable Production Mode, with high-speed parallel
-                                          processing (default: false)
-  --verbose                               Enable verbose logging (default: true)
-  --metrics-listen-address <string>       The process will listen on this address for Prometheus
-                                          metrics requests (default: "localhost")
-  --metrics-listen-port <int>             The process will listen on this port for Prometheus
-                                          metrics requests (default: "9102")
-  --metrics-disabled                      If set, will not send metrics to Prometheus (default:
-                                          false)
-  -p, --params <string...>                Set a params for parameterizable modules. Can be
-                                          specified multiple times. (ex: -p module1=valA -p
-                                          module2=valX&valY) (default: [])
+  --substreams-api-token-envvar <string>  Environnement variable name of the API token for the substream endpoint (ex: SUBSTREAMS_API_TOKEN)
+  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts
+  --cursor-file <string>                  cursor lock file (ex: cursor.lock)
+  --disable-production-mode               Disable production mode (production mode enables high-speed parallel processing)
+  --verbose                               Enable verbose logging
+  --prometheus-hostname <string>          Hostname for Prometheus metrics (ex: 127.0.0.1)
+  --prometheus-port <int>                 Port for Prometheus metrics (ex: 9102)
+  --prometheus-disabled                   If set, will not send metrics to Prometheus
+  -p, --params <string...>                Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY)
   --url <string>                          Webhook URL to send POST.
-  --private-key <string>                  Private key to sign POST data payload (ex: "PVT_K1_...")
+  --secret-key <string>                   TweetNaCl Secret-key to sign POST data payload
+  --concurrency <number>                  Concurrency of requests (default: "1")
+  --disable-ping                          Disable ping on init
   -h, --help                              display help for command
-
-Commands:
-  completion                              Generate the autocompletion script for the specified
-                                          shell
-  help                                    Display help for command
 ```
 
 ## Features

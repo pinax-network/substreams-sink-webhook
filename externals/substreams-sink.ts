@@ -10,7 +10,7 @@ export interface RunOptions {
   substreamsApiToken?: string;
   delayBeforeStart?: string;
   cursorFile?: string;
-  productionMode?: boolean;
+  disableProductionMode?: boolean;
   verbose?: boolean;
   prometheusHostname?: string;
   prometheusPort?: number;
@@ -57,13 +57,13 @@ export function option(program: Command, pkg: Package) {
     .option("-s --start-block <int>", "Start block to stream from (defaults to -1, which means the initialBlock of the first module you are streaming)")
     .option("-t --stop-block <string>", "Stop block to end stream at, inclusively")
     .option("--substreams-api-token <string>", "API token for the substream endpoint")
-    .option("--substreams-api-token-envvar <string>", "Environnement variable name of the API token for the substream endpoint", DEFAULT_SUBSTREAMS_API_TOKEN_ENV)
-    .option("--delay-before-start <int>", "[OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts", "0")
+    .option("--substreams-api-token-envvar <string>", `Environnement variable name of the API token for the substream endpoint (ex: ${DEFAULT_SUBSTREAMS_API_TOKEN_ENV})`)
+    .option("--delay-before-start <int>", "[OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts")
     .option("--cursor-file <string>", "cursor lock file (ex: cursor.lock)")
-    .option("--production-mode", "Enable Production Mode, with high-speed parallel processing", DEFAULT_PRODUCTION_MODE)
+    .option("--disable-production-mode", "Disable production mode (production mode enables high-speed parallel processing)")
     .option("--verbose", "Enable verbose logging")
-    .option(`--prometheus-hostname <string>", "Hostname for Prometheus metrics (ex: ${DEFAULT_PROMETHEUS_HOSTNAME})`)
-    .option(`--prometheus-port <int>", "Port for Prometheus metrics (ex: ${DEFAULT_PROMETHEUS_PORT})`)
+    .option("--prometheus-hostname <string>", `Hostname for Prometheus metrics (ex: ${DEFAULT_PROMETHEUS_HOSTNAME})`)
+    .option("--prometheus-port <int>", `Port for Prometheus metrics (ex: ${DEFAULT_PROMETHEUS_PORT})`)
     .option("--prometheus-disabled", "If set, will not send metrics to Prometheus")
-    .option("-p, --params <string...>", "Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY)", []);
+    .option("-p, --params <string...>", "Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY)");
 }

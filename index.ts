@@ -3,7 +3,6 @@ import fs from "node:fs";
 // import { nanoid } from "nanoid";
 import { BlockEmitter, createDefaultTransport } from "@substreams/node";
 import { createModuleHash, createRegistry, createRequest, fetchSubstream, getModuleOrThrow } from "@substreams/core";
-import { type RunOptions } from "./externals/substreams-sink.js";
 import { getSubstreamsEndpoint } from "./src/getSubstreamsEndpoint.js";
 import { postWebhook } from "./src/postWebhook.js";
 import { signMessage } from "./src/signMessage.js";
@@ -13,16 +12,10 @@ import { queue } from "./src/queue.js";
 import { ping } from "./src/ping.js";
 import * as metrics from "./externals/prometheus.js";
 import { applyParams } from "./externals/applyParams.js";
-import { CONCURRENCY, PROMETHEUS_DISABLED, PROMETHEUS_HOSTNAME, PROMETHEUS_PORT, SECRET_KEY } from "./src/config.js";
+import { CONCURRENCY, CURSOR_FILE, PROMETHEUS_DISABLED, PROMETHEUS_HOSTNAME, PROMETHEUS_PORT, SECRET_KEY, WEBHOOK_URL, DISABLE_PING, SUBSTREAMS_API_TOKEN, SUBSTREAMS_API_TOKEN_ENVVAR } from "./src/config.js";
+import type { WebhookRunOptions } from "./bin/cli.js";
 
-export interface ActionOptions extends RunOptions {
-  url: string;
-  secretKey: string;
-  concurrency: string;
-  disablePing: boolean;
-}
-
-export async function action(options: ActionOptions) {
+export async function action(options: WebhookRunOptions) {
   // verbose
   const verbose = options.verbose ?? JSON.parse(process.env.VERBOSE ?? "false");
   if (verbose) {
@@ -39,11 +32,11 @@ export async function action(options: ActionOptions) {
   queue.concurrency = concurrency;
 
   // Cursor file
-  const cursorFile = options.cursorFile ?? process.env.CURSOR_FILE ?? "cursor.lock";
+  const cursorFile = options.cursorFile ?? CURSOR_FILE ?? "cursor.lock";
   const startCursor = fs.existsSync(cursorFile) ? fs.readFileSync(cursorFile, "utf-8") : "";
 
   // required CLI or environment variables
-  const url = options.url ?? process.env.URL;
+  const url = options.url ?? WEBHOOK_URL;
   if (!url) throw new Error("Missing required --url");
 
   // Private Key to sign messages
@@ -51,7 +44,7 @@ export async function action(options: ActionOptions) {
   if (!secretKey) throw new Error("Missing required --private-key");
 
   // Ping URL to check if it's valid
-  const disablePing = options.disablePing ?? JSON.parse(process.env.DISABLE_PING ?? "false");
+  const disablePing = options.disablePing ?? DISABLE_PING
   if ( !disablePing ) {
     if (!await ping(url, secretKey) ) {
       logger.error("exiting from invalid PING response");
@@ -61,7 +54,8 @@ export async function action(options: ActionOptions) {
 
   // auth API token
   // https://app.streamingfast.io/
-  const token = options.substreamsApiToken ?? process.env[options.substreamsApiTokenEnvvar || ""] ?? process.env.SUBSTREAMS_API_TOKEN;
+  const substreamsApiTokenEnvvar = options.substreamsApiTokenEnvvar ?? SUBSTREAMS_API_TOKEN_ENVVAR;
+  const token = options.substreamsApiToken ?? SUBSTREAMS_API_TOKEN ?? process.env[substreamsApiTokenEnvvar || ""];
   if (!token) throw new Error("SUBSTREAMS_API_TOKEN is require");
   let baseUrl = options.substreamsEndpoint ?? process.env.SUBSTREAMS_ENDPOINT;
   const chain = options.chain ?? process.env.CHAIN;
@@ -84,7 +78,7 @@ export async function action(options: ActionOptions) {
 
   // Apply params
   const params = [];
-  if ( options.params.length ) params.push(...options.params)
+  if ( options.params?.length ) params.push(...options.params)
   if ( process.env.PARAM) params.push(process.env.PARAM)
   if ( params.length ) applyParams(params, substreamPackage.modules.modules);
   logger.info("params", params);

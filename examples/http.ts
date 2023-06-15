@@ -18,7 +18,6 @@ export default {
     if (!signature) return new Response("missing required signature in headers", { status: 400 });
     if (!body) return new Response("missing body", { status: 400 });
 
-    console.log({signature, timestamp, body})
     // validate signature using public key
     const isVerified = nacl.sign.detached.verify(
       Buffer.from(timestamp + body),
