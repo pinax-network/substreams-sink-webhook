@@ -69,7 +69,7 @@ export async function action(options: WebhookRunOptions) {
   const manifest = spkg ? getSubstreamsPackageURL(spkg) : options.manifest ?? process.env.MANIFEST;
   if (!manifest) throw new Error("Missing required --manifest or --spkg");
   logger.info("fetching manifest", {manifest});
-  const substreamPackage = await fetchSubstream(manifest);
+  const substreamPackage = await fetchSubstream(new Request(manifest));
   if (!substreamPackage.modules) throw new Error("Unable to create Substream Package");
 
   // Module hash
@@ -128,7 +128,7 @@ export async function action(options: WebhookRunOptions) {
     // Sign body
     const seconds = Number(clock.timestamp.seconds);
     const body = JSON.stringify({...metadata, data});
-    const signature = signMessage(body, seconds, secretKey);
+    const signature = signMessage(seconds, body, secretKey);
 
     // Queue POST
     queue.add(async () => {
