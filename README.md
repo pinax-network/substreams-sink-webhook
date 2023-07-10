@@ -39,7 +39,6 @@ docker run -it --rm --env-file .env substreams-sink-webhook run
 
 ## `.env` Environment variables
 
-**.env**
 ```env
 # Webhook
 SECRET_KEY=...
