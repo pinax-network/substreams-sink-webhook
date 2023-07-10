@@ -22,13 +22,24 @@
 
 - [Docker Hub](https://hub.docker.com/r/pinaxnetwork/substreams-sink-webhook) community container image
 
+Pull from GitHub Container registry
+```bash
+docker pull ghcr.io/pinax-network/substreams-sink-webhook:latest
+```
+Build from source
 ```bash
 docker build -t substreams-sink-webhook .
+```
+
+Run with `.env` file
+
+```bash
 docker run -it --rm --env-file .env substreams-sink-webhook run
 ```
 
 ## `.env` Environment variables
 
+**.env**
 ```env
 # Webhook
 SECRET_KEY=...
