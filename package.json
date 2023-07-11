@@ -3,6 +3,25 @@
   "description": "Substreams Sink Webhook",
   "version": "0.2.1",
   "type": "module",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+      "substreams-sink-webhook": "dist/bin/cli.js"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16"
+  },
+  "repository": "git@github.com:pinax-network/substreams-sink-webhook.git",
+  "keywords": ["substreams", "streamingfast", "firehose", "thegraph", "pinax"],
+  "author": {
+      "name": "Denis",
+      "email": "denis@pinax.network"
+  },
   "scripts": {
     "build": "tsc",
     "test": "bun test",
