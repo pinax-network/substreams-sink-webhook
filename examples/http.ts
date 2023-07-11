@@ -25,7 +25,7 @@ export default {
       Buffer.from(PUBLIC_KEY, 'hex')
     );
     console.log({isVerified, timestamp, signature});
-    console.log(body);
+    console.log(JSON.stringify(JSON.parse(body), null, 2));
 
     if (!isVerified) {
       return new Response("invalid request signature", { status: 401 });

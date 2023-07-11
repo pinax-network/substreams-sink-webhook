@@ -4,15 +4,13 @@ export function getSubstreamsEndpoint(chain: string) {
     if ( chain === "eos") return "https://eos.firehose.eosnation.io:9001";
 
     // EVM
-    if ( chain === "polygon") return "https://polygon-mar.firehose.pinax.network:9000";
-    if ( chain === "eth") return "https://eth-mar.firehose.pinax.network:9000";
-    if ( chain === "sepolia") return "https://sepolia-mar.firehose.pinax.network:9000";
-    if ( chain === "goerli") return "https://goerli-mar.firehose.pinax.network:9000";
-    if ( chain === "rinkeby") return "https://rinkeby-mar.firehose.pinax.network:9000";
-    if ( chain === "mumbai") return "https://mumbai-mar.firehose.pinax.network:9000";
-    if ( chain === "eth") return "https://eth-mar.firehose.pinax.network:9000";
-    if ( chain === "ethereum") return "https://ethereum-mar.firehose.pinax.network:9000";
-    if ( chain === "bsc") return "https://bsc-mar.firehose.pinax.network:9000";
+    if ( chain === "sepolia") return "https://sepolia.firehose.pinax.network:9000";
+    if ( chain === "goerli") return "https://goerli.firehose.pinax.network:9000";
+    if ( chain === "rinkeby") return "https://rinkeby.firehose.pinax.network:9000";
+    if ( chain === "mumbai") return "https://mumbai.firehose.pinax.network:9000";
+    if ( ["polygon", "matic"].includes(chain)) return "https://polygon.firehose.pinax.network:9000";
+    if ( ["bsc", "bnb"].includes(chain)) return "https://bsc.firehose.pinax.network:9000";
+    if ( ["eth", "ethereum"].includes(chain)) return "https://eth.firehose.pinax.network:9000";
 
     throw new Error("Unsupported chain");
 }
