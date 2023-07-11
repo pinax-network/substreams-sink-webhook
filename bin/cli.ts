@@ -1,27 +1,26 @@
 #!/usr/bin/env node
 
-import { action } from "../index.js";
 import pkg from "../package.json" assert { type: "json" };
-import * as sink from "../externals/substreams-sink.js";
+import { commander, logger } from "substreams-sink";
 import { keyPair } from "../src/signMessage.js";
+import { action } from "../index.js";
 import { ping } from "../src/ping.js";
-import { WEBHOOK_URL } from "../src/config.js";
-import { logger } from "../src/logger.js";
+import { Option } from "commander";
 
-export interface WebhookRunOptions extends sink.RunOptions {
+export interface WebhookRunOptions extends commander.RunOptions {
     url: string;
     secretKey: string;
-    concurrency: string;
+    concurrency: number;
     disablePing: boolean;
 }
 
 // Run Webhook Sink
-const program = sink.program(pkg);
-const command = sink.option(program, pkg);
-command.option("--url <string>", "Webhook URL to send POST.");
-command.option("--secret-key <string>", 'TweetNaCl Secret-key to sign POST data payload');
-command.option("--concurrency <number>", "Concurrency of requests", "1");
-command.option("--disable-ping", "Disable ping on init");
+const program = commander.program(pkg);
+const command = commander.run(program, pkg);
+command.addOption(new Option("--webhook-url <string>", "Webhook URL to send POST").makeOptionMandatory().env("WEBHOOK_URL"))
+command.addOption(new Option("--secret-key <string>", "TweetNaCl Secret-key to sign POST data payload").makeOptionMandatory().env("SECRET_KEY"))
+command.addOption(new Option("--concurrency <number>", "Concurrency of requests").env("CONCURRENCY").default(1))
+command.addOption(new Option("--disable-ping", "Disable ping on init").env("DISABLE_PING").default(false))
 command.action(action);
 
 program.command("keypair")
@@ -36,7 +35,7 @@ program.command("ping")
     .description("Ping Webhook URL")
     .option("--url <string>", "Webhook URL to send POST.")
     .option("--secret-key <string>", 'TweetNaCl Secret-key to sign POST data payload')
-    .action(async (options) => {
+    .action(async (options: any) => {
         logger.settings.type = "pretty";
         const url = options.url ?? WEBHOOK_URL;
         const secretKey = options.secretKey ?? process.env.SECRET_KEY;

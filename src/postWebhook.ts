@@ -1,12 +1,12 @@
 import { setTimeout } from "node:timers/promises";
-import { logger } from "./logger.js";
-import { queue } from "./queue.js";
+import { logger } from "substreams-sink";
+import PQueue from 'p-queue';
 
 interface PostWebhookOptions {
   maximumAttempts?: number;
 }
 
-export async function postWebhook(url: string, body: string, signature: string, timestamp: number, options: PostWebhookOptions = {}) {
+export async function postWebhook(queue: PQueue, url: string, body: string, signature: string, timestamp: number, options: PostWebhookOptions = {}) {
   // Retry Policy
   const initialInterval = 1000; // 1s
   const maximumAttempts = options.maximumAttempts ?? 100 * initialInterval;

@@ -1,12 +1,12 @@
 {
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "type": "module",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-      "substreams-sink-webhook": "dist/bin/cli.js"
+    "substreams-sink-webhook": "dist/bin/cli.js"
   },
   "files": [
     "dist",
@@ -17,10 +17,16 @@
     "node": ">=16"
   },
   "repository": "git@github.com:pinax-network/substreams-sink-webhook.git",
-  "keywords": ["substreams", "streamingfast", "firehose", "thegraph", "pinax"],
+  "keywords": [
+    "substreams",
+    "streamingfast",
+    "firehose",
+    "thegraph",
+    "pinax"
+  ],
   "author": {
-      "name": "Denis",
-      "email": "denis@pinax.network"
+    "name": "Denis",
+    "email": "denis@pinax.network"
   },
   "scripts": {
     "build": "tsc",
@@ -30,14 +36,8 @@
     "keypair": "tsx ./bin/cli.ts keypair"
   },
   "dependencies": {
-    "@substreams/core": "^0.1.12",
-    "@substreams/node": "^0.1.3",
-    "commander": "latest",
-    "dotenv": "latest",
-    "nanoid": "latest",
     "p-queue": "latest",
-    "prom-client": "latest",
-    "tslog": "latest",
+    "substreams-sink": "^0.6.5",
     "tweetnacl": "latest"
   },
   "devDependencies": {
