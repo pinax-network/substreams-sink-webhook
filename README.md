@@ -13,26 +13,19 @@
   - [interactions-and-bot-users](https://discord.com/developers/docs/interactions/receiving-and-responding#interactions-and-bot-users)
   - [security-and-authorization](https://discord.com/developers/docs/interactions/receiving-and-responding#security-and-authorization)
 
-## [Pre-built binaries](https://github.com/pinax-network/substreams-sink-webhook/releases)
-- [x] MacOS
-- [x] Linux
-- [x] Windows
-
 ## Docker environment
-
-- [Docker Hub](https://hub.docker.com/r/pinaxnetwork/substreams-sink-webhook) community container image
 
 Pull from GitHub Container registry
 ```bash
 docker pull ghcr.io/pinax-network/substreams-sink-webhook:latest
 ```
+
 Build from source
 ```bash
 docker build -t substreams-sink-webhook .
 ```
 
 Run with `.env` file
-
 ```bash
 docker run -it --rm --env-file .env substreams-sink-webhook run
 ```
@@ -84,7 +77,8 @@ Options:
   -t --stop-block <string>                Stop block to end stream at, inclusively
   --substreams-api-token <string>         API token for the substream endpoint
   --substreams-api-token-envvar <string>  Environnement variable name of the API token for the substream endpoint (ex: SUBSTREAMS_API_TOKEN)
-  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform to maintenance on the pod before actually letting it starts
+  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait before starting any internal processes, can be used to perform
+                                          to maintenance on the pod before actually letting it starts
   --cursor-file <string>                  cursor lock file (ex: cursor.lock)
   --disable-production-mode               Disable production mode (production mode enables high-speed parallel processing)
   --verbose                               Enable verbose logging

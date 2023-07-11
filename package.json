@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "version": "0.2.1",
@@ -25,7 +24,7 @@
   "devDependencies": {
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
-    "bun-types": "^0.6.9",
+    "bun-types": "latest",
     "tsx": "latest",
     "typescript": "latest"
   }
