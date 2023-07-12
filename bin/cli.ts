@@ -8,7 +8,7 @@ import { ping } from "../src/ping.js";
 import { Option } from "commander";
 
 export interface WebhookRunOptions extends commander.RunOptions {
-    url: string;
+    webhookUrl: string;
     secretKey: string;
     concurrency: number;
     disablePing: boolean;
@@ -33,13 +33,11 @@ program.command("keypair")
 
 program.command("ping")
     .description("Ping Webhook URL")
-    .option("--url <string>", "Webhook URL to send POST.")
-    .option("--secret-key <string>", 'TweetNaCl Secret-key to sign POST data payload')
+    .addOption(new Option("--webhook-url <string>", "Webhook URL to send POST").makeOptionMandatory().env("WEBHOOK_URL"))
+    .addOption(new Option("--secret-key <string>", "TweetNaCl Secret-key to sign POST data payload").makeOptionMandatory().env("SECRET_KEY"))
     .action(async (options: any) => {
         logger.settings.type = "pretty";
-        const url = options.url ?? WEBHOOK_URL;
-        const secretKey = options.secretKey ?? process.env.SECRET_KEY;
-        const response = await ping(url, secretKey);
+        const response = await ping(options.webhookUrl, options.secretKey);
         console.log(response);
     })
 program.parse();

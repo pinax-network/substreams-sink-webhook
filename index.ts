@@ -9,15 +9,14 @@ import { ping } from "./src/ping.js";
 
 export async function action(options: WebhookRunOptions) {
   // Block Emitter
-  const emitter = await setup(options, pkg);
-  const moduleHash = ""; // TO-DO in substreams-sink
+  const {emitter, moduleHash} = await setup(options, pkg);
 
   // Queue
-  const queue: PQueue = new PQueue({concurrency: options.concurrency});
+  const queue = new PQueue({concurrency: options.concurrency});
 
   // Ping URL to check if it's valid
   if ( !options.disablePing ) {
-    if (!await ping(queue, options.url, options.secretKey) ) {
+    if (!await ping(options.webhookUrl, options.secretKey) ) {
       logger.error("exiting from invalid PING response");
       process.exit();
     }
@@ -46,7 +45,7 @@ export async function action(options: WebhookRunOptions) {
 
     // Queue POST
     queue.add(async () => {
-      const response = await postWebhook(queue, options.url, body, signature, seconds)
+      const response = await postWebhook(options.webhookUrl, body, signature, seconds)
       logger.info("POST", response, metadata);
     });
   });

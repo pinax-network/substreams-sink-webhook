@@ -32,19 +32,18 @@
     "build": "tsc",
     "test": "bun test",
     "server": "bun ./examples/http.ts 3000",
-    "start": "tsx ./bin/cli.ts run",
-    "keypair": "tsx ./bin/cli.ts keypair"
+    "start": "tsc && node ./dist/bin/cli.js run",
+    "keypair": "tsc && node ./dist/bin/cli.js keypair"
   },
   "dependencies": {
     "p-queue": "latest",
-    "substreams-sink": "^0.6.5",
+    "substreams-sink": "^0.7.1",
     "tweetnacl": "latest"
   },
   "devDependencies": {
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
     "bun-types": "latest",
-    "tsx": "latest",
     "typescript": "latest"
   }
 }

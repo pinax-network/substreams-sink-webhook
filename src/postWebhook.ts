@@ -1,12 +1,11 @@
 import { setTimeout } from "node:timers/promises";
 import { logger } from "substreams-sink";
-import PQueue from 'p-queue';
 
 interface PostWebhookOptions {
   maximumAttempts?: number;
 }
 
-export async function postWebhook(queue: PQueue, url: string, body: string, signature: string, timestamp: number, options: PostWebhookOptions = {}) {
+export async function postWebhook(url: string, body: string, signature: string, timestamp: number, options: PostWebhookOptions = {}) {
   // Retry Policy
   const initialInterval = 1000; // 1s
   const maximumAttempts = options.maximumAttempts ?? 100 * initialInterval;
@@ -26,7 +25,7 @@ export async function postWebhook(queue: PQueue, url: string, body: string, sign
     if ( attempts ) {
       let milliseconds = initialInterval * Math.pow(backoffCoefficient, attempts);
       if ( milliseconds > maximumInterval ) milliseconds = maximumInterval;
-      logger.warn(`delay ${milliseconds}`, {attempts, url, queue: queue.size});
+      logger.warn(`delay ${milliseconds}`, {attempts, url});
       await setTimeout(milliseconds);
     }
     try {
