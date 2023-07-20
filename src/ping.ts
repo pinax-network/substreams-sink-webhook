@@ -1,7 +1,6 @@
 import { keyPair, signMessage } from "./signMessage.js";
 import { postWebhook } from "./postWebhook.js";
 import { logger } from "substreams-sink";
-import PQueue from 'p-queue';
 
 export async function ping(url: string, secretKey: string) {
     const body = JSON.stringify({message: "PING"});

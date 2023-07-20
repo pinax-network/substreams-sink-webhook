@@ -27,8 +27,8 @@ program.command("keypair")
     .description("Generate TweetNaCl keypair")
     .action(() => {
         const { publicKey, secretKey } = keyPair();
-        console.log(`Public Key: ${publicKey}`);
-        console.log(`Secret Key: ${secretKey}`);
+        console.log(`PUBLIC_KEY=${publicKey}`);
+        console.log(`SECRET_KEY=${secretKey}`);
     })
 
 program.command("ping")
@@ -36,8 +36,9 @@ program.command("ping")
     .addOption(new Option("--webhook-url <string>", "Webhook URL to send POST").makeOptionMandatory().env("WEBHOOK_URL"))
     .addOption(new Option("--secret-key <string>", "TweetNaCl Secret-key to sign POST data payload").makeOptionMandatory().env("SECRET_KEY"))
     .action(async (options: any) => {
-        logger.settings.type = "pretty";
+        logger.settings.type = "hidden";
         const response = await ping(options.webhookUrl, options.secretKey);
-        console.log(response);
+        if (response) console.log("✅ OK");
+        else console.log("⁉️ ERROR");
     })
 program.parse();
