@@ -8,3 +8,6 @@ cursor.lock
 *.js
 !ecosystem.config.js
 docker-compose.yml
+*-linux
+*-macos
+*-win.exe

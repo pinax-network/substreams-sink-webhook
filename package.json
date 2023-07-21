@@ -1,7 +1,7 @@
 {
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -34,7 +34,11 @@
     "server": "bun ./examples/http.ts 3000",
     "start": "tsc && node --no-warnings ./dist/bin/cli.js run",
     "keypair": "tsc && node --no-warnings ./dist/bin/cli.js keypair",
-    "ping": "tsc && node --no-warnings ./dist/bin/cli.js ping"
+    "ping": "tsc && node --no-warnings ./dist/bin/cli.js ping",
+    "rollup": "rollup --config rollup.config.mjs",
+    "linux": "npm run build && npm run rollup && ./scripts/build.linux.sh",
+    "macos": "npm run build && npm run rollup && ./scripts/build.macos.sh",
+    "windows": "npm run build && npm run rollup && ./scripts/build.windows.sh"
   },
   "dependencies": {
     "p-queue": "latest",
@@ -42,9 +46,13 @@
     "tweetnacl": "latest"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.3",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
     "bun-types": "latest",
+    "rollup": "^3.26.3",
     "typescript": "latest"
   }
 }
