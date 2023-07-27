@@ -40,22 +40,13 @@ WEBHOOK_URL=http://127.0.0.1:3000
 
 # Substreams endpoint
 SUBSTREAMS_API_TOKEN=...
-CHAIN=wax
+SUBSTREAMS_ENDPOINT=https://wax.firehose.eosnation.io:9001
 
 # Substreams package
-SPKG=eosio.token
+MANIFEST=https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.13.0/eosio-token-v0.13.0.spkg
 MODULE_NAME=map_transfers
 START_BLOCK=-1
 PARAM=map_transfers=symcode=WAX&quantity_gte=100000000000
-
-# Prometheus
-PROMETHEUS_PORT=9102
-PROMETHEUS_HOSTNAME=127.0.0.1
-PROMETHEUS_DISABLED=false
-
-# CLI
-VERBOSE=true
-DISABLE_PING=true
 ```
 
 ## Help

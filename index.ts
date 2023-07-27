@@ -2,7 +2,7 @@ import pkg from "./package.json" assert { type: "json" };
 import PQueue from 'p-queue';
 import { postWebhook } from "./src/postWebhook.js";
 import { signMessage } from "./src/signMessage.js";
-import { logger, setup } from "substreams-sink";
+import { logger, setup, http } from "substreams-sink";
 
 import type { WebhookRunOptions } from "./bin/cli.js";
 import { ping } from "./src/ping.js";
@@ -49,5 +49,6 @@ export async function action(options: WebhookRunOptions) {
       logger.info("POST", response, metadata);
     });
   });
-  emitter.start();
+  emitter.start(options.delayBeforeStart);
+  http.listen(options);
 }
