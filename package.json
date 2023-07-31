@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "p-queue": "latest",
-    "substreams-sink": "^0.8.1",
+    "substreams-sink": "^0.8.x",
     "tweetnacl": "latest"
   },
   "devDependencies": {
