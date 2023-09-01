@@ -3,8 +3,8 @@
 	"compilerOptions": {
 		  "target": "ESNext",
 		  "outDir": "dist",
-		  "module": "ESNext",
-		  "moduleResolution": "nodenext",
+		  "module": "NodeNext",
+		  "moduleResolution": "NodeNext",
 		  "resolveJsonModule": true,
 		  "declaration": true,
 		  "declarationMap": true,

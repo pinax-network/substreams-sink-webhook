@@ -1,15 +1,22 @@
-import pkg from "./package.json" assert { type: "json" };
 import PQueue from 'p-queue';
 import { postWebhook } from "./src/postWebhook.js";
 import { signMessage } from "./src/signMessage.js";
 import { logger, setup, http } from "substreams-sink";
+import { health } from "./src/health.js"
 
 import type { WebhookRunOptions } from "./bin/cli.js";
 import { ping } from "./src/ping.js";
 
 export async function action(options: WebhookRunOptions) {
+  // TEMP FIX FOR
+  // https://github.com/pinax-network/substreams-sink/issues/15
+  options.headers = new Headers();
+
+  // Health check
+  health();
+
   // Block Emitter
-  const { emitter, moduleHash } = await setup(options, pkg);
+  const { emitter, moduleHash } = await setup(options);
 
   // Queue
   const queue = new PQueue({ concurrency: options.concurrency });
@@ -49,6 +56,6 @@ export async function action(options: WebhookRunOptions) {
       logger.info("POST", response, metadata);
     });
   });
-  emitter.start(options.delayBeforeStart);
+  emitter.start();
   http.listen(options);
 }
