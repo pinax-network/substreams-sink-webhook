@@ -12,7 +12,7 @@ export function health() {
                 if ( req.url === "/") return toText(res, banner());
                 if ( req.url === "/health" ) {
                     const messages = await getSingleMetric("substreams_sink_data_message")
-                    if ( messages ) return toNoContent(res);
+                    if ( messages ) return toText(res, "OK");
                     return toText(res, "no messages received yet", 503);
                 }
             }
