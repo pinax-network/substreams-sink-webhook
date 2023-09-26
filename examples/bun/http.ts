@@ -1,13 +1,14 @@
 import nacl from "tweetnacl";
+import "dotenv/config";
 
-const port = process.argv[2] ?? 3000
-const PUBLIC_KEY = process.env.PUBLIC_KEY;
-if ( !PUBLIC_KEY ) throw new Error("PUBLIC_KEY is require");
-console.log(`Listening on port ${port}`);
+const PORT = process.env.PORT ?? 3000;
+const PUBLIC_KEY = process.env.PUBLIC_KEY ?? "a3cb7366ee8ca77225b4d41772e270e4e831d171d1de71d91707c42e7ba82cc9";
+
+console.dir(`Listening on port http://localhost:${PORT}`)
 console.log(`Signature validation using ${PUBLIC_KEY}`);
 
 export default {
-  port,
+  port: PORT,
   async fetch(request) {
     // get headers and body from POST request
     const timestamp = request.headers.get("x-signature-timestamp");
@@ -25,7 +26,7 @@ export default {
       Buffer.from(PUBLIC_KEY, 'hex')
     );
     console.log({isVerified, timestamp, signature});
-    console.log(JSON.stringify(JSON.parse(body)));
+    console.log(body);
 
     if (!isVerified) {
       return new Response("invalid request signature", { status: 401 });
@@ -33,3 +34,4 @@ export default {
     return new Response("OK");
   },
 };
+

@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "bun http.ts"
+  },
+  "dependencies": {
+    "tweetnacl": "latest",
+    "dotenv": "latest"
+  }
+}

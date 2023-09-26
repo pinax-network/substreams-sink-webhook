@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node http.js"
+  },
+  "dependencies": {
+    "tweetnacl": "latest",
+    "dotenv": "latest",
+    "express": "latest"
+  }
+}

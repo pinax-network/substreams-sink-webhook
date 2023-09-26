@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "deno run --allow-net --allow-read --allow-env http.ts"
+  }
+}

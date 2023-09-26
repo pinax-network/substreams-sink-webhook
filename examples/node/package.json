@@ -1,0 +1,14 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "tsx http.ts"
+  },
+  "dependencies": {
+    "dotenv": "latest",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "tsx": "latest"
+  }
+}

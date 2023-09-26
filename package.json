@@ -31,7 +31,7 @@
   "scripts": {
     "build": "tsc",
     "test": "bun test",
-    "server": "bun ./examples/http.ts 3000",
+    "server": "bun ./examples/node/http.ts 3000",
     "start": "tsc && node --no-warnings ./dist/bin/cli.js run",
     "keypair": "tsc && node --no-warnings ./dist/bin/cli.js keypair",
     "ping": "tsc && node --no-warnings ./dist/bin/cli.js ping",
