@@ -31,11 +31,13 @@ The POST message will be a JSON object with the following structure:
 ```http
 POST http://localhost:3000 HTTP/1.1
 content-type: application/json
-x-signature-ed25519: 8bfa890aef1bccc753c9cad540844fb1082c610d505a23ecdfabd0bed05cfa429471f0b20f49c3e6125677ab1eedc625fb4f7bfcc8eeff125312a176ba41460b
+x-signature-ed25519: a2e1437d2b32774418f46365d4dccb4509be5469ed24ba0d1707ce4ca76dd7fbe0b01597d9c91391fba5316e917d4dca3134a6c1f2c283d708c02cd33d5b080d
 x-signature-timestamp: 1686802918
 ```
 
 **body**
+
+> The body will be a flatten JSON string with the following structure:
 
 ```json
 {
