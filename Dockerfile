@@ -7,4 +7,4 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-ENTRYPOINT ["node", "dist/bin/cli.js", "run"]
+ENTRYPOINT ["npm", "start"]
