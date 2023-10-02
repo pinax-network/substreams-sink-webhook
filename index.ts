@@ -29,8 +29,9 @@ export async function action(options: WebhookRunOptions) {
   });
 
   // Stream Blocks
-  emitter.on("anyMessage", async (data, cursor, clock) => {
+  emitter.on("output", async (data, cursor, clock) => {
     if (!clock.timestamp) return;
+    const chain = new URL(options.substreamsEndpoint).hostname.split(".")[0];
     const metadata = {
       cursor,
       session: {
@@ -45,7 +46,9 @@ export async function action(options: WebhookRunOptions) {
       manifest: {
         substreamsEndpoint: options.substreamsEndpoint,
         moduleName: options.moduleName,
+        type: data.getType().typeName,
         moduleHash,
+        chain
       },
     }
     // Sign body
