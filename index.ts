@@ -7,12 +7,9 @@ import type { WebhookRunOptions } from "./bin/cli.js";
 import { ping } from "./src/ping.js";
 import { banner } from './src/banner.js';
 import { toText } from './src/http.js';
+import type { SessionInit } from "@substreams/core/proto";
 
 export async function action(options: WebhookRunOptions) {
-  // TEMP FIX FOR
-  // https://github.com/pinax-network/substreams-sink/issues/15
-  options.headers = new Headers();
-
   // Block Emitter
   const { emitter, moduleHash } = await setup(options);
 
@@ -26,12 +23,20 @@ export async function action(options: WebhookRunOptions) {
       process.exit(1);
     }
   }
+  let session: SessionInit;
+  emitter.on("session", data => {
+    session = data
+  });
 
   // Stream Blocks
   emitter.on("anyMessage", async (data, cursor, clock) => {
     if (!clock.timestamp) return;
     const metadata = {
       cursor,
+      session: {
+        traceId: session.traceId,
+        resolvedStartBlock: Number(session.resolvedStartBlock),
+      },
       clock: {
         timestamp: clock.timestamp.toDate().toISOString(),
         number: Number(clock.number),
