@@ -33,6 +33,7 @@ export async function action(options: WebhookRunOptions) {
     if (!clock.timestamp) return;
     const chain = new URL(options.substreamsEndpoint).hostname.split(".")[0];
     const metadata = {
+      status: 200,
       cursor,
       session: {
         traceId: session.traceId,
