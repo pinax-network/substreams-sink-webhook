@@ -21,7 +21,6 @@
   - [interactions-and-bot-users](https://discord.com/developers/docs/interactions/receiving-and-responding#interactions-and-bot-users)
   - [security-and-authorization](https://discord.com/developers/docs/interactions/receiving-and-responding#security-and-authorization)
 
-
 ## POST Message
 
 The POST message will be a JSON object with the following structure:
@@ -31,8 +30,8 @@ The POST message will be a JSON object with the following structure:
 ```http
 POST http://localhost:3000 HTTP/1.1
 content-type: application/json
-x-signature-ed25519: a2e1437d2b32774418f46365d4dccb4509be5469ed24ba0d1707ce4ca76dd7fbe0b01597d9c91391fba5316e917d4dca3134a6c1f2c283d708c02cd33d5b080d
-x-signature-timestamp: 1686802918
+x-signature-ed25519: 6ec208fc250059fdb0fa543e01339ee3c6967da6fc7b6bf86dcd8217fa2e130ce2e17a5258fcf9bbe415de223d00eaee2f6949ef3a44594b42e7fb1a53481802
+x-signature-timestamp: 1696733583
 ```
 
 **body**
@@ -41,49 +40,56 @@ x-signature-timestamp: 1686802918
 
 ```json
 {
-  "cursor": "gBCLb0z81lU8vbvZVzJkEaWwLpc_DFhqVQ3jLxVJgYH2pSTFicymUzd9bx2GlKH51RboGgmo19eZRX588ZED7YW8y7FhuSM6EHh4wNzo87Dne6KjPQlIIOhjC-iJMNncUT7SYgz9f7UI5N_nb6XZMxMyMZEuK2blizdZqoZXIfAVsHthkjz6cJ6Bga_A-YtEq-AnEuf1xn6lDzF1Lx4LOc_RNqGe6z4nN3Rq",
-  "clock": {
-    "timestamp": "2023-06-15T04:21:58.000Z",
-    "number": 250665484,
-    "id": "0ef0da0cf870f489833ac498da073acadf895d22f3dce68483aa43cac1d27b17"
-  },
-  "manifest": {
-    "chain": "wax",
-    "moduleName": "map_transfers",
-    "moduleHash": "6aa24e6aa34db4a4faf55c69c6f612aeb06053c2"
-  },
-  "data": {
-    "items": [
-      {
-        "trxId": "dd93c64db8ff91cfac74e731fd518548aa831be3d833e6a1fefeac69d2ddd138",
-        "actionOrdinal": 2,
-        "contract": "eosio.token",
-        "action": "transfer",
-        "symcode": "WAX",
-        "from": "banxawallet1",
-        "to": "atomicmarket",
-        "quantity": "1340.00000000 WAX",
-        "memo": "deposit",
-        "precision": 8,
-        "amount": "134000000000",
-        "value": 1340
-      },
-      {
-        "trxId": "dd93c64db8ff91cfac74e731fd518548aa831be3d833e6a1fefeac69d2ddd138",
-        "actionOrdinal": 7,
-        "contract": "eosio.token",
-        "action": "transfer",
-        "symcode": "WAX",
-        "from": "atomicmarket",
-        "to": "jft4m.c.wam",
-        "quantity": "1206.00000000 WAX",
-        "memo": "AtomicMarket Sale Payout - ID #129675349",
-        "precision": 8,
-        "amount": "120600000000",
-        "value": 1206
-      }
-    ]
-  }
+    "status": 200,
+    "cursor": "3ErAq5aeVa2E561uHfBu6qWwLpcyAlJrUAPhKxFLhtnz9HLH3JikBTQmaRqEkKz52RO4HQuk2I3EFi8p88JXtNa8kb4y6XdtRH5-loC_qLHscPOmawkSIu9kDrmJYdLfUzjSagj7c7tRsdLlPKaLY0BkY850fTOwizxW8IYFJqNAv3Mykm2ucMfVgf6fooJArbYgFuyinCzyBz16Kk4LO8TQZ_bN7jx1",
+    "session": {
+        "traceId": "06eb726db08090e476eb2dbeff72f1bb",
+        "resolvedStartBlock": 48458405
+    },
+    "clock": {
+        "timestamp": "2023-10-08T02:53:03.000Z",
+        "number": 48458410,
+        "id": "3b54021525ec17d05946cfa86b92ab12787fb6f4fe25b59ac5380db39cd6ac73"
+    },
+    "manifest": {
+        "substreamsEndpoint": "https://polygon.substreams.pinax.network:9000",
+        "moduleName": "map_block_stats",
+        "type": "subtivity.v1.BlockStats",
+        "moduleHash": "0a363b2a63aadb76a525208f1973531d3616fbae",
+        "chain": "polygon"
+    },
+    "data": {
+        "transactionTraces": "36",
+        "traceCalls": "212",
+        "uaw": [
+            "d6b1cca00889daa9adc1d6e76b9a120086a13aab",
+            "675fe893a74815a35f867a12cbdd0637b7d7d6d4",
+            "42b07d313de7a38dc5cea48e326e545450cc4322",
+            "8ed47843e5030b6f06e6f204fcf2725378bb837a",
+            "9ced478d8d6fcaad332d9abf30415c8e48ac8079",
+            "21c3de23d98caddc406e3d31b25e807addf33633",
+            "2f59cde588b6d3661e8792632844f511d5e2da02",
+            "84a611b71254f5fccb1e5a619ad723cad8a03638",
+            "7ba865f70e32c9f46f67e33fe06139c8c31a2fad",
+            "18264397296fd982e432b4cd4942295c5bca50f8",
+            "258cfdaeee1b411bbb63a48cb030faed6720bb15",
+            "207cf8cdaec06610d7f9c92fec513e70520ce655",
+            "f746fb75a9c1d0f1c9799e434aea2aef90f7aa22",
+            "d3961bdbf7ad806b8e870a1cfbf7e54b5247020e",
+            "314c9a7a79ec28835ae68bcf5c0fd696141f85b4",
+            "2802fa14557b4f1afdf94af082b18c37d5786a2e",
+            "74eb675ed60a6f332e156c5a9ac376ee8d4d905d",
+            "5543ff441d3b0fcce59aa08eb52f15d27294af21",
+            "a1ab1c841898fe94900d00d9312ba954e4f81501",
+            "3dd12eb5ae0f1a106fb358c8b99830ab5690a7a2",
+            "51fafb35f31c434066267fc86ea24d8424115d2a",
+            "8709264ba5b56be8750193dad1a99f8b9d6ad3d6",
+            "c2b5f79a5768893b8087667b391c1381c502ab5c",
+            "85d8d0fc4e5a1f6dc823ee4baf486758a2fcb19c",
+            "7537cb7b7e8083ff8e68cb5c0ca18553ab54946f",
+            "d0a8cb58efcee1caee48f3c357074862ca8210dc"
+        ]
+    }
 }
 ```
 
@@ -111,40 +117,22 @@ if (!isVerified) {
 }
 ```
 
-## Docker environment
-
-Pull from GitHub Container registry
-```bash
-docker pull ghcr.io/pinax-network/substreams-sink-webhook:latest
-```
-
-Build from source
-```bash
-docker build -t substreams-sink-webhook .
-```
-
-Run with `.env` file
-```bash
-docker run -it --rm --env-file .env substreams-sink-webhook run
-```
-
 ## `.env` Environment variables
 
 ```env
 # Webhook
-SECRET_KEY=...
-PUBLIC_KEY=...
+SECRET_KEY="<Ed25519 Secret-key>"
+PUBLIC_KEY="<Ed25519 Public-key>"
 WEBHOOK_URL=http://127.0.0.1:3000
 
 # Substreams endpoint
-SUBSTREAMS_API_TOKEN=...
-SUBSTREAMS_ENDPOINT=https://wax.firehose.eosnation.io:9001
+SUBSTREAMS_API_TOKEN="<Substreams API Token @ https://pinax.network>"
+SUBSTREAMS_ENDPOINT=https://polygon.substreams.pinax.network:9000
 
 # Substreams package
-MANIFEST=https://github.com/pinax-network/substreams/releases/download/eosio.token-v0.13.0/eosio-token-v0.13.0.spkg
-MODULE_NAME=map_transfers
+MANIFEST=https://github.com/pinax-network/subtivity-substreams/releases/download/v0.3.0/subtivity-ethereum-v0.3.0.spkg
+MODULE_NAME=map_block_stats
 START_BLOCK=-1
-PARAM=map_transfers=symcode=WAX&quantity_gte=100000000000
 ```
 
 ## Help
@@ -191,6 +179,23 @@ Options:
   --disable-ping                          Disable ping on init (default: false, env:
                                           DISABLE_PING)
   -h, --help                              display help for command
+```
+
+## Docker environment
+
+Pull from GitHub Container registry
+```bash
+docker pull ghcr.io/pinax-network/substreams-sink-webhook:latest
+```
+
+Build from source
+```bash
+docker build -t substreams-sink-webhook .
+```
+
+Run with `.env` file
+```bash
+docker run -it --rm --env-file .env substreams-sink-webhook run
 ```
 
 ## Features
