@@ -10,7 +10,6 @@ import { Option } from "commander";
 export interface WebhookRunOptions extends commander.RunOptions {
     webhookUrl: string;
     secretKey: string;
-    concurrency: number;
     disablePing: boolean;
 }
 
@@ -19,7 +18,6 @@ const program = commander.program(pkg);
 const command = commander.run(program, pkg);
 command.addOption(new Option("--webhook-url <string>", "Webhook URL to send POST").makeOptionMandatory().env("WEBHOOK_URL"))
 command.addOption(new Option("--secret-key <string>", "TweetNaCl Secret-key to sign POST data payload").makeOptionMandatory().env("SECRET_KEY"))
-command.addOption(new Option("--concurrency <number>", "Concurrency of requests").env("CONCURRENCY").default(1))
 command.addOption(new Option("--disable-ping", "Disable ping on init").env("DISABLE_PING").default(false))
 command.action(action);
 

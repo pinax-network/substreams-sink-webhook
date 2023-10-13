@@ -133,6 +133,7 @@ SUBSTREAMS_ENDPOINT=https://polygon.substreams.pinax.network:9000
 MANIFEST=https://github.com/pinax-network/subtivity-substreams/releases/download/v0.3.0/subtivity-ethereum-v0.3.0.spkg
 MODULE_NAME=map_block_stats
 START_BLOCK=-1
+FINAL_BLOCKS_ONLY=true
 ```
 
 ## Help
@@ -175,9 +176,10 @@ Options:
   --webhook-url <string>                  Webhook URL to send POST (env: WEBHOOK_URL)
   --secret-key <string>                   TweetNaCl Secret-key to sign POST data payload (env:
                                           SECRET_KEY)
-  --concurrency <number>                  Concurrency of requests (default: 1, env: CONCURRENCY)
   --disable-ping                          Disable ping on init (default: false, env:
                                           DISABLE_PING)
+  --final-blocks-only <boolean>           Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD (default: "false", env: FINAL_BLOCKS_ONLY)
+
   -h, --help                              display help for command
 ```
 
@@ -201,27 +203,40 @@ docker run -it --rm --env-file .env substreams-sink-webhook run
 ## Features
 
 - [x] POST data to URL
-- [x] Map hash module
+- [x] Include Substreams Manifest to payload
+  - substreamsEndpoint
+  - chain
+  - finalBlockOnly
+  - moduleName
+  - type
+  - moduleHash
+- [x] Include Substreams Clock to payload
+  - timestamp
+  - number
+  - id
+- [x] Includes Substreams Session to payload
+  - traceId
+  - resolvedStartBlock
+- [x] Includes Substreams cursor to payload
 - [x] Signing policy
   - [x] TweetNaCl
-  - [x] ~~R1 private keys~~
+  - [ ] ~~R1 private keys~~
   - [ ] ~~Ether.js~~
+- [x] All messages are sent in block order, no need to parallelize
+- [x] Support for Final Blocks Only `--final-blocks-only`
+- [x] Support for Production Mode `--production-mode`
 - [x] Retry policy
   - [x] Exponential backoff (2x)
   - [x] Initial Interval (1s)
   - [x] Maximum Attempts (Infinity)
   - [x] Maximum Interval (100 * initialInterval)
-- [x] Queue
-  - [x] Conccurent requests (1)
 - [x] Dockerfile
 - [x] Provide CLI arguments or Environment Variables (`.env`)
-- [x] Params injection
+- [x] Allow params injection via `--params` or `-p`
 - [x] Prometheus metrics
-  - [x] add metrics from `substreams-sink`
-  - [ ] add queue counter
-  - [ ] add post counter
-  - [ ] add error counter
-  - [ ] update block stats when errors
+  - [x] includes metrics from `substreams-sink`
+  - [x] HTTP POST requests
+  - [x] HTTP errors
 - [x] PING URL on start (invalid + valid)
-- [x] Save `cursor.lock` file on successful POST
-- [x] Use `clock` data
+- [x] Save `cursor.lock` only after successful POST
+  - [ ] Enforce retry policy on HTTP cursor updates

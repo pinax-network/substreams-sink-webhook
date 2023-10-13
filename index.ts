@@ -14,7 +14,7 @@ export async function action(options: WebhookRunOptions) {
   const { emitter, moduleHash } = await setup(options);
 
   // Queue
-  const queue = new PQueue({ concurrency: options.concurrency });
+  const queue = new PQueue({ concurrency: 1 }); // all messages are sent in block order, no need to parallelize
 
   // Ping URL to check if it's valid
   if (!options.disablePing) {
@@ -46,10 +46,11 @@ export async function action(options: WebhookRunOptions) {
       },
       manifest: {
         substreamsEndpoint: options.substreamsEndpoint,
+        chain,
+        finalBlockOnly: options.finalBlocksOnly,
         moduleName: options.moduleName,
         type: data.getType().typeName,
         moduleHash,
-        chain
       },
     }
     // Sign body
