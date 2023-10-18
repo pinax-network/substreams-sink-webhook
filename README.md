@@ -146,41 +146,31 @@ Usage: substreams-sink-webhook run [options]
 Substreams Sink Webhook
 
 Options:
-  -e --substreams-endpoint <string>       Substreams gRPC endpoint to stream data from
-  --manifest <string>                     URL of Substreams package
-  --module-name <string>                  Name of the output module (declared in the manifest)
-  -s --start-block <int>                  Start block to stream from (defaults to -1, which
-                                          means the initialBlock of the first module you are
-                                          streaming)
-  -t --stop-block <int>                   Stop block to end stream at, inclusively
-  -p, --params <string...>                Set a params for parameterizable modules. Can be
-                                          specified multiple times. (ex: -p module1=valA -p
-                                          module2=valX&valY)
-  --substreams-api-token <string>         API token for the substream endpoint
-  --substreams-api-token-envvar <string>  Environnement variable name of the API token for the
-                                          substream endpoint (ex: SUBSTREAMS_API_TOKEN)
-  --delay-before-start <int>              [OPERATOR] Amount of time in milliseconds (ms) to wait
-                                          before starting any internal processes, can be used to
-                                          perform to maintenance on the pod before actually
-                                          letting it starts
-  --cursor-file <string>                  cursor lock file (ex: cursor.lock)
-  --disable-production-mode               Disable production mode, allows debugging modules
-                                          logs, stops high-speed parallel processing
-  --restart-inactivity-seconds <int>      If set, the sink will restart when inactive for over a
-                                          certain amount of seconds (ex: 60)
-  --hostname <string>                     The process will listen on this hostname for any HTTP
-                                          and Prometheus metrics requests (ex: localhost)
-  --port <int>                            The process will listen on this port for any HTTP and
-                                          Prometheus metrics requests (ex: 9102)
-  --verbose                               Enable verbose logging
-  --webhook-url <string>                  Webhook URL to send POST (env: WEBHOOK_URL)
-  --secret-key <string>                   TweetNaCl Secret-key to sign POST data payload (env:
-                                          SECRET_KEY)
-  --disable-ping                          Disable ping on init (default: false, env:
-                                          DISABLE_PING)
-  --final-blocks-only <boolean>           Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD (default: "false", env: FINAL_BLOCKS_ONLY)
-
-  -h, --help                              display help for command
+  -e --substreams-endpoint <string>    Substreams gRPC endpoint to stream data from (env: SUBSTREAMS_ENDPOINT)
+  --manifest <string>                  URL of Substreams package (env: MANIFEST)
+  --module-name <string>               Name of the output module (declared in the manifest) (env: MODULE_NAME)
+  -s --start-block <int>               Start block to stream from (defaults to -1, which means the initialBlock of the first module you are streaming) (default: "-1", env: START_BLOCK)
+  -t --stop-block <int>                Stop block to end stream at, inclusively (env: STOP_BLOCK)
+  -p, --params <string...>             Set a params for parameterizable modules. Can be specified multiple times. (ex: -p module1=valA -p module2=valX&valY) (default: [], env: PARAMS)
+  --substreams-api-token <string>      API token for the substream endpoint or API key if '--auth-issue-url' is specified (default: "", env: SUBSTREAMS_API_TOKEN)
+  --auth-issue-url <string>            URL used to issue a token (default: "https://auth.pinax.network/v1/auth/issue", env: AUTH_ISSUE_URL)
+  --delay-before-start <int>           Delay (ms) before starting Substreams (default: 0, env: DELAY_BEFORE_START)
+  --cursor-path <string>               File path or URL to cursor lock file (default: "cursor.lock", env: CURSOR_PATH)
+  --http-cursor-auth <string>          Basic auth credentials for http cursor (ex: username:password) (env: HTTP_CURSOR_AUTH)
+  --production-mode <boolean>          Enable production mode, allows cached substreams data if available (default: "false", env: PRODUCTION_MODE)
+  --inactivity-seconds <int>           If set, the sink will stop when inactive for over a certain amount of seconds (default: 300, env: INACTIVITY_SECONDS)
+  --hostname <string>                  The process will listen on this hostname for any HTTP and Prometheus metrics requests (default: "localhost", env: HOSTNAME)
+  --port <int>                         The process will listen on this port for any HTTP and Prometheus metrics requests (default: 9102, env: PORT)
+  --metrics-labels [string...]         To apply generic labels to all default metrics (ex: --labels foo=bar) (default: {}, env: METRICS_LABELS)
+  --collect-default-metrics <boolean>  Collect default metrics (default: "false", env: COLLECT_DEFAULT_METRICS)
+  --headers [string...]                Set headers that will be sent on every requests (ex: --headers X-HEADER=headerA) (default: {}, env: HEADERS)
+  --final-blocks-only <boolean>        Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD (default: "false", env:
+                                       FINAL_BLOCKS_ONLY)
+  --verbose <boolean>                  Enable verbose logging (default: "false", env: VERBOSE)
+  --webhook-url <string>               Webhook URL to send POST (env: WEBHOOK_URL)
+  --secret-key <string>                TweetNaCl Secret-key to sign POST data payload (env: SECRET_KEY)
+  --disable-ping                       Disable ping on init (default: false, env: DISABLE_PING)
+  -h, --help                           display help for command
 ```
 
 ## Docker environment
