@@ -180,14 +180,14 @@ Pull from GitHub Container registry
 docker pull ghcr.io/pinax-network/substreams-sink-webhook:latest
 ```
 
+Run with `.env` file
+```bash
+docker run -it --rm --env-file .env ghcr.io/pinax-network/substreams-sink-webhook:latest run
+```
+
 Build from source
 ```bash
 docker build -t substreams-sink-webhook .
-```
-
-Run with `.env` file
-```bash
-docker run -it --rm --env-file .env substreams-sink-webhook run
 ```
 
 ## Features
