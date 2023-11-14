@@ -31,6 +31,7 @@
   "scripts": {
     "build": "tsc",
     "test": "bun test",
+    "bench": "bun ./src/*.bench.ts",
     "server": "bun ./examples/node/http.ts 3000",
     "start": "tsc && node --no-warnings ./dist/bin/cli.js run",
     "keypair": "tsc && node --no-warnings ./dist/bin/cli.js keypair",
@@ -52,6 +53,7 @@
     "@tsconfig/recommended": "latest",
     "@types/node": "latest",
     "bun-types": "latest",
+    "mitata": "^0.1.6",
     "rollup": "^3.26.3",
     "typescript": "latest"
   }
