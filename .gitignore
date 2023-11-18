@@ -11,3 +11,4 @@ docker-compose.yml
 *-linux
 *-macos
 *-win.exe
+substreams-sink-webhook

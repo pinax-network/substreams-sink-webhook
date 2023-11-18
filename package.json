@@ -1,60 +1,30 @@
 {
+  "private": true,
+  "version": "0.6.0",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
-  "version": "0.5.0",
   "type": "module",
-  "exports": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "bin": {
-    "substreams-sink-webhook": "dist/bin/cli.js"
-  },
-  "files": [
-    "dist",
-    "src"
-  ],
-  "sideEffects": false,
-  "engines": {
-    "node": ">=16"
-  },
-  "repository": "git@github.com:pinax-network/substreams-sink-webhook.git",
-  "keywords": [
-    "substreams",
-    "streamingfast",
-    "firehose",
-    "thegraph",
-    "pinax"
-  ],
   "author": {
     "name": "Denis",
     "email": "denis@pinax.network"
   },
   "scripts": {
-    "build": "tsc",
+    "start": "bun bin/cli.ts run",
+    "dev": "bun --watch bin/cli.ts run",
+    "pretest": "bunx tsc --noEmit",
+    "server": "bun ./examples/node/http.ts 3000",
     "test": "bun test",
     "bench": "bun ./src/*.bench.ts",
-    "server": "bun ./examples/node/http.ts 3000",
-    "start": "tsc && node --no-warnings ./dist/bin/cli.js run",
-    "keypair": "tsc && node --no-warnings ./dist/bin/cli.js keypair",
-    "ping": "tsc && node --no-warnings ./dist/bin/cli.js ping",
-    "rollup": "rollup --config rollup.config.mjs",
-    "linux": "npm run build && npm run rollup && ./scripts/build.linux.sh",
-    "macos": "npm run build && npm run rollup && ./scripts/build.macos.sh",
-    "windows": "npm run build && npm run rollup && ./scripts/build.windows.sh"
+    "build": "bun build --compile ./index.ts --outfile substreams-sink-webhook"
   },
   "dependencies": {
     "p-queue": "latest",
-    "substreams-sink": "^0.11.0",
+    "substreams-sink": "^0.13.0",
     "tweetnacl": "latest"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.3",
-    "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.1.0",
-    "@tsconfig/recommended": "latest",
-    "@types/node": "latest",
     "bun-types": "latest",
-    "mitata": "^0.1.6",
-    "rollup": "^3.26.3",
+    "mitata": "latest",
     "typescript": "latest"
   }
 }

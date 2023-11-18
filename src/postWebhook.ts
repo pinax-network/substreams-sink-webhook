@@ -1,5 +1,8 @@
-import { setTimeout } from "node:timers/promises";
 import { logger } from "substreams-sink";
+
+function awaitSetTimeout(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 interface PostWebhookOptions {
   maximumAttempts?: number;
@@ -26,7 +29,7 @@ export async function postWebhook(url: string, body: string, signature: string, 
       let milliseconds = initialInterval * Math.pow(backoffCoefficient, attempts);
       if ( milliseconds > maximumInterval ) milliseconds = maximumInterval;
       logger.warn(`delay ${milliseconds}`, {attempts, url});
-      await setTimeout(milliseconds);
+      await awaitSetTimeout(milliseconds);
     }
     try {
       const response = await fetch(url, {
