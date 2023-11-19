@@ -127,13 +127,12 @@ WEBHOOK_URL=http://127.0.0.1:3000
 
 # Substreams endpoint
 SUBSTREAMS_API_TOKEN="<Substreams API Token @ https://pinax.network>"
-SUBSTREAMS_ENDPOINT=https://polygon.substreams.pinax.network:9000
+SUBSTREAMS_ENDPOINT=https://polygon.substreams.pinax.network:443
 
 # Substreams package
 MANIFEST=https://github.com/pinax-network/subtivity-substreams/releases/download/v0.3.0/subtivity-ethereum-v0.3.0.spkg
 MODULE_NAME=map_block_stats
 START_BLOCK=-1
-FINAL_BLOCKS_ONLY=true
 ```
 
 ## Help
@@ -164,8 +163,7 @@ Options:
   --metrics-labels [string...]         To apply generic labels to all default metrics (ex: --labels foo=bar) (default: {}, env: METRICS_LABELS)
   --collect-default-metrics <boolean>  Collect default metrics (default: "false", env: COLLECT_DEFAULT_METRICS)
   --headers [string...]                Set headers that will be sent on every requests (ex: --headers X-HEADER=headerA) (default: {}, env: HEADERS)
-  --final-blocks-only <boolean>        Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD (default: "false", env:
-                                       FINAL_BLOCKS_ONLY)
+  --final-blocks-only <boolean>        Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD (default: "false", env: FINAL_BLOCKS_ONLY)
   --verbose <boolean>                  Enable verbose logging (default: "false", env: VERBOSE)
   --webhook-url <string>               Webhook URL to send POST (env: WEBHOOK_URL)
   --secret-key <string>                TweetNaCl Secret-key to sign POST data payload (env: SECRET_KEY)

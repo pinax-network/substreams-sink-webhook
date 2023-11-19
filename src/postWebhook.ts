@@ -1,14 +1,20 @@
 import { logger } from "substreams-sink";
 
 function awaitSetTimeout(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 interface PostWebhookOptions {
   maximumAttempts?: number;
 }
 
-export async function postWebhook(url: string, body: string, signature: string, timestamp: number, options: PostWebhookOptions = {}) {
+export async function postWebhook(
+  url: string,
+  body: string,
+  signature: string,
+  timestamp: number,
+  options: PostWebhookOptions = {},
+) {
   // Retry Policy
   const initialInterval = 1000; // 1s
   const maximumAttempts = options.maximumAttempts ?? 100 * initialInterval;
@@ -16,19 +22,19 @@ export async function postWebhook(url: string, body: string, signature: string, 
   const backoffCoefficient = 2;
 
   let attempts = 0;
-  while ( true ) {
-    if ( attempts > maximumAttempts && maximumAttempts == 0 ) {
-      logger.error("invalid response", {url});
+  while (true) {
+    if (attempts > maximumAttempts && maximumAttempts === 0) {
+      logger.error("invalid response", { url });
       throw new Error("invalid response");
     }
-    if ( attempts > maximumAttempts ) {
-      logger.error("Maximum attempts exceeded", {url});
+    if (attempts > maximumAttempts) {
+      logger.error("Maximum attempts exceeded", { url });
       throw new Error("Maximum attempts exceeded");
     }
-    if ( attempts ) {
-      let milliseconds = initialInterval * Math.pow(backoffCoefficient, attempts);
-      if ( milliseconds > maximumInterval ) milliseconds = maximumInterval;
-      logger.warn(`delay ${milliseconds}`, {attempts, url});
+    if (attempts) {
+      let milliseconds = initialInterval * backoffCoefficient ** attempts;
+      if (milliseconds > maximumInterval) milliseconds = maximumInterval;
+      logger.warn(`delay ${milliseconds}`, { attempts, url });
       await awaitSetTimeout(milliseconds);
     }
     try {
@@ -40,17 +46,21 @@ export async function postWebhook(url: string, body: string, signature: string, 
           "x-signature-ed25519": signature,
           "x-signature-timestamp": String(timestamp),
         },
-      })
+      });
       const status = response.status;
-      if ( status != 200 ) {
+      if (status !== 200) {
         attempts++;
-        logger.warn(`Unexpected status code ${status}`, { url, timestamp, body });
+        logger.warn(`Unexpected status code ${status}`, {
+          url,
+          timestamp,
+          body,
+        });
         continue;
       }
-      return {url, status};
+      return { url, status };
     } catch (e: any) {
       const error = e.cause;
-      logger.error(`Unexpected error`, {url, timestamp, body, error});
+      logger.error(`Unexpected error`, { url, timestamp, body, error });
       attempts++;
     }
   }
