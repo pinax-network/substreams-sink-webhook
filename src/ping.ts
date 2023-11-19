@@ -1,4 +1,3 @@
-import { logger } from "substreams-sink";
 import { postWebhook } from "./postWebhook.js";
 import { keyPair, signMessage } from "./signMessage.js";
 
@@ -11,34 +10,17 @@ export async function ping(url: string, secretKey: string) {
 
   // send valid signature (must respond with 200)
   try {
-    logger.info("PING valid request", {
-      url,
-      timestamp,
-      signature,
-      body,
-      isVerified: true,
-    });
     await postWebhook(url, body, signature, timestamp, { maximumAttempts: 0 });
-  } catch (e) {
-    logger.error("error PING valid response");
+  } catch (_e) {
     return false;
   }
   // send invalid signature (must NOT respond with 200)
   try {
-    logger.info("PING invalid request", {
-      url,
-      timestamp,
-      invalidSignature,
-      body,
-      invalidSecretKey,
-      isVerified: false,
-    });
     await postWebhook(url, body, invalidSignature, timestamp, {
       maximumAttempts: 0,
     });
-    logger.error("error PING invalid response");
     return false;
-  } catch (e) {
+  } catch (_e) {
     return true;
   }
 }

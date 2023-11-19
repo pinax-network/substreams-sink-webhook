@@ -60,7 +60,7 @@ export async function postWebhook(
       return { url, status };
     } catch (e: any) {
       const error = e.cause;
-      logger.error(`Unexpected error`, { url, timestamp, body, error });
+      logger.error("Unexpected error", { url, timestamp, body, error });
       attempts++;
     }
   }

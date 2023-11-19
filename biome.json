@@ -1,16 +1,44 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.3.3/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
-	"formatter": {
-		"indentStyle": "space",
-		"lineWidth": 120
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true
-		}
-	}
+  "files": {
+    "ignore": [
+      ".direnv/",
+      ".cache/",
+      ".vercel/",
+      ".next/",
+      "dist/",
+      "build/",
+      "proto/",
+      "coverage/",
+      "out/",
+      "examples/",
+      "pnpm-lock.yaml",
+      "tsconfig.json",
+      "tsconfig.*.json"
+    ]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "lineWidth": 120
+  },
+  "linter": {
+    "rules": {
+      "all": true,
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noRedundantUseStrict": "off"
+      },
+      "nursery": {
+        "useImportRestrictions": "off"
+      },
+      "style": {
+        "useNamingConvention": "off"
+      },
+      "complexity": {
+        "noForEach": "off"
+      }
+    }
+  },
+  "organizeImports": {
+    "enabled": true
+  }
 }

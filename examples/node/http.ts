@@ -7,7 +7,7 @@ const PUBLIC_KEY = process.env.PUBLIC_KEY ?? "a3cb7366ee8ca77225b4d41772e270e4e8
 const server = http.createServer();
 
 function rawBody(request: http.IncomingMessage) {
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<string>((resolve) => {
     const chunks: Uint8Array[] = [];
     request
       .on("data", (chunk) => {
