@@ -11,6 +11,7 @@ export interface WebhookRunOptions extends commander.RunOptions {
   webhookUrl: string;
   secretKey: string;
   disablePing: boolean;
+  expiryTime: number;
 }
 
 // Run Webhook Sink
@@ -25,6 +26,11 @@ command.addOption(
     .env("SECRET_KEY"),
 );
 command.addOption(new Option("--disable-ping", "Disable ping on init").env("DISABLE_PING").default(false));
+command.addOption(
+  new Option("--expiry-time <number>", "Time before a transmission becomes invalid (in seconds)")
+    .env("EXPIRY_TIME")
+    .default(40),
+);
 command.action(action);
 
 program
@@ -45,9 +51,9 @@ program
       .makeOptionMandatory()
       .env("SECRET_KEY"),
   )
-  .action(async (options) => {
+  .action(async (options: WebhookRunOptions) => {
     logger.settings.type = "hidden";
-    const response = await ping(options.webhookUrl, options.secretKey);
+    const response = await ping(options.webhookUrl, options.secretKey, options.expiryTime);
     if (response) console.log("✅ OK");
     else console.log("⁉️ ERROR");
   });
