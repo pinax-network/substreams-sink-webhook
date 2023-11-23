@@ -11,6 +11,7 @@
   "scripts": {
     "start": "bun bin/cli.ts run",
     "dev": "bun --watch bin/cli.ts run",
+    "keypair": "bun bin/cli.ts keypair",
     "pretest": "bunx tsc --noEmit",
     "server": "bun ./examples/node/http.ts 3000",
     "test": "bun test",
