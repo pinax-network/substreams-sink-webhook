@@ -12,6 +12,7 @@
     "name": "Denis",
     "email": "denis@pinax.network"
   },
+  "files": ["dist"],
   "scripts": {
     "start": "tsc && node ./dist/bin/cli.js run",
     "pretest": "tsc --noEmit",
