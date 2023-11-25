@@ -1,27 +1,28 @@
 {
-  "private": true,
-  "version": "0.6.0",
+  "version": "0.6.1",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "substreams-sink-webhook": "dist/bin/cli.js"
+  },
   "author": {
     "name": "Denis",
     "email": "denis@pinax.network"
   },
   "scripts": {
-    "start": "bun bin/cli.ts run",
-    "dev": "bun --watch bin/cli.ts run",
-    "pretest": "bunx tsc --noEmit",
-    "server": "bun ./examples/node/http.ts 3000",
+    "start": "tsc && node ./dist/bin/cli.js run",
+    "pretest": "tsc --noEmit",
     "test": "bun test",
-    "bench": "bun ./src/*.bench.ts",
+    "prepublishOnly": "tsc",
     "build": "bun build --compile ./index.ts --outfile substreams-sink-webhook",
-    "format": "biome format --write . && biome check --apply .",
-    "lint": "biome check ."
+    "bench": "bun ./src/*.bench.ts"
   },
   "dependencies": {
     "p-queue": "latest",
-    "substreams-sink": "^0.13.0",
+    "substreams-sink": "^0.13.3",
     "tweetnacl": "latest"
   },
   "devDependencies": {
