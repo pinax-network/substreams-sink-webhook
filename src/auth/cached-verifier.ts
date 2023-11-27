@@ -1,18 +1,19 @@
 import { logger } from "substreams-sink";
 import nacl from "tweetnacl";
+import { Verifier } from "./index.js";
 
-export class Verifier {
+export class CachedVerifier implements Verifier {
   private expirationTimes: { [message: string]: number } = {};
 
   constructor(public knownPublicKeys: string[]) {}
 
-  public verify(message: string): boolean {
-    if (!this.expirationTimes[message]) {
+  public verify(signature: string): boolean {
+    if (!this.expirationTimes[signature]) {
       this.removedExpired();
-      return this.verifyMessage(message);
+      return this.verifyMessage(signature);
     }
 
-    if (this.now() >= this.expirationTimes[message]) {
+    if (this.now() >= this.expirationTimes[signature]) {
       this.removedExpired();
       return false;
     }

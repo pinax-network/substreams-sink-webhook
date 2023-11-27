@@ -1,6 +1,7 @@
 import nacl from "tweetnacl";
+import { Signer } from "./index.js";
 
-export class Signer {
+export class CachedSigner implements Signer {
   // After how much time (in % of expiration time) should a token be regenerated.
   private readonly GRACE_PERIOD = 0.6;
 
@@ -12,7 +13,7 @@ export class Signer {
     this.refreshSignature();
   }
 
-  public get signature() {
+  public signature(_: number, __: string) {
     if (this.latestSignature.expiryTime - this.now() <= (1 - this.GRACE_PERIOD) * this.expirationTime * 1000) {
       this.refreshSignature();
     }
@@ -21,7 +22,7 @@ export class Signer {
   }
 
   private refreshSignature() {
-    const expiryTime = this.nextExpiredTime();
+    const expiryTime = this.now() + this.expirationTime * 1000;
     const payload = JSON.stringify({ exp: expiryTime, id: this.publicKey });
     const signedBuffer = nacl.sign(Buffer.from(payload), Buffer.from(this.secretKey, "hex"));
 
@@ -31,9 +32,5 @@ export class Signer {
 
   private now() {
     return new Date().getTime();
-  }
-
-  private nextExpiredTime() {
-    return this.now() + this.expirationTime * 1000;
   }
 }

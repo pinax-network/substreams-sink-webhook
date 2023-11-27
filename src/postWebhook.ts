@@ -1,5 +1,5 @@
 import { logger } from "substreams-sink";
-import { Signer } from "./auth/signer.js";
+import { Signer } from "./auth/index.js";
 
 function awaitSetTimeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -9,7 +9,13 @@ interface PostWebhookOptions {
   maximumAttempts?: number;
 }
 
-export async function postWebhook(url: string, body: string, signer: Signer, options: PostWebhookOptions = {}) {
+export async function postWebhook(
+  url: string,
+  timestamp: number,
+  body: string,
+  signer: Signer,
+  options: PostWebhookOptions = {}
+) {
   // Retry Policy
   const initialInterval = 1000; // 1s
   const maximumAttempts = options.maximumAttempts ?? 100 * initialInterval;
@@ -41,7 +47,8 @@ export async function postWebhook(url: string, body: string, signer: Signer, opt
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-signature-ed25519": signer.signature,
+          "x-signature-ed25519": signer.signature(timestamp, body),
+          "x-signature-timestamp": timestamp.toString()
         },
       });
 

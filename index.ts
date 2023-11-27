@@ -4,7 +4,7 @@ import { postWebhook } from "./src/postWebhook.js";
 
 import type { SessionInit } from "@substreams/core/proto";
 import type { WebhookRunOptions } from "./bin/cli.js";
-import { Signer } from "./src/auth/signer.js";
+import { makeSigner } from "./src/auth/index.js";
 import { banner } from "./src/banner.js";
 import { toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
@@ -17,11 +17,12 @@ export async function action(options: WebhookRunOptions) {
   const queue = new PQueue({ concurrency: 1 }); // all messages are sent in block order, no need to parallelize
 
   // Signer
-  const signer = new Signer(options.secretKey, options.expiryTime);
+  const signerOptions = { secretKey: options.secretKey, expirationTime: options.expiryTime };
+  const signer = makeSigner(options.signature, signerOptions);
 
   // Ping URL to check if it's valid
   if (!options.disablePing) {
-    if (!(await ping(options.webhookUrl, options.secretKey, options.expiryTime))) {
+    if (!(await ping(options.webhookUrl, options.signature, signerOptions))) {
       logger.error("exiting from invalid PING response");
       process.exit(1);
     }
@@ -56,12 +57,12 @@ export async function action(options: WebhookRunOptions) {
         moduleHash,
       },
     };
-    // Sign body
+
     const body = JSON.stringify({ ...metadata, data });
 
     // Queue POST
     queue.add(async () => {
-      const response = await postWebhook(options.webhookUrl, body, signer);
+      const response = await postWebhook(options.webhookUrl, metadata.clock.number, body, signer);
       logger.info("POST", response, metadata);
     });
   });
