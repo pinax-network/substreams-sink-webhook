@@ -1,5 +1,5 @@
 import { logger } from "substreams-sink";
-import { Signer } from "./signer.js";
+import { Signer } from "./auth/signer.js";
 
 function awaitSetTimeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

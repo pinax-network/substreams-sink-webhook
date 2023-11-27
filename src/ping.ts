@@ -1,6 +1,6 @@
+import { Signer } from "./auth/signer.js";
+import { keyPair } from "./auth/utils.js";
 import { postWebhook } from "./postWebhook.js";
-import { keyPair } from "./signMessage.js";
-import { Signer } from "./signer.js";
 
 export async function ping(url: string, secretKey: string, expirationTime: number) {
   const body = JSON.stringify({ message: "PING" });

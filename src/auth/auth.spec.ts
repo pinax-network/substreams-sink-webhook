@@ -13,7 +13,7 @@ describe("signatures", () => {
   });
 
   // This test will be invalid from January 1, 2050
-  test("signMessage", () => {
+  test("sign", () => {
     // Make the token expire in 2050 by modifying the current time
     setSystemTime(new Date(2050, 0, 1));
     const signer = new Signer(secretKey, 0);
@@ -28,7 +28,7 @@ describe("signatures", () => {
     expect(verifier.verify(signer.signature)).toBeTrue();
   });
 
-  test("signMessage cache", () => {
+  test("sign cache", () => {
     setSystemTime(new Date("2000-01-01T00:00:00.000Z"));
     const signer = new Signer(secretKey, 60);
     const refreshSignatureSpy = spyOn(signer as any, "refreshSignature");

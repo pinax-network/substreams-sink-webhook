@@ -4,10 +4,10 @@ import { postWebhook } from "./src/postWebhook.js";
 
 import type { SessionInit } from "@substreams/core/proto";
 import type { WebhookRunOptions } from "./bin/cli.js";
+import { Signer } from "./src/auth/signer.js";
 import { banner } from "./src/banner.js";
 import { toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
-import { Signer } from "./src/signer.js";
 
 export async function action(options: WebhookRunOptions) {
   // Block Emitter
