@@ -1,8 +1,8 @@
 import nacl from "tweetnacl";
 
-export function sign(secretKey: string, expirationTimeInSecs: number) {
+export function sign(secretKey: string, durationInSecs: number) {
   const publicKey = secretKey.substring(nacl.sign.secretKeyLength);
-  const expirationTime = new Date().getTime() + expirationTimeInSecs * 1000;
+  const expirationTime = new Date().getTime() + durationInSecs * 1000;
 
   const payload = JSON.stringify({ exp: expirationTime, id: publicKey });
   const signedBuffer = nacl.sign.detached(Buffer.from(payload), Buffer.from(secretKey, "hex"));

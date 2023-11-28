@@ -1,17 +1,24 @@
 import { sign, verify } from "./ed25519.js";
 
-// Keep in memory the latest generated signature. We do not regenerate it it is still valid.
-let latestSignature: ReturnType<typeof sign> = { signature: "", publicKey: "", expirationTime: 0 };
+// Keep in memory the latest generated signature for every secret key.
+// We do not regenerate them if they are still valid.
+const latestSignatures = new Map<string, ReturnType<typeof sign>>();
 
 export function cachedSign(...args: Parameters<typeof sign>): ReturnType<typeof sign> {
-  const [_, expirationTimeInSecs] = args;
+  const [secretKey, durationInSecs] = args;
 
   // Do not recalculate a signature it the latest one expires in less than 40% of the expiryTime
-  if (latestSignature.expirationTime - new Date().getTime() <= 0.4 * expirationTimeInSecs * 1000) {
+  let latestSignature = latestSignatures.get(secretKey);
+  if (!latestSignature || generatedSignatureIsExpired(latestSignature.expirationTime, durationInSecs)) {
     latestSignature = sign(...args);
+    latestSignatures.set(secretKey, latestSignature);
   }
 
   return latestSignature;
+}
+
+function generatedSignatureIsExpired(expirationTime: number, signatureDurationInSecs: number) {
+  return expirationTime - new Date().getTime() <= 0.4 * signatureDurationInSecs * 1000;
 }
 
 // Keep in memory which signatures are currently valid, and at what time they become invalid.
@@ -24,7 +31,7 @@ export function cachedVerify(...args: Parameters<typeof verify>): ReturnType<typ
   // Quick return if the signature is already known
   const cachedSignatureExpiry = validSignatures.get(signature);
   if (cachedSignatureExpiry !== undefined) {
-    if (isExpired(cachedSignatureExpiry)) {
+    if (receivedSignatureIsExpired(cachedSignatureExpiry)) {
       return new Error("signature is expired");
     }
 
@@ -33,7 +40,7 @@ export function cachedVerify(...args: Parameters<typeof verify>): ReturnType<typ
 
   // Cleanup expired values from cache
   for (const [signature, expiry] of validSignatures) {
-    if (isExpired(expiry)) {
+    if (receivedSignatureIsExpired(expiry)) {
       validSignatures.delete(signature);
     }
   }
@@ -44,6 +51,6 @@ export function cachedVerify(...args: Parameters<typeof verify>): ReturnType<typ
   return result;
 }
 
-function isExpired(expirationTime: number): boolean {
+function receivedSignatureIsExpired(expirationTime: number): boolean {
   return new Date().getTime() >= expirationTime;
 }
