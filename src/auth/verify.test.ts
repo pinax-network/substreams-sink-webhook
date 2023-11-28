@@ -1,5 +1,6 @@
 import { expect, setSystemTime, spyOn, test } from "bun:test";
-import { makeSigner, makeVerifier } from "./index.js";
+import { cachedVerify } from "./cached.js";
+import * as auth from "./ed25519.js";
 
 const secretKey =
   "3faae992336ea6599fbee55bb2605f1a1297c7288b860725cdfc8794413559dba3cb7366ee8ca77225b4d41772e270e4e831d171d1de71d91707c42e7ba82cc9";
@@ -14,45 +15,44 @@ test("verify", () => {
 
   const tests = [
     { key: publicKey, expiry: expiry, expected: true },
-    { key: publicKey, expiry: expired, expected: false },
-    { key: invalidPublicKey, expiry: expired, expected: false },
-    { key: invalidPublicKey, expiry: expired, expected: false },
+    { key: publicKey, expiry: expired, expected: "signature has expired" },
+    { key: invalidPublicKey, expiry: expiry, expected: "invalid signature" },
+    { key: invalidPublicKey, expiry: expired, expected: "signature has expired" },
   ];
 
   for (const test of tests) {
     setSystemTime(test.expiry);
-    const signer = makeSigner("cached", { secretKey, expirationTime: 0 });
-    setSystemTime();
-    const verifier = makeVerifier("cached", [test.key]);
+    const { signature } = auth.sign(secretKey, 0);
 
-    expect(verifier.verify(signer.signature(0, ""), "")).toBe(test.expected);
+    setSystemTime();
+    if (typeof test.expected === "boolean") {
+      expect(auth.verify(signature, test.expiry.getTime(), test.key)).toBe(test.expected);
+    } else {
+      expect(() => auth.verify(signature, test.expiry.getTime(), test.key)).toThrow(test.expected);
+    }
   }
 });
 
 test("verify cache", () => {
   setSystemTime(new Date("2000-01-01T00:00:00.000Z"));
-  const signer = makeSigner("cached", { secretKey, expirationTime: 60 });
-  const signature = signer.signature(0, "");
 
-  const verifier = makeVerifier("cached", [publicKey]);
-  const verifyMessageSpy = spyOn(verifier as any, "verifyMessage");
+  const { signature, expirationTime, publicKey } = auth.sign(secretKey, 60);
+  const verifyMessageSpy = spyOn(auth, "verify");
 
-  expect(verifier.verify(signature, "")).toBeTrue();
+  expect(cachedVerify(signature, expirationTime, publicKey)).toBeTrue();
   expect(verifyMessageSpy).toHaveBeenCalledTimes(1);
 
   // This signature is already known, we do not need to revalidate it
-  expect(verifier.verify(signature, "")).toBeTrue();
+  expect(cachedVerify(signature, expirationTime, publicKey)).toBeTrue();
   expect(verifyMessageSpy).toHaveBeenCalledTimes(1);
 
   // This signature expires in 1s, but it is still valid. We do not need to revalide it.
   setSystemTime(new Date("2000-01-01T00:00:59.000Z"));
-  expect(verifier.verify(signature, "")).toBeTrue();
+  expect(cachedVerify(signature, expirationTime, publicKey)).toBeTrue();
   expect(verifyMessageSpy).toHaveBeenCalledTimes(1);
 
   // This signature is expired, it should be removed from the cache.
   setSystemTime(new Date("2000-01-01T00:01:00.000Z"));
-  expect(verifier.verify(signature, "")).toBeFalse();
-  // @ts-expect-error
-  expect(verifier.expirationTimes).toEqual({});
+  expect(cachedVerify(signature, expirationTime, publicKey)).toBeInstanceOf(Error);
   expect(verifyMessageSpy).toHaveBeenCalledTimes(1);
 });

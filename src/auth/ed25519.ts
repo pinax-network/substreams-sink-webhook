@@ -19,7 +19,7 @@ export function verify(signature: string, expiry: number, publicKey: string): Er
   const isVerified = nacl.sign.detached.verify(
     Buffer.from(payload),
     Buffer.from(signature, "hex"),
-    Buffer.from(publicKey, "hex")
+    Buffer.from(publicKey, "hex"),
   );
 
   if (!isVerified) {

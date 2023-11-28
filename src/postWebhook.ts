@@ -1,5 +1,5 @@
 import { logger } from "substreams-sink";
-import { sign } from "./auth/ed25519.js";
+import { cachedSign } from "./auth/cached.js";
 
 function awaitSetTimeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -9,18 +9,12 @@ interface PostWebhookOptions {
   maximumAttempts?: number;
 }
 
-let latestSignature: ReturnType<typeof sign> = {
-  publicKey: "",
-  signature: "",
-  expirationTime: 0,
-};
-
 export async function postWebhook(
   url: string,
   body: string,
   secretKey: string,
   expiryTime: number,
-  options: PostWebhookOptions = {}
+  options: PostWebhookOptions = {},
 ) {
   // Retry Policy
   const initialInterval = 1000; // 1s
@@ -48,19 +42,16 @@ export async function postWebhook(
     }
 
     try {
-      // Do not recalculate a signature it the latest one expires in less than 40% of the expiryTime
-      if (latestSignature.expirationTime - new Date().getTime() <= 0.4 * expiryTime * 1000) {
-        latestSignature = sign(secretKey, expiryTime);
-      }
+      const { signature, expirationTime, publicKey } = cachedSign(secretKey, expiryTime);
 
       const response = await fetch(url, {
         body,
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-signature-ed25519": latestSignature.signature,
-          "x-signature-ed25519-expiry": latestSignature.expirationTime.toString(),
-          "x-signature-ed25519-public-key": latestSignature.publicKey,
+          "x-signature-ed25519": signature,
+          "x-signature-ed25519-expiry": expirationTime.toString(),
+          "x-signature-ed25519-public-key": publicKey,
         },
       });
 
