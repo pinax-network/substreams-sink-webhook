@@ -1,5 +1,5 @@
 import { logger } from "substreams-sink";
-import { Signer } from "./auth/index.js";
+import { sign } from "./auth/ed25519.js";
 
 function awaitSetTimeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -9,11 +9,17 @@ interface PostWebhookOptions {
   maximumAttempts?: number;
 }
 
+let latestSignature: ReturnType<typeof sign> = {
+  publicKey: "",
+  signature: "",
+  expirationTime: 0,
+};
+
 export async function postWebhook(
   url: string,
-  timestamp: number,
   body: string,
-  signer: Signer,
+  secretKey: string,
+  expiryTime: number,
   options: PostWebhookOptions = {}
 ) {
   // Retry Policy
@@ -42,13 +48,19 @@ export async function postWebhook(
     }
 
     try {
+      // Do not recalculate a signature it the latest one expires in less than 40% of the expiryTime
+      if (latestSignature.expirationTime - new Date().getTime() <= 0.4 * expiryTime * 1000) {
+        latestSignature = sign(secretKey, expiryTime);
+      }
+
       const response = await fetch(url, {
         body,
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-signature-ed25519": signer.signature(timestamp, body),
-          "x-signature-timestamp": timestamp.toString()
+          "x-signature-ed25519": latestSignature.signature,
+          "x-signature-ed25519-expiry": latestSignature.expirationTime.toString(),
+          "x-signature-ed25519-public-key": latestSignature.publicKey,
         },
       });
 

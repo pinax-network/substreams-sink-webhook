@@ -4,7 +4,6 @@ import { postWebhook } from "./src/postWebhook.js";
 
 import type { SessionInit } from "@substreams/core/proto";
 import type { WebhookRunOptions } from "./bin/cli.js";
-import { makeSigner } from "./src/auth/index.js";
 import { banner } from "./src/banner.js";
 import { toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
@@ -16,13 +15,9 @@ export async function action(options: WebhookRunOptions) {
   // Queue
   const queue = new PQueue({ concurrency: 1 }); // all messages are sent in block order, no need to parallelize
 
-  // Signer
-  const signerOptions = { secretKey: options.secretKey, expirationTime: options.expiryTime };
-  const signer = makeSigner(options.signature, signerOptions);
-
   // Ping URL to check if it's valid
   if (!options.disablePing) {
-    if (!(await ping(options.webhookUrl, options.signature, signerOptions))) {
+    if (!(await ping(options.webhookUrl, options.secretKey, options.expiryTime))) {
       logger.error("exiting from invalid PING response");
       process.exit(1);
     }
@@ -62,7 +57,7 @@ export async function action(options: WebhookRunOptions) {
 
     // Queue POST
     queue.add(async () => {
-      const response = await postWebhook(options.webhookUrl, metadata.clock.number, body, signer);
+      const response = await postWebhook(options.webhookUrl, body, options.secretKey, options.expiryTime);
       logger.info("POST", response, metadata);
     });
   });
