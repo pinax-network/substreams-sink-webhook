@@ -10,22 +10,27 @@ app.use(express.text({ type: "application/json" }));
 
 app.use(async (req, res) => {
   // get headers and body from POST request
-  const timestamp = req.headers["x-signature-timestamp"];
-  const signature = req.headers["x-signature-ed25519"];
-  const body = req.body;
+  const signature = request.headers.get("x-signature-ed25519");
+  const expiry = request.headers.get("x-signature-ed25519-expiry");
+  const publicKey = request.headers.get("x-signature-ed25519-public-key");
 
-  if (!timestamp) return res.send("missing required timestamp in headers").status(400);
-  if (!signature) return res.send("missing required signature in headers").status(400);
-  if (!body) return res.send("missing body").status(400);
+  const body = await request.text();
+
+  if (!signature) return new Response("missing required signature in headers", { status: 400 });
+  if (!expiry) return new Response("missing required expiry in headers", { status: 400 });
+  if (!publicKey) return new Response("missing required public key in headers", { status: 400 });
+  if (!body) return new Response("missing body", { status: 400 });
+
+  if (publicKey !== PUBLIC_KEY) return new Response("unknown public key", { status: 401 });
 
   // validate signature using public key
   const isVerified = nacl.sign.detached.verify(
-    Buffer.from(timestamp + body),
+    Buffer.from(body),
     Buffer.from(signature, "hex"),
-    Buffer.from(PUBLIC_KEY, "hex"),
+    Buffer.from(PUBLIC_KEY, "hex")
   );
 
-  console.dir({ timestamp, signature, isVerified });
+  console.dir({ signature, isVerified });
   console.dir(body);
   if (!isVerified) {
     return res.send("invalid request signature").status(401);

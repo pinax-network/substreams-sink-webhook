@@ -1,6 +1,8 @@
 POST http://localhost:3000 HTTP/1.1
 content-type: application/json
 x-signature-ed25519: 32c4f322a21ac05e7c9b7374bb702ccd834e56aeebe8320048440833f2e18358014a5790302fbe3ead8c956cdf2b05c9181b787c55c3e40dc6dbc3ab2cfe730f
-x-signature-timestamp: 1686871505
+x-signature-ed25519-expiry: 2524626000000
+x-signature-ed25519-public-key: a3cb7366ee8ca77225b4d41772e270e4e831d171d1de71d91707c42e7ba82cc9 
+
 
 {"message":"PING"}
