@@ -8,6 +8,8 @@ import { banner } from "./src/banner.js";
 import { toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
 
+export * from "./src/auth/index.js";
+
 export async function action(options: WebhookRunOptions) {
   // Block Emitter
   const { emitter, moduleHash } = await setup(options);
