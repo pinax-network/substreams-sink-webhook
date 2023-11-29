@@ -1,5 +1,5 @@
 {
-  "version": "0.7.0",
+  "version": "0.7.1",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "type": "module",
@@ -13,6 +13,18 @@
     "email": "denis@pinax.network"
   },
   "files": ["dist"],
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./auth": {
+      "default": "./dist/src/auth.js",
+      "import": "./dist/src/auth.js",
+      "types": "./dist/src/auth.d.ts"
+    }
+  },
   "scripts": {
     "start": "tsc && node ./dist/bin/cli.js run",
     "pretest": "tsc --noEmit",
@@ -22,9 +34,11 @@
     "bench": "bun ./src/**/*.bench.ts"
   },
   "dependencies": {
+    "@substreams/sink-entity-changes": "^0.3.4",
     "p-queue": "latest",
     "substreams-sink": "^0.13.3",
-    "tweetnacl": "latest"
+    "tweetnacl": "latest",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@biomejs/biome": "1.3.3",
