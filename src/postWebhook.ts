@@ -1,4 +1,5 @@
 import { logger } from "substreams-sink";
+import { cachedSign } from "./auth/cached.js";
 
 function awaitSetTimeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -11,8 +12,8 @@ interface PostWebhookOptions {
 export async function postWebhook(
   url: string,
   body: string,
-  signature: string,
-  timestamp: number,
+  secretKey: string,
+  expiryTime: number,
   options: PostWebhookOptions = {},
 ) {
   // Retry Policy
@@ -27,40 +28,43 @@ export async function postWebhook(
       logger.error("invalid response", { url });
       throw new Error("invalid response");
     }
+
     if (attempts > maximumAttempts) {
       logger.error("Maximum attempts exceeded", { url });
       throw new Error("Maximum attempts exceeded");
     }
+
     if (attempts) {
       let milliseconds = initialInterval * backoffCoefficient ** attempts;
       if (milliseconds > maximumInterval) milliseconds = maximumInterval;
       logger.warn(`delay ${milliseconds}`, { attempts, url });
       await awaitSetTimeout(milliseconds);
     }
+
     try {
+      const { signature, expirationTime, publicKey } = cachedSign(secretKey, expiryTime);
+
       const response = await fetch(url, {
         body,
         method: "POST",
         headers: {
           "content-type": "application/json",
           "x-signature-ed25519": signature,
-          "x-signature-timestamp": String(timestamp),
+          "x-signature-ed25519-expiry": expirationTime.toString(),
+          "x-signature-ed25519-public-key": publicKey,
         },
       });
+
       const status = response.status;
       if (status !== 200) {
         attempts++;
-        logger.warn(`Unexpected status code ${status}`, {
-          url,
-          timestamp,
-          body,
-        });
+        logger.warn(`Unexpected status code ${status}`, { url, body });
         continue;
       }
       return { url, status };
     } catch (e: any) {
       const error = e.cause;
-      logger.error("Unexpected error", { url, timestamp, body, error });
+      logger.error("Unexpected error", { url, body, error });
       attempts++;
     }
   }

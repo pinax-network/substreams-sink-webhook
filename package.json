@@ -1,5 +1,5 @@
 {
-  "version": "0.6.2",
+  "version": "0.7.0",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "type": "module",
@@ -19,7 +19,7 @@
     "test": "bun test",
     "prepublishOnly": "tsc",
     "build": "bun build --compile ./index.ts --outfile substreams-sink-webhook",
-    "bench": "bun ./src/*.bench.ts"
+    "bench": "bun ./src/**/*.bench.ts"
   },
   "dependencies": {
     "p-queue": "latest",

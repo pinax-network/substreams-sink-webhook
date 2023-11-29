@@ -4,27 +4,25 @@ import { Option } from "commander";
 import { commander, logger } from "substreams-sink";
 import { action } from "../index.js";
 import pkg from "../package.json" assert { type: "json" };
+import { keyPair } from "../src/auth/ed25519.js";
 import { ping } from "../src/ping.js";
-import { keyPair } from "../src/signMessage.js";
 
 export interface WebhookRunOptions extends commander.RunOptions {
   webhookUrl: string;
   secretKey: string;
   disablePing: boolean;
+  expiryTime: number;
 }
+
+const expirationOption = new Option("--expiry-time <number>", "Time before a transmission becomes invalid (in seconds)").env("EXPIRY_TIME").default(40)
 
 // Run Webhook Sink
 const program = commander.program(pkg);
 const command = commander.run(program, pkg);
-command.addOption(
-  new Option("--webhook-url <string>", "Webhook URL to send POST").makeOptionMandatory().env("WEBHOOK_URL"),
-);
-command.addOption(
-  new Option("--secret-key <string>", "TweetNaCl Secret-key to sign POST data payload")
-    .makeOptionMandatory()
-    .env("SECRET_KEY"),
-);
+command.addOption(new Option("--webhook-url <string>", "Webhook URL to send POST").makeOptionMandatory().env("WEBHOOK_URL"));
+command.addOption(new Option("--secret-key <string>", "TweetNaCl Secret-key to sign POST data payload").makeOptionMandatory().env("SECRET_KEY"));
 command.addOption(new Option("--disable-ping", "Disable ping on init").env("DISABLE_PING").default(false));
+command.addOption(expirationOption);
 command.action(action);
 
 program
@@ -40,14 +38,11 @@ program
   .command("ping")
   .description("Ping Webhook URL")
   .addOption(new Option("--webhook-url <string>", "Webhook URL to send POST").makeOptionMandatory().env("WEBHOOK_URL"))
-  .addOption(
-    new Option("--secret-key <string>", "TweetNaCl Secret-key to sign POST data payload")
-      .makeOptionMandatory()
-      .env("SECRET_KEY"),
-  )
-  .action(async (options) => {
+  .addOption(new Option("--secret-key <string>", "TweetNaCl Secret-key to sign POST data payload").makeOptionMandatory().env("SECRET_KEY"))
+  .addOption(expirationOption)
+  .action(async (options: WebhookRunOptions) => {
     logger.settings.type = "hidden";
-    const response = await ping(options.webhookUrl, options.secretKey);
+    const response = await ping(options.webhookUrl, options.secretKey, options.expiryTime);
     if (response) console.log("✅ OK");
     else console.log("⁉️ ERROR");
   });
