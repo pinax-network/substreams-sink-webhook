@@ -1,5 +1,5 @@
 {
-  "version": "0.7.1",
+  "version": "0.7.2",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "type": "module",
@@ -20,9 +20,9 @@
       "types": "./dist/index.d.ts"
     },
     "./auth": {
-      "default": "./dist/src/auth.js",
-      "import": "./dist/src/auth.js",
-      "types": "./dist/src/auth.d.ts"
+      "default": "./dist/src/auth/index.js",
+      "import": "./dist/src/auth/index.js",
+      "types": "./dist/src/auth/index.d.ts"
     }
   },
   "scripts": {
