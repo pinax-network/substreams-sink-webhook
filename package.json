@@ -1,5 +1,5 @@
 {
-  "version": "0.7.2",
+  "version": "0.7.3",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "type": "module",
@@ -36,7 +36,7 @@
   "dependencies": {
     "@substreams/sink-entity-changes": "^0.3.4",
     "p-queue": "latest",
-    "substreams-sink": "^0.13.3",
+    "substreams-sink": "^0.13.4",
     "tweetnacl": "latest",
     "zod": "^3.22.4"
   },
