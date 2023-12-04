@@ -1,3 +1,4 @@
+import { DatabaseChanges } from "@substreams/sink-database-changes/zod";
 import { EntityChanges } from "@substreams/sink-entity-changes/zod";
 import z from "zod";
 
@@ -32,7 +33,7 @@ export const PayloadBody = z.object({
   }),
   clock: ClockSchema,
   manifest: ManifestSchema,
-  data: EntityChanges,
+  data: EntityChanges.or(DatabaseChanges),
 });
 export type PayloadBody = z.infer<typeof PayloadBody>;
 
