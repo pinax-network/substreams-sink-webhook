@@ -9,6 +9,7 @@ import { toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
 
 export * from "./src/auth/index.js";
+export * from "./src/schemas.js";
 
 export async function action(options: WebhookRunOptions) {
   // Block Emitter
