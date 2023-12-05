@@ -34,6 +34,7 @@
     "bench": "bun ./src/**/*.bench.ts"
   },
   "dependencies": {
+    "@substreams/sink-database-changes": "^0.3.2",
     "@substreams/sink-entity-changes": "^0.3.4",
     "p-queue": "latest",
     "substreams-sink": "^0.13.4",
