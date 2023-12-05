@@ -12,3 +12,4 @@ docker-compose.yml
 *-macos
 *-win.exe
 substreams-sink-webhook
+bun.lockb
