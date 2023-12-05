@@ -33,7 +33,7 @@ export const PayloadBody = z.object({
   }),
   clock: ClockSchema,
   manifest: ManifestSchema,
-  data: EntityChanges.or(DatabaseChanges),
+  data: z.union([EntityChanges, DatabaseChanges, z.unknown()]),
 });
 export type PayloadBody = z.infer<typeof PayloadBody>;
 
