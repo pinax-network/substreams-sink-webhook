@@ -19,11 +19,13 @@ const handler = async (request: Request) => {
   if (!publicKey) return new Response("missing required public key in headers", { status: 400 });
   if (!body) return new Response("missing body", { status: 400 });
 
+  if (new Date().getTime() >= Number(expiry)) return new Response("signature expired", { status: 401 });
   if (publicKey !== PUBLIC_KEY) return new Response("unknown public key", { status: 401 });
 
   // TO-DO: 🚨 FIX CODE BELOW 🚨
   // validate signature using public key
-  const isVerified = nacl.sign.detached.verify(encode(body), encode(signature), encode(PUBLIC_KEY));
+  const payload = JSON.stringify({ exp: expiry, id: publicKey });
+  const isVerified = nacl.sign.detached.verify(encode(payload), encode(signature), encode(PUBLIC_KEY));
 
   console.dir({ signature, isVerified });
   console.dir(body);
