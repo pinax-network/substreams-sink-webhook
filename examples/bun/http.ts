@@ -12,7 +12,7 @@ export default {
   async fetch(request) {
     // get headers and body from POST request
     const signature = request.headers.get("x-signature-ed25519");
-    const expiry = request.headers.get("x-signature-ed25519-expiry");
+    const expiry = Number(request.headers.get("x-signature-ed25519-expiry"));
     const publicKey = request.headers.get("x-signature-ed25519-public-key");
 
     const body = await request.text();
@@ -22,15 +22,16 @@ export default {
     if (!publicKey) return new Response("missing required public key in headers", { status: 400 });
     if (!body) return new Response("missing body", { status: 400 });
 
-    if (new Date().getTime() >= Number(expiry)) return new Response("signature expired", { status: 401 });
+    if (new Date().getTime() >= expiry) return new Response("signature expired", { status: 401 });
     if (publicKey !== PUBLIC_KEY) return new Response("unknown public key", { status: 401 });
 
     // validate signature using public key
+    console.log({signature, expiry, publicKey});
     const payload = JSON.stringify({ exp: expiry, id: publicKey });
     const isVerified = nacl.sign.detached.verify(
       Buffer.from(payload),
       Buffer.from(signature, "hex"),
-      Buffer.from(publicKey, "hex")
+      Buffer.from(publicKey, "hex"),
     );
     console.log({ isVerified, signature });
     console.log(body);

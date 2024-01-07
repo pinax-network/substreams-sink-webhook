@@ -40,56 +40,28 @@ x-signature-timestamp: 1696733583
 
 ```json
 {
-    "status": 200,
-    "cursor": "3ErAq5aeVa2E561uHfBu6qWwLpcyAlJrUAPhKxFLhtnz9HLH3JikBTQmaRqEkKz52RO4HQuk2I3EFi8p88JXtNa8kb4y6XdtRH5-loC_qLHscPOmawkSIu9kDrmJYdLfUzjSagj7c7tRsdLlPKaLY0BkY850fTOwizxW8IYFJqNAv3Mykm2ucMfVgf6fooJArbYgFuyinCzyBz16Kk4LO8TQZ_bN7jx1",
-    "session": {
-        "traceId": "06eb726db08090e476eb2dbeff72f1bb",
-        "resolvedStartBlock": 48458405
-    },
-    "clock": {
-        "timestamp": "2023-10-08T02:53:03.000Z",
-        "number": 48458410,
-        "id": "3b54021525ec17d05946cfa86b92ab12787fb6f4fe25b59ac5380db39cd6ac73"
-    },
-    "manifest": {
-        "substreamsEndpoint": "https://polygon.substreams.pinax.network:9000",
-        "moduleName": "map_block_stats",
-        "type": "subtivity.v1.BlockStats",
-        "moduleHash": "0a363b2a63aadb76a525208f1973531d3616fbae",
-        "chain": "polygon"
-    },
-    "data": {
-        "transactionTraces": "36",
-        "traceCalls": "212",
-        "uaw": [
-            "d6b1cca00889daa9adc1d6e76b9a120086a13aab",
-            "675fe893a74815a35f867a12cbdd0637b7d7d6d4",
-            "42b07d313de7a38dc5cea48e326e545450cc4322",
-            "8ed47843e5030b6f06e6f204fcf2725378bb837a",
-            "9ced478d8d6fcaad332d9abf30415c8e48ac8079",
-            "21c3de23d98caddc406e3d31b25e807addf33633",
-            "2f59cde588b6d3661e8792632844f511d5e2da02",
-            "84a611b71254f5fccb1e5a619ad723cad8a03638",
-            "7ba865f70e32c9f46f67e33fe06139c8c31a2fad",
-            "18264397296fd982e432b4cd4942295c5bca50f8",
-            "258cfdaeee1b411bbb63a48cb030faed6720bb15",
-            "207cf8cdaec06610d7f9c92fec513e70520ce655",
-            "f746fb75a9c1d0f1c9799e434aea2aef90f7aa22",
-            "d3961bdbf7ad806b8e870a1cfbf7e54b5247020e",
-            "314c9a7a79ec28835ae68bcf5c0fd696141f85b4",
-            "2802fa14557b4f1afdf94af082b18c37d5786a2e",
-            "74eb675ed60a6f332e156c5a9ac376ee8d4d905d",
-            "5543ff441d3b0fcce59aa08eb52f15d27294af21",
-            "a1ab1c841898fe94900d00d9312ba954e4f81501",
-            "3dd12eb5ae0f1a106fb358c8b99830ab5690a7a2",
-            "51fafb35f31c434066267fc86ea24d8424115d2a",
-            "8709264ba5b56be8750193dad1a99f8b9d6ad3d6",
-            "c2b5f79a5768893b8087667b391c1381c502ab5c",
-            "85d8d0fc4e5a1f6dc823ee4baf486758a2fcb19c",
-            "7537cb7b7e8083ff8e68cb5c0ca18553ab54946f",
-            "d0a8cb58efcee1caee48f3c357074862ca8210dc"
-        ]
-    }
+  "status": 200,
+  "cursor": "T0S2BNqDj6a8pKMA6bEXAaWwLpc_DFltXAvkKhhBj4L29XqRiMmiVjVzbU_UxPzyiRLsSV-q2tzLEih6oMZR7oLpwbA2vHI_F39_l9vm_ODoe6CjP1tJdekzCuzcN9DRWD7eYgv7c7EK6dXiMqeMM0ZkNsEjfmLn2j0EpYJWdaUVunUzlT2vdc6Ag_iU-dAQrOV0QLelxyOkUzJ-fx5cbJ6GNaPKuW51bQ==",
+  "session": {
+    "traceId": "4ebea20349c16844d92bf6c961f627fa",
+    "resolvedStartBlock": 32900744
+  },
+  "clock": {
+    "timestamp": "2022-09-09T20:23:38.000Z",
+    "number": 32901090,
+    "id": "9058ded4fd65b4de2d772564366f1b61bc328bac7a4c4b87d73ca6ab4bae6be8"
+  },
+  "manifest": {
+    "substreamsEndpoint": "https://polygon.substreams.pinax.network:443",
+    "chain": "polygon",
+    "finalBlockOnly": "false",
+    "moduleName": "map_block_stats",
+    "type": "subtivity.v1.BlockStats",
+    "moduleHash": "6fb7bbc60685bbfc1cd209d26697639e05efdb24"
+  },
+  "data": {
+    ...
+  }
 }
 ```
 
@@ -102,14 +74,18 @@ import nacl from "tweetnacl";
 
 // get headers and body from POST request
 const rawBody = await request.text();
-const timestamp = request.headers.get("x-signature-timestamp");
 const signature = request.headers.get("x-signature-ed25519");
+const expiry = Number(request.headers.get("x-signature-ed25519-expiry"));
+const publicKey = request.headers.get("x-signature-ed25519-public-key");
+
+if (new Date().getTime() >= expiry) return new Response("signature expired", { status: 401 });
 
 // validate signature using public key
+const payload = JSON.stringify({ exp: expiry, id: publicKey });
 const isVerified = nacl.sign.detached.verify(
-  Buffer.from(timestamp + body),
-  Buffer.from(signature, 'hex'),
-  Buffer.from(PUBLIC_KEY, 'hex')
+  Buffer.from(payload),
+  Buffer.from(signature, "hex"),
+  Buffer.from(publicKey, "hex")
 );
 
 if (!isVerified) {

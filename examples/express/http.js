@@ -21,7 +21,7 @@ app.use(async (req, res) => {
   if (!publicKey) return new Response("missing required public key in headers", { status: 400 });
   if (!body) return new Response("missing body", { status: 400 });
 
-  if (new Date().getTime() >= Number(expiry)) return new Response("signature expired", { status: 401 });
+  if (new Date().getTime() >= expiry) return new Response("signature expired", { status: 401 });
   if (publicKey !== PUBLIC_KEY) return new Response("unknown public key", { status: 401 });
 
   // validate signature using public key
