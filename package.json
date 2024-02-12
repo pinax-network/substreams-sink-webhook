@@ -1,5 +1,5 @@
 {
-  "version": "0.7.5",
+  "version": "0.8.0",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "type": "module",
@@ -12,7 +12,9 @@
     "name": "Denis",
     "email": "denis@pinax.network"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "default": "./dist/index.js",
@@ -37,7 +39,7 @@
     "@substreams/sink-database-changes": "^0.3.2",
     "@substreams/sink-entity-changes": "^0.3.4",
     "p-queue": "latest",
-    "substreams-sink": "^0.13.4",
+    "substreams-sink": "^0.14.0",
     "tweetnacl": "latest",
     "zod": "^3.22.4"
   },

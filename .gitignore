@@ -13,3 +13,4 @@ docker-compose.yml
 *-win.exe
 substreams-sink-webhook
 bun.lockb
+.vscode
