@@ -28,23 +28,27 @@
     }
   },
   "scripts": {
-    "start": "tsc && node ./dist/bin/cli.js run",
+    "start": "tsc && node ./dist/bin/cli.js run --help",
     "pretest": "tsc --noEmit",
     "test": "bun test",
+    "posttest": "bunx @biomejs/biome check .",
     "prepublishOnly": "tsc",
+    "format": "bunx @biomejs/biome format --write ./",
     "build": "bun build --compile ./index.ts --outfile substreams-sink-webhook",
     "bench": "bun ./src/**/*.bench.ts"
   },
   "dependencies": {
     "@substreams/sink-database-changes": "^0.3.2",
     "@substreams/sink-entity-changes": "^0.3.4",
+    "hono": "^4.0.1",
     "p-queue": "latest",
     "substreams-sink": "^0.14.0",
     "tweetnacl": "latest",
-    "zod": "^3.22.4"
+    "viem": "^2.7.8",
+    "zod": "latest"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.3.3",
+    "@biomejs/biome": "latest",
     "bun-types": "latest",
     "mitata": "latest",
     "typescript": "latest"

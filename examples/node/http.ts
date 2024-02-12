@@ -21,37 +21,29 @@ function rawBody(request: http.IncomingMessage) {
 
 // Create a local server to serve Prometheus gauges
 server.on("request", async (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-
   // get headers and body from POST request
   const signature = String(req.headers["x-signature-ed25519"]);
-  const expiry = Number(req.headers["x-signature-ed25519-expiry"]);
-  const publicKey = String(req.headers["x-signature-ed25519-public-key"]);
-
+  const timestamp = Number(req.headers["x-signature-timestamp"]);
   const body = await rawBody(req);
 
   if (!signature) return new Response("missing required signature in headers", { status: 400 });
-  if (!expiry) return new Response("missing required expiry in headers", { status: 400 });
-  if (!publicKey) return new Response("missing required public key in headers", { status: 400 });
+  if (!timestamp) return new Response("missing required timestamp in headers", { status: 400 });
   if (!body) return new Response("missing body", { status: 400 });
 
-  if (new Date().getTime() >= expiry) return new Response("signature expired", { status: 401 });
-  if (publicKey !== PUBLIC_KEY) return new Response("unknown public key", { status: 401 });
-
   // validate signature using public key
-  const payload = JSON.stringify({ exp: expiry, id: publicKey });
   const isVerified = nacl.sign.detached.verify(
-    Buffer.from(payload),
+    Buffer.from(timestamp + body),
     Buffer.from(signature, "hex"),
-    Buffer.from(PUBLIC_KEY, "hex")
+    Buffer.from(PUBLIC_KEY, "hex"),
   );
 
-  console.dir({ signature, isVerified });
+  console.dir({ signature, timestamp, isVerified });
   console.dir(body);
+  res.setHeader("Content-Type", "text/plain;charset=utf-8");
   if (!isVerified) {
     return res.writeHead(401).end("invalid request signature");
   }
-  return res.end("OK");
+  return res.writeHead(200).end("OK");
 });
 
 server.listen(PORT, () => {

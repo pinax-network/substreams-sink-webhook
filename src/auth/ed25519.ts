@@ -1,31 +1,54 @@
 import nacl from "tweetnacl";
 
-export function sign(secretKey: string, durationInSecs: number) {
-  const publicKey = secretKey.substring(nacl.sign.secretKeyLength);
-  const expirationTime = new Date().getTime() + durationInSecs * 1000;
-
-  const payload = JSON.stringify({ exp: expirationTime, id: publicKey });
-  const signedBuffer = nacl.sign.detached(Buffer.from(payload), Buffer.from(secretKey, "hex"));
-
-  return { signature: Buffer.from(signedBuffer).toString("hex"), expirationTime, publicKey };
+export function createTimestamp() {
+  return Math.floor(Date.now() / 1000);
 }
 
-export function verify(signature: string, expiry: number, publicKey: string): Error | true {
-  if (new Date().getTime() >= expiry) {
-    return new Error("signature has expired");
+export function sign(timestamp: number, body: string, secretKey: string) {
+  const secretKeyHex = Buffer.from(secretKey, "hex");
+
+  // input validation
+  if (secretKeyHex.length !== nacl.sign.secretKeyLength) {
+    throw Error("invalid secret key length");
+  }
+  if (!body) {
+    throw Error("missing body");
+  }
+  if (!(timestamp > 0)) {
+    throw Error("invalid timestamp");
   }
 
-  const payload = JSON.stringify({ exp: expiry, id: publicKey });
-  const isVerified = nacl.sign.detached.verify(
-    Buffer.from(payload),
-    Buffer.from(signature, "hex"),
-    Buffer.from(publicKey, "hex"),
-  );
+  // sign message
+  const msg = Buffer.from(timestamp + body);
+  const signedBuffer = nacl.sign.detached(msg, secretKeyHex);
+  return Buffer.from(signedBuffer).toString("hex");
+}
+
+export function verify(timestamp: number, body: string, signature: string, publicKey: string): true {
+  const signatureHex = Buffer.from(signature, "hex");
+  const publicKeyHex = Buffer.from(publicKey, "hex");
+
+  // input validation
+  if (signatureHex.length !== nacl.sign.signatureLength) {
+    throw Error("invalid signature length");
+  }
+  if (!body) {
+    throw Error("missing body");
+  }
+  if (!(timestamp > 0)) {
+    throw Error("invalid timestamp");
+  }
+  if (publicKeyHex.length !== nacl.sign.publicKeyLength) {
+    throw Error("invalid public key length");
+  }
+
+  // verify signature
+  const msg = Buffer.from(timestamp + body);
+  const isVerified = nacl.sign.detached.verify(msg, signatureHex, publicKeyHex);
 
   if (!isVerified) {
-    return new Error("invalid signature");
+    throw Error("invalid signature");
   }
-
   return true;
 }
 
