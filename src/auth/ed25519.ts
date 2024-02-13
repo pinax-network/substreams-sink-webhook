@@ -44,17 +44,12 @@ export function sign(timestamp: number, body: string, privateKey: Hex) {
   return Buffer.from(signedBuffer).toString("hex");
 }
 
-export function verify(timestamp: number, body: string, signature: Hex, publicKey: Hex): true {
+export function verify(timestamp: number, body: string, signature: Hex, publicKey: Hex) {
   checkKey(publicKey, "public");
   checkMessage(timestamp, body);
   checkSignature(signature);
   const message = createMessage(timestamp, body);
-  const isVerified = ed25519.verify(signature, message, publicKey);
-
-  if (!isVerified) {
-    throw Error("invalid signature");
-  }
-  return true;
+  return ed25519.verify(signature, message, publicKey);
 }
 
 export function keyPair() {
