@@ -39,11 +39,9 @@
   "dependencies": {
     "@substreams/sink-database-changes": "^0.3.2",
     "@substreams/sink-entity-changes": "^0.3.4",
-    "hono": "^4.0.1",
     "p-queue": "latest",
     "substreams-sink": "^0.14.0",
     "tweetnacl": "latest",
-    "viem": "^2.7.8",
     "zod": "latest"
   },
   "devDependencies": {
