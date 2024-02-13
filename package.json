@@ -28,13 +28,12 @@
     }
   },
   "scripts": {
-    "start": "tsc && node ./dist/bin/cli.js run --help",
+    "start": "tsc && node ./dist/bin/cli.js run",
     "pretest": "tsc --noEmit",
     "test": "bun test",
     "posttest": "bunx @biomejs/biome check .",
     "prepublishOnly": "tsc",
     "format": "bunx @biomejs/biome format --write ./",
-    "build": "bun build --compile ./index.ts --outfile substreams-sink-webhook",
     "bench": "bun ./src/**/*.bench.ts"
   },
   "dependencies": {

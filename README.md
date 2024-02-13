@@ -145,9 +145,8 @@ Options:
   --webhook-url <string>               Webhook URL to send POST (env: WEBHOOK_URL)
   --secret-key <string>                TweetNaCl Secret-key to sign POST data payload (env: SECRET_KEY)
   --disable-ping <boolean>             Disable ping on init (choices: "true", "false", default: false, env: DISABLE_PING)
-  --maximum-attempts <number>          Maximum attempts to retry POST (default: 100, env: MAXIMUM_ATTEMPTS)
   --disable-signature <boolean>        Disable Ed25519 signature (choices: "true", "false", default: false, env: DISABLE_SIGNATURE)
-  --expiry-time <number>               Time before a transmission becomes invalid (in seconds) (default: 40, env: EXPIRY_TIME)
+  --maximum-attempts <number>          Maximum attempts to retry POST (default: 100, env: MAXIMUM_ATTEMPTS)
   -h, --help                           display help for command
 ```
 

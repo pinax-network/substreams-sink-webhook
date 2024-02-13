@@ -39,7 +39,7 @@ export async function postWebhook(url: string, body: string, secretKey: string, 
 
     try {
       const timestamp = createTimestamp();
-      const signature = disableSignature ? '' : sign(timestamp, body, secretKey);
+      const signature = disableSignature ? "" : sign(timestamp, body, secretKey);
 
       const response = await fetch(url, {
         body,
