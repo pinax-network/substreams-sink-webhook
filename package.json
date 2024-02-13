@@ -1,5 +1,5 @@
 {
-  "version": "0.8.2",
+  "version": "0.8.3",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "type": "module",
@@ -43,7 +43,7 @@
     "@substreams/sink-database-changes": "^0.3.2",
     "@substreams/sink-entity-changes": "^0.3.4",
     "p-queue": "latest",
-    "substreams-sink": "^0.14.0",
+    "substreams-sink": "^0.14.1",
     "zod": "latest"
   },
   "devDependencies": {
