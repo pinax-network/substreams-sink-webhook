@@ -95,6 +95,7 @@ if (!isVerified) {
 # Webhook
 SECRET_KEY="<Ed25519 Secret-key>"
 WEBHOOK_URL=http://127.0.0.1:3000
+PORT=9102
 
 # Get Substreams API Key
 # https://app.pinax.network
@@ -105,6 +106,7 @@ SUBSTREAMS_API_KEY="<Substreams API Token @ https://pinax.network>"
 MANIFEST=https://github.com/pinax-network/substreams/releases/download/blocks-v0.1.0/blocks-v0.1.0.spkg
 MODULE_NAME=map_blocks
 START_BLOCK=-10
+PRODUCTION_MODE=true
 
 # Webhook (Optional)
 DISABLE_PING=false

@@ -65,8 +65,15 @@ export async function action(options: WebhookRunOptions) {
     });
   });
   emitter.start();
+
+  // HTTP Server
   http.listen(options);
   http.server.on("request", (req, res) => {
     if (req.url === "/") return toText(res, banner());
   });
+
+  emitter.on("close", () => {
+    logger.info("stream closed");
+    http.server.close()
+  })
 }
