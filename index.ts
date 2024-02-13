@@ -5,9 +5,9 @@ import { postWebhook } from "./src/postWebhook.js";
 import type { SessionInit } from "@substreams/core/proto";
 import type { WebhookRunOptions } from "./bin/cli.js";
 import { banner } from "./src/banner.js";
-import { toText } from "./src/http.js";
+import { toJSON, toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
-import { checkKey } from "./index.js";
+import { checkKey, keyPair } from "./src/auth/ed25519.js";
 
 export * from "./src/auth/ed25519.js";
 export * from "./src/schemas.js";
@@ -73,6 +73,7 @@ export async function action(options: WebhookRunOptions) {
   http.listen(options);
   http.server.on("request", (req, res) => {
     if (req.url === "/") return toText(res, banner());
+    if (req.url === "/keypair") return toJSON(res, keyPair());
   });
 
   emitter.on("close", () => {

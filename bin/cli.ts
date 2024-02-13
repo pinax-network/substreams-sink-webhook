@@ -31,7 +31,7 @@ command.action(action);
 
 program
   .command("keypair")
-  .description("Generate TweetNaCl keypair")
+  .description("Generate random Ed25519 private & public keys")
   .action(() => {
     const { publicKey, privateKey } = keyPair();
     console.log(`PUBLIC_KEY=${publicKey}`);
