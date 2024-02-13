@@ -1,5 +1,6 @@
+import { Hex } from "@noble/curves/abstract/utils";
 import { logger } from "substreams-sink";
-import { cachedSign } from "./auth/cached.js";
+import { createTimestamp, sign } from "./auth/ed25519.js";
 
 function awaitSetTimeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -7,20 +8,16 @@ function awaitSetTimeout(ms: number) {
 
 interface PostWebhookOptions {
   maximumAttempts?: number;
+  disableSignature?: string;
 }
 
-export async function postWebhook(
-  url: string,
-  body: string,
-  secretKey: string,
-  expiryTime: number,
-  options: PostWebhookOptions = {},
-) {
+export async function postWebhook(url: string, body: string, secretKey: Hex, options: PostWebhookOptions = {}) {
   // Retry Policy
   const initialInterval = 1000; // 1s
   const maximumAttempts = options.maximumAttempts ?? 100 * initialInterval;
   const maximumInterval = 100 * initialInterval;
   const backoffCoefficient = 2;
+  const disableSignature = options.disableSignature === "true";
 
   let attempts = 0;
   while (true) {
@@ -42,7 +39,8 @@ export async function postWebhook(
     }
 
     try {
-      const { signature, expirationTime, publicKey } = cachedSign(secretKey, expiryTime);
+      const timestamp = createTimestamp();
+      const signature = disableSignature ? "" : sign(timestamp, body, secretKey);
 
       const response = await fetch(url, {
         body,
@@ -50,8 +48,7 @@ export async function postWebhook(
         headers: {
           "content-type": "application/json",
           "x-signature-ed25519": signature,
-          "x-signature-ed25519-expiry": expirationTime.toString(),
-          "x-signature-ed25519-public-key": publicKey,
+          "x-signature-timestamp": String(timestamp),
         },
       });
 

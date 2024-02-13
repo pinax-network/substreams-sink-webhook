@@ -7,8 +7,9 @@ import type { WebhookRunOptions } from "./bin/cli.js";
 import { banner } from "./src/banner.js";
 import { toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
+import { checkKey } from "./index.js";
 
-export * from "./src/auth/index.js";
+export * from "./src/auth/ed25519.js";
 export * from "./src/schemas.js";
 
 export async function action(options: WebhookRunOptions) {
@@ -19,8 +20,10 @@ export async function action(options: WebhookRunOptions) {
   const queue = new PQueue({ concurrency: 1 }); // all messages are sent in block order, no need to parallelize
 
   // Ping URL to check if it's valid
-  if (!options.disablePing) {
-    if (!(await ping(options.webhookUrl, options.secretKey, options.expiryTime))) {
+  const privateKey = options.privateKey;
+  checkKey(privateKey, "private");
+  if (options.disablePing === "false") {
+    if (!(await ping(options.webhookUrl, privateKey))) {
       logger.error("exiting from invalid PING response");
       process.exit(1);
     }
@@ -60,13 +63,20 @@ export async function action(options: WebhookRunOptions) {
 
     // Queue POST
     queue.add(async () => {
-      const response = await postWebhook(options.webhookUrl, body, options.secretKey, options.expiryTime);
+      const response = await postWebhook(options.webhookUrl, body, privateKey, options);
       logger.info("POST", response, metadata);
     });
   });
   emitter.start();
+
+  // HTTP Server
   http.listen(options);
   http.server.on("request", (req, res) => {
     if (req.url === "/") return toText(res, banner());
+  });
+
+  emitter.on("close", () => {
+    logger.info("stream closed");
+    http.server.close();
   });
 }
