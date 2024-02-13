@@ -74,6 +74,6 @@ export async function action(options: WebhookRunOptions) {
 
   emitter.on("close", () => {
     logger.info("stream closed");
-    http.server.close()
-  })
+    http.server.close();
+  });
 }
