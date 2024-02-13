@@ -7,9 +7,9 @@ import type { WebhookRunOptions } from "./bin/cli.js";
 import { banner } from "./src/banner.js";
 import { toJSON, toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
-import { checkKey, keyPair } from "./src/auth/ed25519.js";
+import { checkKey, keyPair } from "./src/auth.js";
 
-export * from "./src/auth/ed25519.js";
+export * from "./src/auth.js";
 export * from "./src/schemas.js";
 
 export async function action(options: WebhookRunOptions) {

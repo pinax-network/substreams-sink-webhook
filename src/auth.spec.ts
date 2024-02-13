@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import * as auth from "./ed25519.js";
+import * as auth from "./auth.js";
 
 const privateKey = "3faae992336ea6599fbee55bb2605f1a1297c7288b860725cdfc8794413559db";
 const publicKey = "a3cb7366ee8ca77225b4d41772e270e4e831d171d1de71d91707c42e7ba82cc9";

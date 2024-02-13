@@ -1,5 +1,5 @@
 {
-  "version": "0.8.1",
+  "version": "0.8.2",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "type": "module",
@@ -13,18 +13,20 @@
     "email": "denis@pinax.network"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
+  "sideEffects": false,
   "exports": {
     ".": {
-      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "default": "./dist/index.js"
     },
     "./auth": {
-      "default": "./dist/src/auth/index.js",
-      "import": "./dist/src/auth/index.js",
-      "types": "./dist/src/auth/index.d.ts"
+      "types": "./dist/src/auth.d.ts",
+      "import": "./dist/src/auth.js",
+      "default": "./dist/src/auth.js"
     }
   },
   "scripts": {

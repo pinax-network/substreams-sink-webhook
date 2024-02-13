@@ -1,5 +1,5 @@
 import { Hex } from "@noble/curves/abstract/utils";
-import { keyPair } from "./auth/ed25519.js";
+import { keyPair } from "./auth.js";
 import { postWebhook } from "./postWebhook.js";
 
 export async function ping(url: string, privateKey: Hex) {

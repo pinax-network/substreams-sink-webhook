@@ -1,6 +1,6 @@
 import { Hex } from "@noble/curves/abstract/utils";
 import { logger } from "substreams-sink";
-import { createTimestamp, sign } from "./auth/ed25519.js";
+import { createTimestamp, sign } from "./auth.js";
 
 function awaitSetTimeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

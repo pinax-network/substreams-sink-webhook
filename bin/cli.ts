@@ -4,7 +4,7 @@ import { Option } from "commander";
 import { commander, logger } from "substreams-sink";
 import { action } from "../index.js";
 import pkg from "../package.json" assert { type: "json" };
-import { keyPair } from "../src/auth/ed25519.js";
+import { keyPair } from "../src/auth.js";
 import { ping } from "../src/ping.js";
 
 export interface WebhookRunOptions extends commander.RunOptions {
