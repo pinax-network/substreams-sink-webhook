@@ -3,7 +3,7 @@
     "start": "bun http.ts"
   },
   "dependencies": {
-    "tweetnacl": "latest",
+    "@noble/curves": "latest",
     "dotenv": "latest"
   }
 }

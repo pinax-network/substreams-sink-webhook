@@ -1,5 +1,5 @@
 import "dotenv/config";
-import nacl from "tweetnacl";
+import { ed25519 } from "@noble/curves/ed25519.js";
 
 const PORT = process.env.PORT ?? 3000;
 const PUBLIC_KEY = process.env.PUBLIC_KEY ?? "a3cb7366ee8ca77225b4d41772e270e4e831d171d1de71d91707c42e7ba82cc9";
@@ -12,7 +12,7 @@ export default {
   async fetch(request) {
     // get headers and body from POST request
     const signature = request.headers.get("x-signature-ed25519");
-    const timestamp = Number(request.headers.get("x-signature-timestamp"));
+    const timestamp = request.headers.get("x-signature-timestamp");
     const body = await request.text();
 
     if (!signature) return new Response("missing required signature in headers", { status: 400 });
@@ -20,10 +20,10 @@ export default {
     if (!body) return new Response("missing body", { status: 400 });
 
     // validate signature using public key
-    const isVerified = nacl.sign.detached.verify(
+    const isVerified = ed25519.verify(
+      signature,
       Buffer.from(timestamp + body),
-      Buffer.from(signature, "hex"),
-      Buffer.from(PUBLIC_KEY, "hex"),
+      PUBLIC_KEY,
     );
     console.log({ isVerified, timestamp, signature });
     console.log(body);

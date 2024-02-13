@@ -7,6 +7,7 @@ import type { WebhookRunOptions } from "./bin/cli.js";
 import { banner } from "./src/banner.js";
 import { toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
+import { checkKey } from "./index.js";
 
 export * from "./src/auth/ed25519.js";
 export * from "./src/schemas.js";
@@ -19,8 +20,10 @@ export async function action(options: WebhookRunOptions) {
   const queue = new PQueue({ concurrency: 1 }); // all messages are sent in block order, no need to parallelize
 
   // Ping URL to check if it's valid
+  const privateKey = options.privateKey;
+  checkKey(privateKey, "private");
   if (options.disablePing === "false") {
-    if (!(await ping(options.webhookUrl, options.secretKey))) {
+    if (!(await ping(options.webhookUrl, privateKey))) {
       logger.error("exiting from invalid PING response");
       process.exit(1);
     }
@@ -60,7 +63,7 @@ export async function action(options: WebhookRunOptions) {
 
     // Queue POST
     queue.add(async () => {
-      const response = await postWebhook(options.webhookUrl, body, options.secretKey, options);
+      const response = await postWebhook(options.webhookUrl, body, privateKey, options);
       logger.info("POST", response, metadata);
     });
   });

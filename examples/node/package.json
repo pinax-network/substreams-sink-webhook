@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "dotenv": "latest",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "latest"
   },
   "devDependencies": {
     "@types/node": "latest",

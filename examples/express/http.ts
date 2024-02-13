@@ -11,7 +11,7 @@ app.use(express.text({ type: "application/json" }));
 app.use(async (request, res) => {
   // get headers and body from POST request
   const signature = String(request.headers["x-signature-ed25519"]);
-  const timestamp = Number(request.headers["x-signature-timestamp"]);
+  const timestamp = String(request.headers["x-signature-timestamp"]);
   const body = await request.body;
 
   if (!signature) return new Response("missing required signature in headers", { status: 400 });

@@ -1,3 +1,4 @@
+import { Hex } from "@noble/curves/abstract/utils";
 import { logger } from "substreams-sink";
 import { createTimestamp, sign } from "./auth/ed25519.js";
 
@@ -10,7 +11,7 @@ interface PostWebhookOptions {
   disableSignature?: string;
 }
 
-export async function postWebhook(url: string, body: string, secretKey: string, options: PostWebhookOptions = {}) {
+export async function postWebhook(url: string, body: string, secretKey: Hex, options: PostWebhookOptions = {}) {
   // Retry Policy
   const initialInterval = 1000; // 1s
   const maximumAttempts = options.maximumAttempts ?? 100 * initialInterval;

@@ -93,14 +93,14 @@ if (!isVerified) {
 
 ```env
 # Webhook
-SECRET_KEY="<Ed25519 Secret-key>"
+PRIVATE_KEY=<Ed25519 Private Key>
 WEBHOOK_URL=http://127.0.0.1:3000
 PORT=9102
 
 # Get Substreams API Key
 # https://app.pinax.network
 # https://app.streamingfast.io/
-SUBSTREAMS_API_KEY="<Substreams API Token @ https://pinax.network>"
+SUBSTREAMS_API_KEY=<Substreams API Token @ https://pinax.network>
 
 # Substreams Package (*.spkg)
 MANIFEST=https://github.com/pinax-network/substreams/releases/download/blocks-v0.1.0/blocks-v0.1.0.spkg
@@ -145,7 +145,7 @@ Options:
   --final-blocks-only <boolean>        Only process blocks that have pass finality, to prevent any reorg and undo signal by staying further away from the chain HEAD (default: "false", env: FINAL_BLOCKS_ONLY)
   --verbose <boolean>                  Enable verbose logging (default: "false", env: VERBOSE)
   --webhook-url <string>               Webhook URL to send POST (env: WEBHOOK_URL)
-  --secret-key <string>                TweetNaCl Secret-key to sign POST data payload (env: SECRET_KEY)
+  --private-key <string>               Ed25519 private key to sign POST data payload (env: PRIVATE_KEY)
   --disable-ping <boolean>             Disable ping on init (choices: "true", "false", default: false, env: DISABLE_PING)
   --disable-signature <boolean>        Disable Ed25519 signature (choices: "true", "false", default: false, env: DISABLE_SIGNATURE)
   --maximum-attempts <number>          Maximum attempts to retry POST (default: 100, env: MAXIMUM_ATTEMPTS)

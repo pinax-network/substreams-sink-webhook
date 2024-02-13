@@ -9,7 +9,7 @@
     "tweetnacl": "latest"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
+    "@types/express": "latest",
     "@types/node": "latest",
     "tsx": "latest"
   }
