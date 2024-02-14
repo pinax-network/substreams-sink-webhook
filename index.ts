@@ -9,9 +9,6 @@ import { toJSON, toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
 import { checkKey, keyPair } from "./src/auth.js";
 
-export * from "./src/auth.js";
-export * from "./src/schemas.js";
-
 export async function action(options: WebhookRunOptions) {
   // Block Emitter
   const { emitter, moduleHash } = await setup(options);

@@ -1,5 +1,5 @@
 {
-  "version": "0.8.3",
+  "version": "0.8.4",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "type": "module",
@@ -27,6 +27,11 @@
       "types": "./dist/src/auth.d.ts",
       "import": "./dist/src/auth.js",
       "default": "./dist/src/auth.js"
+    },
+    "./schemas": {
+      "types": "./dist/src/schemas.d.ts",
+      "import": "./dist/src/schemas.js",
+      "default": "./dist/src/schemas.js"
     }
   },
   "scripts": {
@@ -40,15 +45,13 @@
   },
   "dependencies": {
     "@noble/curves": "^1.3.0",
-    "@substreams/sink-database-changes": "^0.3.2",
-    "@substreams/sink-entity-changes": "^0.3.4",
     "p-queue": "latest",
     "substreams-sink": "^0.14.1",
     "zod": "latest"
   },
   "devDependencies": {
     "@biomejs/biome": "latest",
-    "bun-types": "latest",
+    "@types/bun": "latest",
     "mitata": "latest",
     "tweetnacl": "latest",
     "typescript": "latest"
