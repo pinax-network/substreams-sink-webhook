@@ -34,8 +34,7 @@ program
   .description("Generate random Ed25519 private & public keys")
   .action(() => {
     const { publicKey, privateKey } = keyPair();
-    console.log(`PUBLIC_KEY=${publicKey}`);
-    console.log(`PRIVATE_KEY=${privateKey}`);
+    process.stdout.write(JSON.stringify({ publicKey, privateKey }, null, 2));
   });
 
 program

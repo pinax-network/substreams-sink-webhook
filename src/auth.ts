@@ -16,6 +16,15 @@ export function checkKey(key: Hex, type: "public" | "private") {
   }
 }
 
+// TweetNaCl.js private key (includes public key)
+// split the private key from the public key
+export function parsePrivateKey(privateKey: string) {
+  if (typeof privateKey === "string" && privateKey.length === 128) {
+    return privateKey.slice(0, 64);
+  }
+  return privateKey;
+}
+
 export function checkSignature(signature: Hex) {
   const length = typeof signature === "string" ? 128 : 64;
   if (signature.length !== length) {
