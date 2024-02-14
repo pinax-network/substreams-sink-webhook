@@ -7,7 +7,7 @@ import type { WebhookRunOptions } from "./bin/cli.js";
 import { banner } from "./src/banner.js";
 import { toJSON, toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
-import { checkKey, keyPair } from "./src/auth.js";
+import { keyPair, parsePrivateKey } from "./src/auth.js";
 
 export async function action(options: WebhookRunOptions) {
   // Block Emitter
@@ -17,8 +17,7 @@ export async function action(options: WebhookRunOptions) {
   const queue = new PQueue({ concurrency: 1 }); // all messages are sent in block order, no need to parallelize
 
   // Ping URL to check if it's valid
-  const privateKey = options.privateKey;
-  checkKey(privateKey, "private");
+  const privateKey = parsePrivateKey(options.privateKey);
   if (options.disablePing === "false") {
     if (!(await ping(options.webhookUrl, privateKey))) {
       logger.error("exiting from invalid PING response");

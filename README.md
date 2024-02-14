@@ -64,6 +64,21 @@ x-signature-timestamp: 1707776632
 }
 ```
 
+## Generate Ed25519 public & private key pair
+
+```bash
+$ bunx substreams-sink-webhook keypair
+{
+  "publicKey": "36a89085d54d866c60ecccc2bf332d1c0dd5f1a810af175b1cfb7ff9e64b67d6",
+  "privateKey": "67603675f8160b4e4ca67770eaf7df797f3a9617665a84ec3e9baf92c403fb4f"
+}
+```
+or using `curl`
+
+```bash
+$ curl http://localhost:9102/keypair
+```
+
 ## Validate Ed25519 signature
 
 ```typescript

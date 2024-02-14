@@ -83,3 +83,7 @@ describe("verify", () => {
     expect(auth.verify(timestamp, body, sig, publicKey)).toBeTruthy();
   });
 });
+
+test("parsePrivateKey", () => {
+  expect(auth.parsePrivateKey(privateKey + publicKey)).toBe(privateKey);
+});
