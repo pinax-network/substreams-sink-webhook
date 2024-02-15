@@ -41,11 +41,11 @@ export async function postWebhook(url: string, body: string, secretKey?: Hex, op
       const timestamp = createTimestamp();
       const headers = new Headers([
         ["content-type", "application/json"],
-        ["x-signature-timestamp", String(timestamp)]
+        ["x-signature-timestamp", String(timestamp)],
       ]);
 
       // optional signature
-      if ( secretKey) {
+      if (secretKey) {
         headers.set("x-signature-ed25519", sign(timestamp, body, secretKey));
       }
 
