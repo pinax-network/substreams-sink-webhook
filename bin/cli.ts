@@ -9,23 +9,18 @@ import { ping } from "../src/ping.js";
 
 export interface WebhookRunOptions extends commander.RunOptions {
   webhookUrl: string;
-  privateKey: string;
-  expiryTime: number;
+  privateKey?: string;
   maximumAttempts: number;
-  disablePing: string;
-  disableSignature: string;
 }
 
 const webhookUrlOption = new Option("--webhook-url <string>", "Webhook URL to send POST").makeOptionMandatory().env("WEBHOOK_URL");
-const privateKeyOption = new Option("--private-key <string>", "Ed25519 private key to sign POST data payload").makeOptionMandatory().env("PRIVATE_KEY");
+const privateKeyOption = new Option("--private-key <string>", "Ed25519 private key to sign POST data payload").env("PRIVATE_KEY");
 
 // Run Webhook Sink
 const program = commander.program(pkg);
 const command = commander.run(program, pkg);
 command.addOption(webhookUrlOption);
 command.addOption(privateKeyOption);
-command.addOption(new Option("--disable-ping <boolean>", "Disable ping on init").choices(["true", "false"]).env("DISABLE_PING").default(false));
-command.addOption(new Option("--disable-signature <boolean>", "Disable Ed25519 signature").choices(["true", "false"]).env("DISABLE_SIGNATURE").default(false));
 command.addOption(new Option("--maximum-attempts <number>", "Maximum attempts to retry POST").env("MAXIMUM_ATTEMPTS").default(100));
 command.action(action);
 

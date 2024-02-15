@@ -108,9 +108,8 @@ if (!isVerified) {
 
 ```env
 # Webhook
-PRIVATE_KEY=<Ed25519 Private Key>
-WEBHOOK_URL=http://127.0.0.1:3000
 PORT=9102
+WEBHOOK_URL=http://127.0.0.1:3000
 
 # Get Substreams API Key
 # https://app.pinax.network
@@ -124,10 +123,9 @@ START_BLOCK=-10
 PRODUCTION_MODE=true
 
 # Webhook (Optional)
-DISABLE_PING=false
-DISABLE_SIGNATURE=false
-VERBOSE=true
+PRIVATE_KEY=<Ed25519 Private Key>
 MAXIMUM_ATTEMPTS=100
+VERBOSE=true
 ```
 
 ## Help
@@ -161,8 +159,6 @@ Options:
   --verbose <boolean>                  Enable verbose logging (default: "false", env: VERBOSE)
   --webhook-url <string>               Webhook URL to send POST (env: WEBHOOK_URL)
   --private-key <string>               Ed25519 private key to sign POST data payload (env: PRIVATE_KEY)
-  --disable-ping <boolean>             Disable ping on init (choices: "true", "false", default: false, env: DISABLE_PING)
-  --disable-signature <boolean>        Disable Ed25519 signature (choices: "true", "false", default: false, env: DISABLE_SIGNATURE)
   --maximum-attempts <number>          Maximum attempts to retry POST (default: 100, env: MAXIMUM_ATTEMPTS)
   -h, --help                           display help for command
 ```

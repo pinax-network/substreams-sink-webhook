@@ -18,7 +18,8 @@ export function checkKey(key: Hex, type: "public" | "private") {
 
 // TweetNaCl.js private key (includes public key)
 // split the private key from the public key
-export function parsePrivateKey(privateKey: string) {
+export function parsePrivateKey(privateKey?: string) {
+  if ( !privateKey ) return;
   if (typeof privateKey === "string" && privateKey.length === 128) {
     return privateKey.slice(0, 64);
   }
