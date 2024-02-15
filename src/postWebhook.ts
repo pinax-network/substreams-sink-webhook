@@ -11,13 +11,12 @@ interface PostWebhookOptions {
   disableSignature?: string;
 }
 
-export async function postWebhook(url: string, body: string, secretKey: Hex, options: PostWebhookOptions = {}) {
+export async function postWebhook(url: string, body: string, secretKey?: Hex, options: PostWebhookOptions = {}) {
   // Retry Policy
   const initialInterval = 1000; // 1s
   const maximumAttempts = options.maximumAttempts ?? 100 * initialInterval;
   const maximumInterval = 100 * initialInterval;
   const backoffCoefficient = 2;
-  const disableSignature = options.disableSignature === "true";
 
   let attempts = 0;
   while (true) {
@@ -40,16 +39,20 @@ export async function postWebhook(url: string, body: string, secretKey: Hex, opt
 
     try {
       const timestamp = createTimestamp();
-      const signature = disableSignature ? "" : sign(timestamp, body, secretKey);
+      const headers = new Headers([
+        ["content-type", "application/json"],
+        ["x-signature-timestamp", String(timestamp)],
+      ]);
+
+      // optional signature
+      if (secretKey) {
+        headers.set("x-signature-ed25519", sign(timestamp, body, secretKey));
+      }
 
       const response = await fetch(url, {
         body,
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-signature-ed25519": signature,
-          "x-signature-timestamp": String(timestamp),
-        },
+        headers,
       });
 
       const status = response.status;

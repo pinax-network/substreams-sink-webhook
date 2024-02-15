@@ -18,11 +18,9 @@ export async function action(options: WebhookRunOptions) {
 
   // Ping URL to check if it's valid
   const privateKey = parsePrivateKey(options.privateKey);
-  if (options.disablePing === "false") {
-    if (!(await ping(options.webhookUrl, privateKey))) {
-      logger.error("exiting from invalid PING response");
-      process.exit(1);
-    }
+  if (!(await ping(options.webhookUrl, privateKey))) {
+    logger.error("exiting from invalid PING response");
+    process.exit(1);
   }
   let session: SessionInit;
   emitter.on("session", (data) => {
