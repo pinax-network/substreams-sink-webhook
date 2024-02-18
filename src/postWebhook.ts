@@ -1,6 +1,7 @@
 import { Hex } from "@noble/curves/abstract/utils";
 import { logger } from "substreams-sink";
 import { createTimestamp, sign } from "./auth.js";
+import logUpdate from "log-update";
 
 function awaitSetTimeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -9,6 +10,22 @@ function awaitSetTimeout(ms: number) {
 interface PostWebhookOptions {
   maximumAttempts?: number;
   disableSignature?: string;
+}
+
+function now() {
+  return Math.floor(new Date().getTime() / 1000);
+}
+
+let success = 0;
+let start = now();
+// let lastUpdate = now();
+
+// TO-DO replace with Prometheus metrics
+function logProgress() {
+  success++;
+  const delta = now() - start;
+  const rate = Math.round(success / delta);
+  logUpdate(`[postWebhook]: ${success} total [${rate} b/s]`);
 }
 
 export async function postWebhook(url: string, body: string, secretKey?: Hex, options: PostWebhookOptions = {}) {
@@ -58,13 +75,15 @@ export async function postWebhook(url: string, body: string, secretKey?: Hex, op
       const status = response.status;
       if (status !== 200) {
         attempts++;
-        logger.warn(`Unexpected status code ${status}`, { url, body });
+        logger.warn(`Unexpected status code ${status}`, { url });
         continue;
       }
+      // success
+      logProgress();
       return { url, status };
     } catch (e: any) {
       const error = e.cause;
-      logger.error("Unexpected error", { url, body, error });
+      logger.error("Unexpected error", { url, error });
       attempts++;
     }
   }

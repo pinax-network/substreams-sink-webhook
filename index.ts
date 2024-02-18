@@ -1,5 +1,5 @@
 import PQueue from "p-queue";
-import { http, logger, setup } from "substreams-sink";
+import { http, setup, logger } from "substreams-sink";
 import { postWebhook } from "./src/postWebhook.js";
 
 import type { SessionInit } from "@substreams/core/proto";
@@ -57,8 +57,7 @@ export async function action(options: WebhookRunOptions) {
 
     // Queue POST
     queue.add(async () => {
-      const response = await postWebhook(options.webhookUrl, body, privateKey, options);
-      logger.info("POST", response, metadata);
+      await postWebhook(options.webhookUrl, body, privateKey, options);
     });
   });
   emitter.start();
@@ -75,3 +74,5 @@ export async function action(options: WebhookRunOptions) {
     http.server.close();
   });
 }
+
+

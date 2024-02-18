@@ -44,7 +44,8 @@
     "bench": "bun ./src/**/*.bench.ts"
   },
   "dependencies": {
-    "@noble/curves": "^1.3.0",
+    "@noble/curves": "latest",
+    "log-update": "latest",
     "p-queue": "latest",
     "substreams-sink": "^0.14.1",
     "zod": "latest"

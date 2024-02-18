@@ -6,6 +6,7 @@ cursor.lock
 *.log
 *.db
 *.js
+*.lock
 !ecosystem.config.js
 docker-compose.yml
 *-linux
