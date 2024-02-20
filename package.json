@@ -1,5 +1,5 @@
 {
-  "version": "0.9.0",
+  "version": "0.9.1",
   "name": "substreams-sink-webhook",
   "description": "Substreams Sink Webhook",
   "type": "module",
@@ -35,7 +35,7 @@
     }
   },
   "scripts": {
-    "start": "tsc && pm2 start ./dist/bin/cli.js --name webhook -- run",
+    "start": "tsc && node ./dist/bin/cli.js run",
     "dev": "tsc && nodemon ./dist/bin/cli.js run",
     "pretest": "tsc --noEmit",
     "test": "bun test",
@@ -55,8 +55,7 @@
     "@biomejs/biome": "latest",
     "@types/bun": "latest",
     "mitata": "latest",
-    "nodemon": "^3.0.3",
-    "pm2": "^5.3.1",
+    "nodemon": "latest",
     "tweetnacl": "latest",
     "typescript": "latest"
   }
