@@ -1,4 +1,4 @@
-import { ed25519 } from "@noble/curves/ed25519.js";
+import { ed25519 } from "@noble/curves/ed25519";
 import { bench, group, run } from "mitata";
 import nacl from "tweetnacl";
 

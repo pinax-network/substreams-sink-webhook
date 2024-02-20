@@ -1,5 +1,6 @@
 import PQueue from "p-queue";
-import { http, setup, logger } from "substreams-sink";
+import fs from "fs";
+import { http, setup, logger, fileCursor } from "substreams-sink";
 import { postWebhook } from "./src/postWebhook.js";
 
 import type { SessionInit } from "@substreams/core/proto";
@@ -10,8 +11,10 @@ import { ping } from "./src/ping.js";
 import { keyPair, parsePrivateKey } from "./src/auth.js";
 
 export async function action(options: WebhookRunOptions) {
+  const cursor = fileCursor.readCursor(options.cursorPath);
+
   // Block Emitter
-  const { emitter, moduleHash } = await setup(options);
+  const { emitter, moduleHash } = await setup({...options, cursor});
 
   // Queue
   const queue = new PQueue({ concurrency: 1 }); // all messages are sent in block order, no need to parallelize
@@ -58,6 +61,7 @@ export async function action(options: WebhookRunOptions) {
     // Queue POST
     queue.add(async () => {
       await postWebhook(options.webhookUrl, body, privateKey, options);
+      fs.writeFileSync(options.cursorPath, cursor);
     });
   });
   emitter.start();

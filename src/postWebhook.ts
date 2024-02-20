@@ -16,16 +16,18 @@ function now() {
   return Math.floor(new Date().getTime() / 1000);
 }
 
-let success = 0;
+let blocks = 0;
 let start = now();
 // let lastUpdate = now();
 
 // TO-DO replace with Prometheus metrics
 function logProgress() {
-  success++;
   const delta = now() - start;
-  const rate = Math.round(success / delta);
-  logUpdate(`[postWebhook]: ${success} total [${rate} b/s]`);
+  const rate = Math.round(blocks / delta);
+  const minutes = Math.round(delta / 60);
+  const seconds = delta % 60;
+  if ( blocks ) logUpdate(`[app] blocks=${blocks} [${rate} b/s] (${minutes}m ${seconds}s)`);
+  blocks++;
 }
 
 export async function postWebhook(url: string, body: string, secretKey?: Hex, options: PostWebhookOptions = {}) {

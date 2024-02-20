@@ -10,17 +10,20 @@ import { ping } from "../src/ping.js";
 export interface WebhookRunOptions extends commander.RunOptions {
   webhookUrl: string;
   privateKey?: string;
+  cursorPath: string;
   maximumAttempts: number;
 }
 
 const webhookUrlOption = new Option("--webhook-url <string>", "Webhook URL to send POST").makeOptionMandatory().env("WEBHOOK_URL");
 const privateKeyOption = new Option("--private-key <string>", "Ed25519 private key to sign POST data payload").env("PRIVATE_KEY");
+const cursorOption = new Option("--cursor-path <string>", "Path to cursor file").env("CURSOR_PATH").default("cursor.lock");
 
 // Run Webhook Sink
 const program = commander.program(pkg);
 const command = commander.run(program, pkg);
 command.addOption(webhookUrlOption);
 command.addOption(privateKeyOption);
+command.addOption(cursorOption);
 command.addOption(new Option("--maximum-attempts <number>", "Maximum attempts to retry POST").env("MAXIMUM_ATTEMPTS").default(100));
 command.action(action);
 

@@ -17,8 +17,7 @@
   },
   "include": [
     "index.ts",
-    "src/schemas.ts",
-    "src/auth.ts",
+    "src",
     "bin/cli.ts"
   ]
 }
