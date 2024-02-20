@@ -36,6 +36,7 @@
   },
   "scripts": {
     "start": "tsc && pm2 start ./dist/bin/cli.js --name webhook -- run",
+    "dev": "tsc && nodemon ./dist/bin/cli.js run",
     "pretest": "tsc --noEmit",
     "test": "bun test",
     "posttest": "bunx @biomejs/biome check .",
@@ -54,6 +55,7 @@
     "@biomejs/biome": "latest",
     "@types/bun": "latest",
     "mitata": "latest",
+    "nodemon": "^3.0.3",
     "pm2": "^5.3.1",
     "tweetnacl": "latest",
     "typescript": "latest"
