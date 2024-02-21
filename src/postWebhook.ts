@@ -18,17 +18,18 @@ function now() {
 }
 
 let blocks = 0;
-let start = now();
+const start = now();
 // let lastUpdate = now();
 
 // TO-DO replace with Prometheus metrics
 function logProgress(metadata?: Metadata) {
-  if ( !metadata ) return;
+  if (!metadata) return;
   const delta = now() - start;
   const rate = Math.round(blocks / delta);
   const minutes = Math.round(delta / 60);
   const seconds = delta % 60;
-  if ( blocks ) logUpdate(`[app] timestamp=${metadata.clock.timestamp} block_number=${metadata.clock.number} blocks=${blocks} [${rate} b/s] (${minutes}m ${seconds}s)`);
+  if (blocks)
+    logUpdate(`[app] timestamp=${metadata.clock.timestamp} block_number=${metadata.clock.number} blocks=${blocks} [${rate} b/s] (${minutes}m ${seconds}s)`);
   blocks++;
 }
 
