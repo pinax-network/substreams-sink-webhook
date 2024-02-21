@@ -8,7 +8,7 @@ export async function ping(url: string, privateKey?: Hex) {
 
   // send valid signature (must respond with 200)
   try {
-    await postWebhook(url, body, undefined, privateKey, { maximumAttempts: 0 });
+    await postWebhook(url, body, privateKey, { maximumAttempts: 0 });
   } catch (_e) {
     return false;
   }
@@ -20,7 +20,7 @@ export async function ping(url: string, privateKey?: Hex) {
 
   // send invalid signature (must NOT respond with 200)
   try {
-    await postWebhook(url, body, undefined, invalidprivateKey, { maximumAttempts: 0 });
+    await postWebhook(url, body, invalidprivateKey, { maximumAttempts: 0 });
     return false;
   } catch (_e) {
     return true;
