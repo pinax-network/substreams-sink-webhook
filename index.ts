@@ -9,9 +9,11 @@ import { banner } from "./src/banner.js";
 import { toJSON, toText } from "./src/http.js";
 import { ping } from "./src/ping.js";
 import { keyPair, parsePrivateKey } from "./src/auth.js";
+import { Metadata, boolean } from "./src/schemas.js";
 
 export async function action(options: WebhookRunOptions) {
   const cursor = fileCursor.readCursor(options.cursorPath);
+  const finalBlocksOnly = boolean.parse(options.finalBlocksOnly);
 
   // Block Emitter
   const { emitter, moduleHash } = await setup({...options, cursor});
@@ -34,7 +36,7 @@ export async function action(options: WebhookRunOptions) {
   emitter.on("output", async (data, cursor, clock) => {
     if (!clock.timestamp) return;
     const chain = new URL(options.substreamsEndpoint).hostname.split(".")[0];
-    const metadata = {
+    const metadata: Metadata = {
       status: 200,
       cursor,
       session: {
@@ -49,7 +51,7 @@ export async function action(options: WebhookRunOptions) {
       manifest: {
         substreamsEndpoint: options.substreamsEndpoint,
         chain,
-        finalBlockOnly: options.finalBlocksOnly,
+        finalBlocksOnly,
         moduleName: options.moduleName,
         type: data.getType().typeName,
         moduleHash,
@@ -60,7 +62,7 @@ export async function action(options: WebhookRunOptions) {
 
     // Queue POST
     queue.add(async () => {
-      await postWebhook(options.webhookUrl, body, privateKey, options);
+      await postWebhook(options.webhookUrl, body, metadata, privateKey, options);
       fs.writeFileSync(options.cursorPath, cursor);
     });
   });

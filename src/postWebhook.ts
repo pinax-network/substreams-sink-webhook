@@ -2,6 +2,7 @@ import { Hex } from "@noble/curves/abstract/utils";
 import { logger } from "substreams-sink";
 import { createTimestamp, sign } from "./auth.js";
 import logUpdate from "log-update";
+import { Metadata } from "./schemas.js";
 
 function awaitSetTimeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -21,16 +22,17 @@ let start = now();
 // let lastUpdate = now();
 
 // TO-DO replace with Prometheus metrics
-function logProgress() {
+function logProgress(metadata?: Metadata) {
+  if ( !metadata ) return;
   const delta = now() - start;
   const rate = Math.round(blocks / delta);
   const minutes = Math.round(delta / 60);
   const seconds = delta % 60;
-  if ( blocks ) logUpdate(`[app] blocks=${blocks} [${rate} b/s] (${minutes}m ${seconds}s)`);
+  if ( blocks ) logUpdate(`[app] timestamp=${metadata.clock.timestamp} block_number=${metadata.clock.number} blocks=${blocks} [${rate} b/s] (${minutes}m ${seconds}s)`);
   blocks++;
 }
 
-export async function postWebhook(url: string, body: string, secretKey?: Hex, options: PostWebhookOptions = {}) {
+export async function postWebhook(url: string, body: string, metadata?: Metadata, secretKey?: Hex, options: PostWebhookOptions = {}) {
   // Retry Policy
   const initialInterval = 1000; // 1s
   const maximumAttempts = options.maximumAttempts ?? 100 * initialInterval;
@@ -81,7 +83,7 @@ export async function postWebhook(url: string, body: string, secretKey?: Hex, op
         continue;
       }
       // success
-      logProgress();
+      logProgress(metadata);
       return { url, status };
     } catch (e: any) {
       const error = e.cause;
