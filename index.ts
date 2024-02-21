@@ -16,7 +16,7 @@ export async function action(options: WebhookRunOptions) {
   const finalBlocksOnly = boolean.parse(options.finalBlocksOnly);
 
   // Block Emitter
-  const { emitter, moduleHash } = await setup({...options, cursor});
+  const { emitter, moduleHash } = await setup({ ...options, cursor });
 
   // Queue
   const queue = new PQueue({ concurrency: 1 }); // all messages are sent in block order, no need to parallelize
@@ -80,5 +80,3 @@ export async function action(options: WebhookRunOptions) {
     http.server.close();
   });
 }
-
-
